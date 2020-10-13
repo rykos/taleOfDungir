@@ -21,7 +21,7 @@ namespace taleOfDungir.Controllers
         [Route("{id}")]
         public IActionResult GetItem(int id)
         {
-            object item = this.dbContext.Set<Item>().FirstOrDefault(x => x.Id == id);
+            object item = this.dbContext.Set<Item>().FirstOrDefault(x => x.ItemId == id);
             object resoult = this.ItemTransport(item);
             return Ok(resoult);
         }
