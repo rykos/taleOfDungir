@@ -16,25 +16,30 @@ namespace taleOfDungir.Data
             builder.Entity<ApplicationUser>()
                 .HasOne(au => au.Character)
                 .WithOne(c => c.ApplicationUser)
-                .HasForeignKey<Character>(c => c.ApplicationUserId);
+                .HasForeignKey<Character>(c => c.ApplicationUserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Inventory
             builder.Entity<Character>()
                 .HasMany(c => c.Inventory)
                 .WithOne(i => i.Character)
-                .HasForeignKey(e => e.CharacterId);
+                .HasForeignKey(e => e.CharacterId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Equipment
             builder.Entity<Character>()
                 .HasMany(c => c.Equipment)
                 .WithOne(e => e.Wearer)
-                .HasForeignKey(e => e.WearerId);
+                .HasForeignKey(e => e.WearerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            //Stats
+            //Skills
             builder.Entity<Character>()
-                .HasOne(c => c.Stats)
+                .HasOne(c => c.Skills)
                 .WithOne(s => s.Character)
-                .HasForeignKey<Stats>(s => s.CharacterId);
+                .HasForeignKey<Skills>(s => s.CharacterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<Character> Characters { get; set; }

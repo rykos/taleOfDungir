@@ -15,6 +15,8 @@ namespace taleOfDungir.Models
         public int Value { get; set; }
         public int Power { get; set; }
 
+
+        //
         public Character Character { get; set; }
         public Int64 CharacterId { get; set; }
 

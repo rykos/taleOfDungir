@@ -15,10 +15,15 @@ namespace taleOfDungir.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int64 Exp { get; set; } = 0;
 
+        //Stats, WORK_IN_PROGRESS
+        public Int64 Health { get; set; }
+        //
+
         public List<Item> Inventory { get; set; }//Items in bag
         public List<Item> Equipment { get; set; }//Equipped items
 
-        public Stats Stats { get; set; }
+        public Skills Skills { get; set; }//Combat skills
+        public LifeSkills LifeSkills { get; set; }//Event skills
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
