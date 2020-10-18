@@ -10,7 +10,7 @@ using taleOfDungir.Data;
 namespace taleOfDungir.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201013142437_init")]
+    [Migration("20201018161429_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,6 +226,7 @@ namespace taleOfDungir.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("Exp")
@@ -237,6 +238,9 @@ namespace taleOfDungir.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long>("Health")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Level")
                         .ValueGeneratedOnAdd()
@@ -299,9 +303,36 @@ namespace taleOfDungir.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Item");
                 });
 
-            modelBuilder.Entity("taleOfDungir.Models.Stats", b =>
+            modelBuilder.Entity("taleOfDungir.Models.LifeSkills", b =>
                 {
-                    b.Property<long>("StatsId")
+                    b.Property<long>("LifeSkillsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long>("CharacterId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Crafting")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Dialog")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Scavanging")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LifeSkillsId");
+
+                    b.HasIndex("CharacterId")
+                        .IsUnique();
+
+                    b.ToTable("LifeSkills");
+                });
+
+            modelBuilder.Entity("taleOfDungir.Models.Skills", b =>
+                {
+                    b.Property<long>("SkillsId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -321,12 +352,12 @@ namespace taleOfDungir.Migrations
                     b.Property<int>("Vitality")
                         .HasColumnType("integer");
 
-                    b.HasKey("StatsId");
+                    b.HasKey("SkillsId");
 
                     b.HasIndex("CharacterId")
                         .IsUnique();
 
-                    b.ToTable("Stats");
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("taleOfDungir.Models.Armor", b =>
@@ -398,7 +429,9 @@ namespace taleOfDungir.Migrations
                 {
                     b.HasOne("taleOfDungir.Models.ApplicationUser", "ApplicationUser")
                         .WithOne("Character")
-                        .HasForeignKey("taleOfDungir.Models.Character", "ApplicationUserId");
+                        .HasForeignKey("taleOfDungir.Models.Character", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("taleOfDungir.Models.Item", b =>
@@ -416,11 +449,20 @@ namespace taleOfDungir.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("taleOfDungir.Models.Stats", b =>
+            modelBuilder.Entity("taleOfDungir.Models.LifeSkills", b =>
                 {
                     b.HasOne("taleOfDungir.Models.Character", "Character")
-                        .WithOne("Stats")
-                        .HasForeignKey("taleOfDungir.Models.Stats", "CharacterId")
+                        .WithOne("LifeSkills")
+                        .HasForeignKey("taleOfDungir.Models.LifeSkills", "CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("taleOfDungir.Models.Skills", b =>
+                {
+                    b.HasOne("taleOfDungir.Models.Character", "Character")
+                        .WithOne("Skills")
+                        .HasForeignKey("taleOfDungir.Models.Skills", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

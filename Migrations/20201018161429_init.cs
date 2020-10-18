@@ -166,7 +166,8 @@ namespace taleOfDungir.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Exp = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ApplicationUserId = table.Column<string>(nullable: true)
+                    Health = table.Column<long>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,7 +177,7 @@ namespace taleOfDungir.Migrations
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,10 +214,32 @@ namespace taleOfDungir.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Stats",
+                name: "LifeSkills",
                 columns: table => new
                 {
-                    StatsId = table.Column<long>(nullable: false)
+                    LifeSkillsId = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Crafting = table.Column<int>(nullable: false),
+                    Scavanging = table.Column<int>(nullable: false),
+                    Dialog = table.Column<int>(nullable: false),
+                    CharacterId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LifeSkills", x => x.LifeSkillsId);
+                    table.ForeignKey(
+                        name: "FK_LifeSkills_Characters_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Characters",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Skills",
+                columns: table => new
+                {
+                    SkillsId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CharacterId = table.Column<long>(nullable: false),
                     Vitality = table.Column<int>(nullable: false),
@@ -226,9 +249,9 @@ namespace taleOfDungir.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stats", x => x.StatsId);
+                    table.PrimaryKey("PK_Skills", x => x.SkillsId);
                     table.ForeignKey(
-                        name: "FK_Stats_Characters_CharacterId",
+                        name: "FK_Skills_Characters_CharacterId",
                         column: x => x.CharacterId,
                         principalTable: "Characters",
                         principalColumn: "CharacterId",
@@ -289,8 +312,14 @@ namespace taleOfDungir.Migrations
                 column: "WearerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stats_CharacterId",
-                table: "Stats",
+                name: "IX_LifeSkills_CharacterId",
+                table: "LifeSkills",
+                column: "CharacterId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Skills_CharacterId",
+                table: "Skills",
                 column: "CharacterId",
                 unique: true);
         }
@@ -316,7 +345,10 @@ namespace taleOfDungir.Migrations
                 name: "Items");
 
             migrationBuilder.DropTable(
-                name: "Stats");
+                name: "LifeSkills");
+
+            migrationBuilder.DropTable(
+                name: "Skills");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
