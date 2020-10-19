@@ -11,6 +11,8 @@ using System;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using taleOfDungir.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace taleOfDungir.Controllers
 {
@@ -22,12 +24,14 @@ namespace taleOfDungir.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IConfiguration configuration;
+        private readonly AppDbContext dbContext;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration, AppDbContext dbContext)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
+            this.dbContext = dbContext;
         }
 
         [HttpPost]
@@ -105,12 +109,29 @@ namespace taleOfDungir.Controllers
             IdentityResult identityResult = await this.userManager.CreateAsync(newApplicationUser, registerModel.Password);
             if (identityResult.Succeeded)
             {
+                await this.CreateCharacter(newApplicationUser);
                 return Ok(registerModel);
             }
             else
             {
                 return Ok(new Response("Error", "User creation failed, try again later."));
             }
+        }
+
+        private async Task CreateCharacter(ApplicationUser user)
+        {
+            Character character = new Character()
+            {
+                Health = 99,
+                Gold = 1,
+                Exp = 0
+            };
+            character.ApplicationUserId = user.Id;
+            this.dbContext.Characters.Add(character);
+            this.dbContext.SaveChanges();
+
+            user.CharacterId = character.CharacterId;
+            await this.userManager.UpdateAsync(user);
         }
 
         [HttpGet]
@@ -124,10 +145,22 @@ namespace taleOfDungir.Controllers
                 return Unauthorized("Account does not exist");
             }
 
+            Character character = (this.userManager.Users.Include(u => u.Character).Where(u => u.Id == userId).Select(u => u.Character)).FirstOrDefault();
+
             return Ok(new
             {
                 id = userId,
-                name = applicationUser.UserName
+                name = applicationUser.UserName,
+                character = new
+                {
+                    level = character.Level,
+                    exp = character.Exp,
+                    health = character.Health,
+                    gold = character.Gold,
+                    equipment = character.Equipment,
+                    inventory = character.Inventory,
+                    lifeSkills = character.LifeSkills
+                }
             });
         }
     }

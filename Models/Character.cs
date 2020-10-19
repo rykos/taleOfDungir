@@ -7,13 +7,10 @@ namespace taleOfDungir.Models
     public class Character
     {
         public Int64 CharacterId { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Int64 Gold { get; set; } = 0;
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Level { get; set; } = 1;
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Int64 Exp { get; set; } = 0;
+        
+        public Int64 Gold { get; set; }
+        public int Level { get; set; }
+        public Int64 Exp { get; set; }
 
         //Stats, WORK_IN_PROGRESS
         public Int64 Health { get; set; }
