@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using taleOfDungir.Data;
 using Microsoft.EntityFrameworkCore;
+using taleOfDungir.Helpers;
 
 namespace taleOfDungir.Controllers
 {
@@ -25,13 +26,19 @@ namespace taleOfDungir.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IConfiguration configuration;
         private readonly AppDbContext dbContext;
+        private readonly CharacterHelperProvider characterHelper;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration, AppDbContext dbContext)
+        public AccountController(UserManager<ApplicationUser> userManager,
+                                 SignInManager<ApplicationUser> signInManager,
+                                 IConfiguration configuration,
+                                 AppDbContext dbContext,
+                                 CharacterHelperProvider characterHelper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.dbContext = dbContext;
+            this.characterHelper = characterHelper;
         }
 
         [HttpPost]
@@ -123,8 +130,10 @@ namespace taleOfDungir.Controllers
             Character character = new Character()
             {
                 Health = 99,
-                Gold = 1,
-                Exp = 0
+                Gold = 0,
+                Exp = 0,
+                Skills = new Skills(),
+                LifeSkills = new LifeSkills()
             };
             character.ApplicationUserId = user.Id;
             this.dbContext.Characters.Add(character);
@@ -145,7 +154,13 @@ namespace taleOfDungir.Controllers
                 return Unauthorized("Account does not exist");
             }
 
-            Character character = (this.userManager.Users.Include(u => u.Character).Where(u => u.Id == userId).Select(u => u.Character)).FirstOrDefault();
+            Character character = (this.userManager.Users
+                .Include(u => u.Character)
+                    .ThenInclude(c => c.Skills)
+                .Include(u => u.Character)
+                    .ThenInclude(c => c.LifeSkills)
+                .Where(u => u.Id == userId).Select(u => u.Character)).FirstOrDefault();
+            this.characterHelper.AddExp(character, 50);
 
             return Ok(new
             {
@@ -159,7 +174,19 @@ namespace taleOfDungir.Controllers
                     gold = character.Gold,
                     equipment = character.Equipment,
                     inventory = character.Inventory,
-                    lifeSkills = character.LifeSkills
+                    lifeSkills = new
+                    {
+                        vitality = character.LifeSkills.Crafting,
+                        Dialog = character.LifeSkills.Dialog,
+                        Scavanging = character.LifeSkills.Scavanging
+                    },
+                    skills = new
+                    {
+                        Combat = character.Skills.Combat,
+                        Luck = character.Skills.Luck,
+                        Perception = character.Skills.Perception,
+                        Vitality = character.Skills.Vitality
+                    }
                 }
             });
         }

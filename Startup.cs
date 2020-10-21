@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using taleOfDungir.Data;
+using taleOfDungir.Helpers;
 using taleOfDungir.Models;
 
 namespace taleOfDungir
@@ -53,6 +54,8 @@ namespace taleOfDungir
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
             });
+
+            services.AddScoped<CharacterHelperProvider, CharacterHelper>();
 
             services.AddControllers();
         }

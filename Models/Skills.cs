@@ -9,9 +9,9 @@ namespace taleOfDungir.Models
         public Character Character { get; set; }
         public Int64 CharacterId { get; set; }
 
-        public int Vitality { get; set; }//Health
-        public int Combat { get; set; }//Damage
-        public int Luck { get; set; }//Better loot
-        public int Perception { get; set; }//Chance to deal critical damage, and hit
+        public int Vitality { get; set; } = 1;//Health
+        public int Combat { get; set; } = 1;//Damage
+        public int Luck { get; set; } = 1;//Better loot
+        public int Perception { get; set; } = 1;//Chance to deal critical damage, and hit
     }
 }
