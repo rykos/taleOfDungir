@@ -11,9 +11,10 @@ namespace taleOfDungir.Models
         [MaxLength(100)]
         public string Description { get; set; }
         public int Level { get; set; }
+        public ItemType ItemType { get; set; }
         public Rarity Rarity { get; set; }
         public int Value { get; set; }
-        public int Power { get; set; }
+        public Int64 Power { get; set; }
 
 
         //
@@ -22,14 +23,5 @@ namespace taleOfDungir.Models
 
         public Character Wearer { get; set; }
         public Int64 WearerId { get; set; }
-    }
-
-    public enum Rarity
-    {
-        Common,
-        Uncommon,
-        Rare,
-        Epic,
-        Legendary
     }
 }
