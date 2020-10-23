@@ -27,18 +27,21 @@ namespace taleOfDungir.Controllers
         private readonly IConfiguration configuration;
         private readonly AppDbContext dbContext;
         private readonly CharacterHelperProvider characterHelper;
+        private readonly ItemHelperProvider itemHelper;
 
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
                                  IConfiguration configuration,
                                  AppDbContext dbContext,
-                                 CharacterHelperProvider characterHelper)
+                                 CharacterHelperProvider characterHelper,
+                                 ItemHelperProvider itemHelper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.dbContext = dbContext;
             this.characterHelper = characterHelper;
+            this.itemHelper = itemHelper;
         }
 
         [HttpPost]
@@ -189,6 +192,28 @@ namespace taleOfDungir.Controllers
                     }
                 }
             });
+        }
+
+        [HttpGet]
+        [Route("give")]
+        public async Task<IActionResult> Give()
+        {
+            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ApplicationUser applicationUser = this.dbContext.Users.Include(u => u.Character.Inventory).FirstOrDefault(u => u.Id == userId);
+            if (applicationUser == default)
+            {
+                return Unauthorized("User does not exist");
+            }
+            this.dbContext.Update(applicationUser);
+
+            Item newItem = this.itemHelper.CreateItem(1);
+            newItem.CharacterId = applicationUser.CharacterId;
+            
+            applicationUser.Character.Inventory.Add(newItem);
+
+            this.dbContext.SaveChanges();
+
+            return Ok();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace taleOfDungir.Models
         public int Level { get; set; }
         public ItemType ItemType { get; set; }
         public Rarity Rarity { get; set; }
-        public int Value { get; set; }
+        public Int64 Value { get; set; }
         public Int64 Power { get; set; }
 
 
@@ -21,7 +21,6 @@ namespace taleOfDungir.Models
         public Character Character { get; set; }
         public Int64 CharacterId { get; set; }
 
-        public Character Wearer { get; set; }
-        public Int64 WearerId { get; set; }
+        public bool Worn { get; set; } = false;
     }
 }

@@ -15,7 +15,9 @@ namespace taleOfDungir.Helpers
 
         public string GetNameFor(ItemType itemType)
         {
-            return this.dbContext.ItemNames.Where(i => i.ItemType == itemType).Select(i => i.Name).OrderBy(i => Guid.NewGuid()).First();
+            int count = this.dbContext.ItemNames.Count();
+            Random rnd = new Random();
+            return this.dbContext.ItemNames.Where(i => i.ItemType == itemType).Skip(rnd.Next(0, count)).First().Name;
         }
     }
 

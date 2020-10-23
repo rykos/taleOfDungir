@@ -10,7 +10,7 @@ using taleOfDungir.Data;
 namespace taleOfDungir.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201018161429_init")]
+    [Migration("20201023183623_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -230,22 +230,16 @@ namespace taleOfDungir.Migrations
                         .HasColumnType("text");
 
                     b.Property<long>("Exp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Gold")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Health")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Level")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
 
                     b.HasKey("CharacterId");
 
@@ -265,6 +259,9 @@ namespace taleOfDungir.Migrations
                     b.Property<long>("CharacterId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("CharacterId1")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Description")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
@@ -273,6 +270,9 @@ namespace taleOfDungir.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("ItemType")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Level")
                         .HasColumnType("integer");
 
@@ -280,27 +280,45 @@ namespace taleOfDungir.Migrations
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("Power")
-                        .HasColumnType("integer");
+                    b.Property<long>("Power")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Rarity")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("integer");
-
-                    b.Property<long>("WearerId")
+                    b.Property<long>("Value")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("Worn")
+                        .HasColumnType("boolean");
 
                     b.HasKey("ItemId");
 
                     b.HasIndex("CharacterId");
 
-                    b.HasIndex("WearerId");
+                    b.HasIndex("CharacterId1");
 
                     b.ToTable("Items");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Item");
+                });
+
+            modelBuilder.Entity("taleOfDungir.Models.ItemName", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("ItemType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ItemNames");
                 });
 
             modelBuilder.Entity("taleOfDungir.Models.LifeSkills", b =>
@@ -442,11 +460,9 @@ namespace taleOfDungir.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("taleOfDungir.Models.Character", "Wearer")
+                    b.HasOne("taleOfDungir.Models.Character", null)
                         .WithMany("Equipment")
-                        .HasForeignKey("WearerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CharacterId1");
                 });
 
             modelBuilder.Entity("taleOfDungir.Models.LifeSkills", b =>

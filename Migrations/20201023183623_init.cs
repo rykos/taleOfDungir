@@ -49,6 +49,20 @@ namespace taleOfDungir.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ItemNames",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ItemType = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemNames", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -160,12 +174,9 @@ namespace taleOfDungir.Migrations
                 {
                     CharacterId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Gold = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Level = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Exp = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Gold = table.Column<long>(nullable: false),
+                    Level = table.Column<int>(nullable: false),
+                    Exp = table.Column<long>(nullable: false),
                     Health = table.Column<long>(nullable: false),
                     ApplicationUserId = table.Column<string>(nullable: false)
                 },
@@ -189,11 +200,13 @@ namespace taleOfDungir.Migrations
                     Name = table.Column<string>(maxLength: 50, nullable: true),
                     Description = table.Column<string>(maxLength: 100, nullable: true),
                     Level = table.Column<int>(nullable: false),
+                    ItemType = table.Column<int>(nullable: false),
                     Rarity = table.Column<int>(nullable: false),
-                    Value = table.Column<int>(nullable: false),
-                    Power = table.Column<int>(nullable: false),
+                    Value = table.Column<long>(nullable: false),
+                    Power = table.Column<long>(nullable: false),
                     CharacterId = table.Column<long>(nullable: false),
-                    WearerId = table.Column<long>(nullable: false),
+                    Worn = table.Column<bool>(nullable: false),
+                    CharacterId1 = table.Column<long>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -206,11 +219,11 @@ namespace taleOfDungir.Migrations
                         principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Items_Characters_WearerId",
-                        column: x => x.WearerId,
+                        name: "FK_Items_Characters_CharacterId1",
+                        column: x => x.CharacterId1,
                         principalTable: "Characters",
                         principalColumn: "CharacterId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -307,9 +320,9 @@ namespace taleOfDungir.Migrations
                 column: "CharacterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_WearerId",
+                name: "IX_Items_CharacterId1",
                 table: "Items",
-                column: "WearerId");
+                column: "CharacterId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LifeSkills_CharacterId",
@@ -340,6 +353,9 @@ namespace taleOfDungir.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ItemNames");
 
             migrationBuilder.DropTable(
                 name: "Items");

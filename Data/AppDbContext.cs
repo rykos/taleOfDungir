@@ -28,11 +28,11 @@ namespace taleOfDungir.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             //Equipment
-            builder.Entity<Character>()
-                .HasMany(c => c.Equipment)
-                .WithOne(e => e.Wearer)
-                .HasForeignKey(e => e.WearerId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // builder.Entity<Character>()
+            //     .HasMany(c => c.Equipment)
+            //     .WithOne(e => e.Wearer)
+            //     .HasForeignKey(e => e.WearerId)
+            //     .OnDelete(DeleteBehavior.Cascade);
 
             //Skills
             builder.Entity<Character>()

@@ -18,15 +18,18 @@ namespace taleOfDungir.Helpers
 
         public Item CreateItem(int level)
         {
-            ItemType itemType = GetRandomItemType();
+            //ItemType itemType = GetRandomItemType();
+            ItemType itemType = ItemType.Head;
             Rarity itemRarity = CreateItemRarity();
+            Int64 power = (Int64)(this.GetPowerScale(itemRarity) * level);
             return new Item()
             {
                 Level = level,
                 Name = this.nameHelper.GetNameFor(itemType),
                 Description = "",
                 Rarity = itemRarity,
-                Power = (Int64)(this.GetPowerScale(itemRarity) * level)
+                Power = (Int64)(this.GetPowerScale(itemRarity) * level),
+                Value = power * 2
             };
         }
 
@@ -107,6 +110,6 @@ namespace taleOfDungir.Helpers
 
     public interface ItemHelperProvider
     {
-
+        Item CreateItem(int level);
     }
 }
