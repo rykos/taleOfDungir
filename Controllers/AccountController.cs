@@ -162,6 +162,7 @@ namespace taleOfDungir.Controllers
                     .ThenInclude(c => c.Skills)
                 .Include(u => u.Character)
                     .ThenInclude(c => c.LifeSkills)
+                .Include(u => u.Character.Inventory)
                 .Where(u => u.Id == userId).Select(u => u.Character)).FirstOrDefault();
             this.characterHelper.AddExp(character, 50);
 
@@ -175,8 +176,7 @@ namespace taleOfDungir.Controllers
                     exp = character.Exp,
                     health = character.Health,
                     gold = character.Gold,
-                    equipment = character.Equipment,
-                    inventory = character.Inventory,
+                    inventory = character.Inventory.Select(i => new { i.Name, i.Level, i.Power, i.Value }).ToList(),
                     lifeSkills = new
                     {
                         vitality = character.LifeSkills.Crafting,
@@ -208,7 +208,7 @@ namespace taleOfDungir.Controllers
 
             Item newItem = this.itemHelper.CreateItem(1);
             newItem.CharacterId = applicationUser.CharacterId;
-            
+
             applicationUser.Character.Inventory.Add(newItem);
 
             this.dbContext.SaveChanges();

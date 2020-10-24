@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using taleOfDungir.Models;
@@ -24,7 +25,7 @@ namespace taleOfDungir.Data
             builder.Entity<Character>()
                 .HasMany(c => c.Inventory)
                 .WithOne(i => i.Character)
-                .HasForeignKey(e => e.CharacterId)
+                .HasForeignKey(i => i.CharacterId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             //Equipment

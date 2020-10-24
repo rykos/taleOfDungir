@@ -17,7 +17,6 @@ namespace taleOfDungir.Models
         //
 
         public List<Item> Inventory { get; set; }//Items in bag
-        public List<Item> Equipment { get; set; }//Equipped items
 
         public Skills Skills { get; set; }//Combat skills
         public LifeSkills LifeSkills { get; set; }//Event skills

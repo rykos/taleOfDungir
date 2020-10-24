@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using taleOfDungir.Data;
@@ -9,9 +10,10 @@ using taleOfDungir.Data;
 namespace taleOfDungir.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201023222001_init3")]
+    partial class init3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,6 +259,9 @@ namespace taleOfDungir.Migrations
                     b.Property<long>("CharacterId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("CharacterId1")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Description")
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
@@ -290,6 +295,8 @@ namespace taleOfDungir.Migrations
                     b.HasKey("ItemId");
 
                     b.HasIndex("CharacterId");
+
+                    b.HasIndex("CharacterId1");
 
                     b.ToTable("Items");
 
@@ -452,6 +459,10 @@ namespace taleOfDungir.Migrations
                         .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("taleOfDungir.Models.Character", null)
+                        .WithMany("Equipment")
+                        .HasForeignKey("CharacterId1");
                 });
 
             modelBuilder.Entity("taleOfDungir.Models.LifeSkills", b =>
