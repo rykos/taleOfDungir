@@ -42,6 +42,6 @@ namespace taleOfDungir.Helpers
 
     public interface CharacterHelperProvider
     {
-        public void AddExp(Character character, Int64 amount);
+        void AddExp(Character character, Int64 amount);
     }
 }

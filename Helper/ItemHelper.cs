@@ -33,14 +33,6 @@ namespace taleOfDungir.Helpers
             };
         }
 
-        public Item CreateItem(int level, ItemType itemType)
-        {
-            return new Item()
-            {
-
-            };
-        }
-
         private double GetPowerScale(Rarity rarity)
         {
             double scale;

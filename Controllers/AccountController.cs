@@ -196,7 +196,7 @@ namespace taleOfDungir.Controllers
 
         [HttpGet]
         [Route("give")]
-        public async Task<IActionResult> Give()
+        public IActionResult Give()
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             ApplicationUser applicationUser = this.dbContext.Users.Include(u => u.Character.Inventory).FirstOrDefault(u => u.Id == userId);
