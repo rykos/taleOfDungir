@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'localhost:5001/taleOfDungir/api'
+  apiUrl: 'https://localhost:5001'
 };
 
 /*
