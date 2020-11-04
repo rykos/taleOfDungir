@@ -10,14 +10,4 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'Tale of Dungir';
-  currentUser: User;
-
-  constructor(private router: Router, private authenticationService: AuthenticationService) {
-    this.authenticationService.currentUser.subscribe(u => { this.currentUser = u; });
-  }
-
-  logout() {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
-  }
 }
