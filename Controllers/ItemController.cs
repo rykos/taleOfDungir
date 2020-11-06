@@ -3,6 +3,7 @@ using taleOfDungir.Data;
 using taleOfDungir.Models;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace taleOfDungir.Controllers
 {
@@ -26,26 +27,15 @@ namespace taleOfDungir.Controllers
             return Ok(resoult);
         }
 
-        private object ItemTransport(object item)
+        private object ItemTransport(object itemObject)
         {
-            string description = "";
-            if (item.GetType() == typeof(Weapon))
-            {
-                Weapon w = (Weapon)item;
-                description = (item as Weapon).Description + $"\n{w.Power * 0.75}-{w.Power * 1.25}";
-            }
-            else if (item.GetType() == typeof(Armor))
-            {
-                Armor a = (Armor)item;
-                description = (item as Armor).Description + $"\n{a.Power} defense";
-            }
-
+            Item item = (Item)itemObject;
             object x = new
             {
-                Name = ((Item)item).Name,
-                Level = ((Item)item).Level,
-                Rarity = ((Item)item).Rarity,
-                Description = description
+                Name = item.Name,
+                Level = item.Level,
+                Rarity = item.Rarity,
+                Description = item.Description
             };
             return x;
         }
@@ -54,21 +44,13 @@ namespace taleOfDungir.Controllers
         [Route("weapon")]
         public IActionResult GetWeapons()
         {
-            Weapon[] weapons = this.dbContext.Set<Weapon>().ToArray();
+            List<Item> weapons = this.dbContext.Items.Where(i => i.ItemType == ItemType.Weapon).ToList();
             return Ok(weapons);
-        }
-
-        [HttpGet]
-        [Route("armor")]
-        public IActionResult GetArmors()
-        {
-            Armor[] armors = this.dbContext.Set<Armor>().ToArray();
-            return Ok(armors);
         }
 
         [HttpPost]
         [Route("weapon")]
-        public IActionResult CreateWeapon([FromBody] Weapon weapon)
+        public IActionResult CreateWeapon([FromBody] Item weapon)
         {
             this.dbContext.Add(weapon);
             this.dbContext.SaveChanges();
@@ -77,9 +59,9 @@ namespace taleOfDungir.Controllers
 
         [HttpPost]
         [Route("armor")]
-        public IActionResult CreateArmor([FromBody] Armor armor)
+        public IActionResult CreateArmor([FromBody] Item armor)
         {
-            this.dbContext.Add(armor);
+            this.dbContext.Items.Add(armor);
             this.dbContext.SaveChanges();
             return Ok(armor);
         }

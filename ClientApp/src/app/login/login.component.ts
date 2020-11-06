@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
   handleError(error) {
     this.loading = false;
     if (error.status === 401) {
-      this.error = error.error.msg;
+      this.error = error.error.message;
     }
   }
 
