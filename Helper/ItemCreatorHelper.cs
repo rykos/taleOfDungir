@@ -6,11 +6,11 @@ using taleOfDungir.Models;
 
 namespace taleOfDungir.Helpers
 {
-    public class ItemHelper : ItemHelperProvider
+    public class ItemCreatorHelper : ItemCreatorHelperProvider
     {
         private readonly AppDbContext dbContext;
         private readonly NameHelperProvider nameHelper;
-        public ItemHelper(AppDbContext dbContext, NameHelperProvider nameHelper)
+        public ItemCreatorHelper(AppDbContext dbContext, NameHelperProvider nameHelper)
         {
             this.dbContext = dbContext;
             this.nameHelper = nameHelper;
@@ -18,19 +18,21 @@ namespace taleOfDungir.Helpers
 
         public Item CreateItem(int level)
         {
-            //ItemType itemType = GetRandomItemType();
-            ItemType itemType = ItemType.Head;
+            ItemType itemType = GetRandomItemType();
             Rarity itemRarity = CreateItemRarity();
             Int64 power = (Int64)(this.GetPowerScale(itemRarity) * level);
-            return new Item()
+            Item item = new Item()
             {
                 Level = level,
                 Name = this.nameHelper.GetNameFor(itemType),
                 Description = "",
                 Rarity = itemRarity,
                 Power = (Int64)(this.GetPowerScale(itemRarity) * level),
+                Stats = null,
                 Value = power * 2
             };
+            this.CreateStats(ref item);
+            return item;
         }
 
         private double GetPowerScale(Rarity rarity)
@@ -98,9 +100,21 @@ namespace taleOfDungir.Helpers
             ItemType[] itemTypes = this.GetItemTypes();
             return itemTypes[new Random().Next(0, itemTypes.Length)];
         }
+
+        private void CreateStats(ref Item item)
+        {
+            Stats stats = new Stats()
+            {
+                Combat = 1,
+                Luck = 2,
+                Perception = 2,
+                Vitality = 3
+            };
+            item.Stats = SystemHelper.Serialize(stats);
+        }
     }
 
-    public interface ItemHelperProvider
+    public interface ItemCreatorHelperProvider
     {
         Item CreateItem(int level);
     }

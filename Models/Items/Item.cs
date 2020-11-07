@@ -16,6 +16,8 @@ namespace taleOfDungir.Models
         public Int64 Value { get; set; }
         public Int64 Power { get; set; }
 
+        public byte[] Stats { get; set; } = null;//Serialized stats structure
+
         //
         public Character Character { get; set; }
         public Int64 CharacterId { get; set; }

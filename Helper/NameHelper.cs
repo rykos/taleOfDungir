@@ -16,8 +16,12 @@ namespace taleOfDungir.Helpers
         public string GetNameFor(ItemType itemType)
         {
             int count = this.dbContext.ItemNames.Count();
+            if (count == 0)
+            {
+                return "Missing names";
+            }
             Random rnd = new Random();
-            return this.dbContext.ItemNames.Where(i => i.ItemType == itemType).Skip(rnd.Next(0, count)).First().Name;
+            return this.dbContext.ItemNames.Where(i => i.ItemType == itemType).Skip(rnd.Next(0, count))?.First().Name ?? "Missing names";
         }
     }
 

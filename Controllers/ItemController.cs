@@ -22,14 +22,13 @@ namespace taleOfDungir.Controllers
         [Route("{id}")]
         public IActionResult GetItem(int id)
         {
-            object item = this.dbContext.Set<Item>().FirstOrDefault(x => x.ItemId == id);
-            object resoult = this.ItemTransport(item);
+            Item item = this.dbContext.Items.FirstOrDefault(i => i.ItemId == id);
+            object resoult = this.ItemToTransport(item);
             return Ok(resoult);
         }
 
-        private object ItemTransport(object itemObject)
+        private object ItemToTransport(Item item)
         {
-            Item item = (Item)itemObject;
             object x = new
             {
                 Name = item.Name,

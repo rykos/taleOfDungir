@@ -27,14 +27,14 @@ namespace taleOfDungir.Controllers
         private readonly IConfiguration configuration;
         private readonly AppDbContext dbContext;
         private readonly CharacterHelperProvider characterHelper;
-        private readonly ItemHelperProvider itemHelper;
+        private readonly ItemCreatorHelperProvider itemHelper;
 
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
                                  IConfiguration configuration,
                                  AppDbContext dbContext,
                                  CharacterHelperProvider characterHelper,
-                                 ItemHelperProvider itemHelper)
+                                 ItemCreatorHelperProvider itemHelper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
