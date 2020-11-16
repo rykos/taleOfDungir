@@ -52,7 +52,7 @@ namespace taleOfDungir.Controllers
             ApplicationUser user = await this.userManager.FindByNameAsync(loginModel.Username);
             if (user == default)
             {
-                return Ok(new Response("Error", "User does not exist"));
+                return Unauthorized(new Response("Error", "User does not exist"));
             }
             bool passwordCheckResoult = await this.userManager.CheckPasswordAsync(user, loginModel.Password);
             if (passwordCheckResoult)
