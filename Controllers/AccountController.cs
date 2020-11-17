@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using taleOfDungir.Data;
 using Microsoft.EntityFrameworkCore;
 using taleOfDungir.Helpers;
+using System.Security.Cryptography;
 
 namespace taleOfDungir.Controllers
 {
@@ -22,14 +23,17 @@ namespace taleOfDungir.Controllers
     [Route("account")]
     public class AccountController : ControllerBase
     {
+        private static string adminKey = GenerateAdminKey();
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration configuration;
         private readonly AppDbContext dbContext;
         private readonly CharacterHelperProvider characterHelper;
         private readonly ItemCreatorHelperProvider itemHelper;
 
         public AccountController(UserManager<ApplicationUser> userManager,
+                                 RoleManager<IdentityRole> roleManager,
                                  SignInManager<ApplicationUser> signInManager,
                                  IConfiguration configuration,
                                  AppDbContext dbContext,
@@ -37,6 +41,7 @@ namespace taleOfDungir.Controllers
                                  ItemCreatorHelperProvider itemHelper)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.dbContext = dbContext;
@@ -120,6 +125,51 @@ namespace taleOfDungir.Controllers
             if (identityResult.Succeeded)
             {
                 await this.CreateCharacter(newApplicationUser);
+                return Ok(registerModel);
+            }
+            else
+            {
+                return Ok(new Response("Error", "User creation failed, try again later."));
+            }
+        }
+
+        [HttpPost]
+        [Route("register-admin")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterAdmin([FromBody] AdminRegisterModel registerModel)
+        {
+            if (registerModel.Key != adminKey)
+            {
+                Console.WriteLine(adminKey);
+                return Unauthorized(new Response("Error", "Invalid key"));
+            }
+            ApplicationUser userByName = await this.userManager.FindByNameAsync(registerModel.Username);
+            ApplicationUser userByEmail = await this.userManager.FindByEmailAsync(registerModel.Email);
+            if (userByName != default)
+            {
+                return BadRequest("Username is taken");
+            }
+            if (userByEmail != default)
+            {
+                return BadRequest("Email is taken");
+            }
+
+            if (await this.roleManager.RoleExistsAsync("admin") == false)
+            {
+                await this.roleManager.CreateAsync(new IdentityRole("admin"));
+            }
+
+            ApplicationUser newApplicationUser = new ApplicationUser()
+            {
+                UserName = registerModel.Username,
+                Email = registerModel.Email
+            };
+            IdentityResult identityResult = await this.userManager.CreateAsync(newApplicationUser, registerModel.Password);
+            if (identityResult.Succeeded)
+            {
+                await this.CreateCharacter(newApplicationUser);
+                await userManager.AddToRoleAsync(newApplicationUser, "admin");
+                adminKey = GenerateAdminKey();
                 return Ok(registerModel);
             }
             else
@@ -214,6 +264,19 @@ namespace taleOfDungir.Controllers
             this.dbContext.SaveChanges();
 
             return Ok();
+        }
+
+        private static string GenerateAdminKey()
+        {
+            string key;
+            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[32];
+                rng.GetBytes(tokenData);
+
+                key = Convert.ToBase64String(tokenData);
+            }
+            return key;
         }
     }
 }
