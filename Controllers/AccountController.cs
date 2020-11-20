@@ -178,6 +178,27 @@ namespace taleOfDungir.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("remove-account/{accountID}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> RemoveAccount(string accountID)
+        {
+            ApplicationUser user = await this.userManager.FindByIdAsync(accountID);
+            if (user == default)
+            {
+                return Ok(new Response(Models.Response.Error, $"User with id {accountID} does not exist"));
+            }
+            IdentityResult resoult = await this.userManager.DeleteAsync(user);
+            if (resoult.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return Ok(new Response(Models.Response.Error, $"There was a problem deleting account with id {accountID}"));
+            }
+        }
+
         private async Task CreateCharacter(ApplicationUser user)
         {
             Character character = new Character()

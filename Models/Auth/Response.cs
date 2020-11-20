@@ -10,5 +10,8 @@ namespace taleOfDungir.Models
             this.Type = Type;
             this.Message = Message;
         }
+
+        public static string Success { get { return "Success"; } }
+        public static string Error { get { return "Success"; } }
     }
 }
