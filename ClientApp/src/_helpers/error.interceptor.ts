@@ -24,7 +24,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         }
         this.router.navigate(['/login', { queryParams: { returnUrl: location.pathname } }]);
       }
-      console.log(err);
       return throwError(err);
     }));
   }

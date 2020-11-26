@@ -1,3 +1,4 @@
+import { Item } from './Item';
 import { LifeSkills } from './LifeSkills';
 import { Skills } from './Skills';
 export class Character {
@@ -7,4 +8,5 @@ export class Character {
     level: number;
     skills: Skills;
     lifeSkills: LifeSkills;
+    inventory?: Item[];
 }

@@ -241,6 +241,7 @@ namespace taleOfDungir.Controllers
             {
                 level = character.Level,
                 exp = character.Exp,
+                reqExp = character.Level * 100,
                 health = character.Health,
                 gold = character.Gold,
                 inventory = character.Inventory.Select(i => new { i.Name, i.Level, i.Power, i.Value }).ToList(),

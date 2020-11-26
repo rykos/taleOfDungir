@@ -1,3 +1,9 @@
 <div *ngIf="character">
-    {{character.exp}}
+    <p>level:{{character.level}}</p>
+    <p>exp:{{character.exp}}/{{character.reqExp}}</p>
+    <p>gold:{{character.gold}}</p>
+    <p>health:{{character.health}}</p>
+    <div *ngFor="let item of character.inventory; index as i;">
+        {{i+1}}) Name:{{item.name}} Level: {{item.level}} Power:{{item.power}} Value: {{item.value}}
+    </div>
 </div>
