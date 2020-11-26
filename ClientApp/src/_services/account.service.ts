@@ -1,3 +1,4 @@
+import { Character } from './../_models/Character';
 import { Observable } from 'rxjs';
 import { environment } from './../environments/environment';
 import { AuthenticationService } from './authentication.service';
@@ -10,10 +11,10 @@ import { Injectable } from '@angular/core';
 export class AccountService {
 
   constructor(private authenticationService: AuthenticationService, private httpClient: HttpClient) {
-
+    
   }
 
-  Details(): Observable<string> {
-    return this.httpClient.get<string>(environment.apiUrl + "/account/details");
+  Details(): Observable<Character> {
+    return this.httpClient.get<Character>(environment.apiUrl + "/account/details");
   }
 }

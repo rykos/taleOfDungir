@@ -1,3 +1,6 @@
+import { Character } from './../../_models/Character';
+import { environment } from './../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { AccountService } from './../../_services/account.service';
 import { User } from './../../_models/User';
 import { AuthenticationService } from './../../_services/authentication.service';
@@ -10,10 +13,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
   user: User;
-  details: string;
-  constructor(private authenticationService: AuthenticationService, private accountService: AccountService) {
+  character: Character;
+  constructor(private authenticationService: AuthenticationService, private accountService: AccountService, private httpClient: HttpClient) {
     this.user = authenticationService.currentUserValue;
-    accountService.Details().subscribe(x => this.details = x);
+    accountService.Details().subscribe(x => { this.character = x; console.log(x); console.log(this.character); });
   }
 
   ngOnInit(): void {

@@ -239,28 +239,23 @@ namespace taleOfDungir.Controllers
 
             return Ok(new
             {
-                id = userId,
-                name = applicationUser.UserName,
-                character = new
+                level = character.Level,
+                exp = character.Exp,
+                health = character.Health,
+                gold = character.Gold,
+                inventory = character.Inventory.Select(i => new { i.Name, i.Level, i.Power, i.Value }).ToList(),
+                lifeSkills = new
                 {
-                    level = character.Level,
-                    exp = character.Exp,
-                    health = character.Health,
-                    gold = character.Gold,
-                    inventory = character.Inventory.Select(i => new { i.Name, i.Level, i.Power, i.Value }).ToList(),
-                    lifeSkills = new
-                    {
-                        vitality = character.LifeSkills.Crafting,
-                        Dialog = character.LifeSkills.Dialog,
-                        Scavanging = character.LifeSkills.Scavanging
-                    },
-                    skills = new
-                    {
-                        Combat = character.Skills.Combat,
-                        Luck = character.Skills.Luck,
-                        Perception = character.Skills.Perception,
-                        Vitality = character.Skills.Vitality
-                    }
+                    vitality = character.LifeSkills.Crafting,
+                    Dialog = character.LifeSkills.Dialog,
+                    Scavanging = character.LifeSkills.Scavanging
+                },
+                skills = new
+                {
+                    Combat = character.Skills.Combat,
+                    Luck = character.Skills.Luck,
+                    Perception = character.Skills.Perception,
+                    Vitality = character.Skills.Vitality
                 }
             });
         }

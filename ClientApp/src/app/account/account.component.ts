@@ -12,6 +12,7 @@ export class AccountComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService) {
     this.user = authenticationService.currentUserValue;
+    console.log(this.user);
   }
 
   ngOnInit(): void {
