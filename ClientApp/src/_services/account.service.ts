@@ -15,6 +15,6 @@ export class AccountService {
   }
 
   Details(): Observable<Character> {
-    return this.httpClient.get<Character>(environment.apiUrl + "/account/details");
+    return this.httpClient.get<Character>(environment.apiUrl + "/character/details");
   }
 }
