@@ -12,6 +12,6 @@ namespace taleOfDungir.Models
         }
 
         public static string Success { get { return "Success"; } }
-        public static string Error { get { return "Success"; } }
+        public static string Error { get { return "Error"; } }
     }
 }

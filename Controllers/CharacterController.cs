@@ -80,14 +80,14 @@ namespace taleOfDungir.Controllers
         public IActionResult Give()
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ApplicationUser applicationUser = this.dbContext.Users.Include(u => u.Character.Inventory).FirstOrDefault(u => u.Id == userId);
+            ApplicationUser applicationUser = this.dbContext.Users.Include(u => u.Character.Inventory).Include(u => u.Character).FirstOrDefault(u => u.Id == userId);
             if (applicationUser == default)
             {
                 return Unauthorized("User does not exist");
             }
             this.dbContext.Update(applicationUser);
-
-            Item newItem = this.itemCreatorHelper.CreateItem(1);
+            System.Random rnd = new System.Random();
+            Item newItem = this.itemCreatorHelper.CreateItem(rnd.Next(0, 2) + applicationUser.Character.Level);
             newItem.CharacterId = applicationUser.CharacterId;
 
             applicationUser.Character.Inventory.Add(newItem);

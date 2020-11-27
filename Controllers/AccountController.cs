@@ -91,7 +91,8 @@ namespace taleOfDungir.Controllers
                     id = user.Id,
                     username = user.UserName,
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    expiration = token.ValidTo,
+                    admin = userRoles.Contains("admin")
                 });
             }
             else
