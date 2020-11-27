@@ -1,6 +1,6 @@
 export class User {
     id: string;
-    admin: boolean = false;
+    admin: boolean;
     username: string;
     expiration: any;
     token?: string;

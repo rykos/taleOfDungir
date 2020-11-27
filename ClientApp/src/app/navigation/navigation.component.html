@@ -14,6 +14,7 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="cursor: pointer;">
                             <a class="dropdown-item" routerLink="/account">Account</a>
                             <a class="dropdown-item" routerLink="/profile">Profile</a>
+                            <a class="dropdown-item" routerLink="/admin" *ngIf="currentUser.admin">Admin panel</a>
                             <a class="dropdown-item" (click)="logout()">Logout</a>
                         </div>
                     </div>
