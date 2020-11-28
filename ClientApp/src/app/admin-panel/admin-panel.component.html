@@ -1,1 +1,12 @@
-<p>admin-panel works!</p>
+<div class="row m-3">
+    <div class="col-3" style="min-width: 200px;">
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action active" style="cursor: pointer;">Item names</a>
+        </div>
+    </div>
+    <div class="col border">
+        <select class="browser-default custom-select" (change)="Changed($event.target.value)">
+            <option *ngFor="let item of itemTypes">{{item}}</option>
+        </select>
+    </div>
+</div>
