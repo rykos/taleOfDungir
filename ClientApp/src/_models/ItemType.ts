@@ -1,11 +1,11 @@
 export enum ItemType {
-    Trash,
-    Consumable,
-    Resource,
-    Head,
-    Body,
-    Legs,
-    Finger,
-    Neck,
-    Weapon
+    Trash = 'Trash',
+    Consumable = 'Consumable',
+    Resource = 'Resource',
+    Head = 'Head',
+    Body = 'Body',
+    Legs = 'Legs',
+    Finger = 'Finger',
+    Neck = 'Neck',
+    Weapon = 'Weapon'
 }

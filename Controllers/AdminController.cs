@@ -5,6 +5,7 @@ using taleOfDungir.Data;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using System.Collections;
 
 namespace taleOfDungir.Controllers
 {
@@ -24,6 +25,22 @@ namespace taleOfDungir.Controllers
 
         [HttpGet]
         [Route("items/names")]
+        public IActionResult GetNames([FromQuery] string pattern)
+        {
+            ItemName[] itemNames;
+            if (pattern == default)
+            {
+                itemNames = this.dbContext.ItemNames?.Take(10)?.ToArray();
+            }
+            else
+            {
+                itemNames = this.dbContext.ItemNames?.Where(i => i.Name.Contains(pattern))?.Take(10)?.ToArray();
+            }
+            return Ok(itemNames);
+        }
+
+        [HttpPost]
+        [Route("items/names")]
         public IActionResult AddName([FromQuery] string itemType, [FromQuery] string itemName)
         {
             if (this.dbContext.ItemNames.FirstOrDefault(i => i.Name == itemName) != default)
@@ -37,7 +54,7 @@ namespace taleOfDungir.Controllers
             }
             this.dbContext.ItemNames.Add(new ItemName() { ItemType = newItemType, Name = itemName });
             this.dbContext.SaveChanges();
-            return Ok();
+            return Ok(new Response(Models.Response.Success, null));
         }
 
         [HttpDelete]
