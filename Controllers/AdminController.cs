@@ -68,7 +68,7 @@ namespace taleOfDungir.Controllers
             }
             this.dbContext.ItemNames.Remove(itemName);
             this.dbContext.SaveChanges();
-            return Ok();
+            return Ok(new Models.Response(Models.Response.Success, null));
         }
     }
 }

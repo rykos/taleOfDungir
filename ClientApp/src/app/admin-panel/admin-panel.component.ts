@@ -27,14 +27,11 @@ export class AdminPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let x = new Item();
-    x.id = 1;
-    x.itemType = ItemType.Finger;
-    x.level = 1;
-    x.name = "Itemek";
-    x.power = 1;
-    this.foundItems = [x, x, x, x];
-    console.log(this.createForm.get("itemName").errors);
+    console.log(ItemType[ItemType.Body]);
+    console.log(ItemType.Body);
+    this.httpClient.get<Item[]>(`${environment.apiUrl}/admin/items/names`).subscribe(x => {
+      this.foundItems = x;
+    });
   }
 
   public Changed(newValue) {
@@ -62,4 +59,18 @@ export class AdminPanelComponent implements OnInit {
     }
   }
 
+  Delete(id: number) {
+    this.httpClient.delete<ComResponse>(`${environment.apiUrl}/admin/items/names/${id}`).subscribe(x => {
+      if (x && x.type == "Success") {
+        let index = this.foundItems.findIndex(x => x.id === id);
+        if (index > -1) {
+          this.foundItems.splice(index, 1);
+        }
+      }
+    });
+  }
+
+  ItemTypeToString(id: number): string {
+    return ItemType[id];
+  }
 }

@@ -43,7 +43,7 @@
                         <label class="col-sm-3 col-form-label-lg">Search</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" placeholder="Item Name"
-                                (change)="SearchBoxChanged($event.target.value)">
+                                (change)="SearchBoxChanged($event.target.value)" (keydown.enter)="SearchBoxChanged($event.target.value)">
                         </div>
                     </div>
                 </div>
@@ -51,8 +51,8 @@
                     <div class="col">
                         <div class="row border" *ngFor="let foundItem of foundItems">
                             ID:{{foundItem.id}} Name:{{foundItem.name}}
-                            ItemType:{{foundItem.itemType}}
-                            <button style="background-color: red;">X</button>
+                            ItemType:{{ItemTypeToString(foundItem.itemType)}} 
+                            <button style="background-color: red;" (click)="Delete(foundItem.id)">X</button>
                         </div>
                     </div>
                 </div>
