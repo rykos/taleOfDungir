@@ -13,64 +13,19 @@ import { combineAll } from 'rxjs/operators';
   styleUrls: ['./admin-panel.component.css']
 })
 export class AdminPanelComponent implements OnInit {
-  itemTypes = Object.values(ItemType).filter(value => isNaN(Number(value)));
-  selectedItemType = this.itemTypes[0];
+  selected: string = "ItemNames";
 
-  foundItems: Item[] = [];
+  constructor() { }
+  ngOnInit() { }
 
-  createForm: FormGroup;
-  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient) {
-    this.createForm = this.formBuilder.group({
-      itemType: ['Trash', Validators.required],
-      itemName: ['', [Validators.required, Validators.minLength(3)]]
-    });
-  }
-
-  ngOnInit(): void {
-    console.log(ItemType[ItemType.Body]);
-    console.log(ItemType.Body);
-    this.httpClient.get<Item[]>(`${environment.apiUrl}/admin/items/names`).subscribe(x => {
-      this.foundItems = x;
-    });
-  }
-
-  public Changed(newValue) {
-    console.log(newValue);
-  }
-
-  SearchBoxChanged(value) {
-    let pattern = value ? `?pattern=${value}` : '';
-    this.httpClient.get<Item[]>(`${environment.apiUrl}/admin/items/names${pattern}`).subscribe(x => {
-      this.foundItems = x;
-    });
-  }
-
-  onSubmit(data) {
-    if (this.createForm.valid) {
-      let params = `?itemType=${this.createForm.value.itemType}&itemName=${this.createForm.value.itemName}`;
-      this.httpClient.post<ComResponse>(`${environment.apiUrl}/admin/items/names${params}`, null).subscribe(x => {
-        if (x && x.type === "Error") {
-          console.log(x.message);
-        }
-        else {
-          //Success
-        }
-      });
+  IsActive(name: string): boolean {
+    if (name.toLowerCase().replace(/\s/g, "") == this.selected.toLowerCase().replace(/\s/g, "")) {
+      return true;
     }
+    return false;
   }
 
-  Delete(id: number) {
-    this.httpClient.delete<ComResponse>(`${environment.apiUrl}/admin/items/names/${id}`).subscribe(x => {
-      if (x && x.type == "Success") {
-        let index = this.foundItems.findIndex(x => x.id === id);
-        if (index > -1) {
-          this.foundItems.splice(index, 1);
-        }
-      }
-    });
-  }
-
-  ItemTypeToString(id: number): string {
-    return ItemType[id];
+  MenuItemClick(elem: Element) {
+    this.selected = elem.innerHTML;
   }
 }

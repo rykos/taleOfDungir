@@ -2,61 +2,16 @@
     <!-- Menu -->
     <div class="col-3" style="min-width: 200px;">
         <div class="list-group">
-            <a class="list-group-item list-group-item-action active" style="cursor: pointer;">Item names</a>
+            <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
+                [ngClass]="{'active': IsActive('itemnames')}" style="cursor: pointer;">Item names</a>
+            <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
+                [ngClass]="{'active': IsActive('items')}" style="cursor: pointer;">Items</a>
         </div>
     </div>
 
     <!-- content -->
     <div class="col">
-        <div class="row">
-            <div class="col border">
-                <!-- create new -->
-                <div class="col">
-                    <h3>Create</h3>
-                </div>
-                <form [formGroup]="createForm" (ngSubmit)="onSubmit(createForm.value)">
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Item Type</label>
-                        <select formControlName="itemType" name="itemType" id="itemType" class="col-sm-9 form-control">
-                            <option *ngFor="let item of itemTypes">{{item}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Item Name</label>
-                        <div class="col-sm-9">
-                            <input formControlName="itemName" name="itemName" id="itemName" type="text" class="form-control" placeholder="Item Name">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary container-fluid">Create</button>
-                </form>
-                <div *ngIf="createForm.get('itemName').hasError('minlength') && createForm.get('itemName').invalid && (createForm.get('itemName').touched)">
-                    <div class="alert alert-danger" role="alert">
-                        Item name must be at least 3 characters
-                      </div>
-                </div>
-            </div>
-        </div>
-        <div class="row my-2">
-            <div class="col border">
-                <div class="row">
-                    <div class="form-group row w-100 m-2">
-                        <label class="col-sm-3 col-form-label-lg">Search</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="Item Name"
-                                (change)="SearchBoxChanged($event.target.value)" (keydown.enter)="SearchBoxChanged($event.target.value)">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="row border" *ngFor="let foundItem of foundItems">
-                            ID:{{foundItem.id}} Name:{{foundItem.name}}
-                            ItemType:{{ItemTypeToString(foundItem.itemType)}} 
-                            <button style="background-color: red;" (click)="Delete(foundItem.id)">X</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-ap-item-names *ngIf="IsActive('itemnames')"></app-ap-item-names>
+        <app-ap-items *ngIf="IsActive('items')"></app-ap-items>
     </div>
 </div>

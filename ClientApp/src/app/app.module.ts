@@ -14,6 +14,8 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { AccountComponent } from './account/account.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { ApItemNamesComponent } from './ap-item-names/ap-item-names.component';
+import { ApItemsComponent } from './ap-items/ap-items.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
     NavigationComponent,
     AccountComponent,
     ProfileComponent,
-    AdminPanelComponent
+    AdminPanelComponent,
+    ApItemNamesComponent,
+    ApItemsComponent
   ],
   imports: [
     BrowserModule,
