@@ -13,7 +13,7 @@ import { combineAll } from 'rxjs/operators';
   styleUrls: ['./admin-panel.component.css']
 })
 export class AdminPanelComponent implements OnInit {
-  selected: string = "ItemNames";
+  selected: string = "players";
 
   constructor() { }
   ngOnInit() { }

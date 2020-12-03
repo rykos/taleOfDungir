@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Collections;
+using Microsoft.EntityFrameworkCore;
 
 namespace taleOfDungir.Controllers
 {
@@ -18,6 +19,7 @@ namespace taleOfDungir.Controllers
     public class AdminController : ControllerBase
     {
         private readonly AppDbContext dbContext;
+
         public AdminController(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -69,6 +71,27 @@ namespace taleOfDungir.Controllers
             this.dbContext.ItemNames.Remove(itemName);
             this.dbContext.SaveChanges();
             return Ok(new Models.Response(Models.Response.Success, null));
+        }
+
+        [HttpGet]
+        [Route("players")]
+        public IActionResult GetPlayers()
+        {
+            object[] users = this.dbContext.Users?.Take(10).Select(u => new
+            {
+                u.UserName,
+                u.Email,
+                u.EmailConfirmed,
+                u.CharacterId
+            }).ToArray();
+            return Ok(users);
+        }
+
+        [HttpGet]
+        [Route("players/amount")]
+        public IActionResult GetPlayersCount()
+        {
+            return Ok(this.dbContext.Users.Count());
         }
     }
 }

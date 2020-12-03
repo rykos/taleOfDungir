@@ -14,15 +14,17 @@
             <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Item Name</label>
                 <div class="col-sm-9">
-                    <input formControlName="itemName" name="itemName" id="itemName" type="text" class="form-control" placeholder="Item Name">
+                    <input formControlName="itemName" name="itemName" id="itemName" type="text" class="form-control"
+                        placeholder="Item Name">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary container-fluid">Create</button>
         </form>
-        <div *ngIf="createForm.get('itemName').hasError('minlength') && createForm.get('itemName').invalid && (createForm.get('itemName').touched)">
+        <div
+            *ngIf="createForm.get('itemName').hasError('minlength') && createForm.get('itemName').invalid && (createForm.get('itemName').touched)">
             <div class="alert alert-danger" role="alert">
                 Item name must be at least 3 characters
-              </div>
+            </div>
         </div>
     </div>
 </div>
@@ -33,15 +35,17 @@
                 <label class="col-sm-3 col-form-label-lg">Search</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control" placeholder="Item Name"
-                        (change)="SearchBoxChanged($event.target.value)" (keydown.enter)="SearchBoxChanged($event.target.value)">
+                        (change)="SearchBoxChanged($event.target.value)"
+                        (keydown.enter)="SearchBoxChanged($event.target.value)">
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <div class="row border" *ngFor="let foundItem of foundItems">
+                <div class="row border" *ngFor="let foundItem of foundItems; index as i;"
+                    [ngClass]="{'list-group-item-dark': i%2==0}">
                     ID:{{foundItem.id}} Name:{{foundItem.name}}
-                    ItemType:{{ItemTypeToString(foundItem.itemType)}} 
+                    ItemType:{{ItemTypeToString(foundItem.itemType)}}
                     <button style="background-color: red;" (click)="Delete(foundItem.id)">X</button>
                 </div>
             </div>

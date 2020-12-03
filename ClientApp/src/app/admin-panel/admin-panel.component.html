@@ -6,6 +6,8 @@
                 [ngClass]="{'active': IsActive('itemnames')}" style="cursor: pointer;">Item names</a>
             <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
                 [ngClass]="{'active': IsActive('items')}" style="cursor: pointer;">Items</a>
+            <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
+                [ngClass]="{'active': IsActive('players')}" style="cursor: pointer;">Players</a>
         </div>
     </div>
 
@@ -13,5 +15,6 @@
     <div class="col">
         <app-ap-item-names *ngIf="IsActive('itemnames')"></app-ap-item-names>
         <app-ap-items *ngIf="IsActive('items')"></app-ap-items>
+        <app-ap-players *ngIf="IsActive('players')"></app-ap-players>
     </div>
 </div>
