@@ -17,6 +17,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { ApItemNamesComponent } from './ap-item-names/ap-item-names.component';
 import { ApItemsComponent } from './ap-items/ap-items.component';
 import { ApPlayersComponent } from './ap-players/ap-players.component';
+import { MissionsComponent } from './missions/missions.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ApPlayersComponent } from './ap-players/ap-players.component';
     AdminPanelComponent,
     ApItemNamesComponent,
     ApItemsComponent,
-    ApPlayersComponent
+    ApPlayersComponent,
+    MissionsComponent
   ],
   imports: [
     BrowserModule,

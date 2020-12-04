@@ -7,7 +7,7 @@ namespace taleOfDungir.Models
     public class Character
     {
         public Int64 CharacterId { get; set; }
-        
+
         public Int64 Gold { get; set; }
         public int Level { get; set; }
         public Int64 Exp { get; set; }
@@ -23,5 +23,7 @@ namespace taleOfDungir.Models
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+
+        public List<Mission> Missions { get; set; }
     }
 }

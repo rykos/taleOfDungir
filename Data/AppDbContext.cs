@@ -34,6 +34,12 @@ namespace taleOfDungir.Data
                 .WithOne(s => s.Character)
                 .HasForeignKey<Skills>(s => s.CharacterId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Character>()
+                .HasMany(c => c.Missions)
+                .WithOne(m => m.Character)
+                .HasForeignKey(m => m.CharacterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<Character> Characters { get; set; }//Player characters
@@ -41,5 +47,6 @@ namespace taleOfDungir.Data
         public DbSet<Item> Items { get; set; }//Generic Items
 
         public DbSet<ItemName> ItemNames { get; set; }//Table for item names with specific ItemType
+        public DbSet<Mission> Missions { get; set; }
     }
 }

@@ -7,9 +7,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
+  selected: string = "";
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  
+  IsActive(name: string): boolean {
+    if (name.toLowerCase().replace(/\s/g, "") == this.selected.toLowerCase().replace(/\s/g, "")) {
+      return true;
+    }
+    return false;
+  }
+
+  MenuItemClick(elem: Element) {
+    this.selected = elem.innerHTML;
   }
 
 }
