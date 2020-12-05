@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,30 @@ namespace taleOfDungir.Controllers
                 this.GenerateNewMissions(character);
             }
             return Ok(character.Missions.Select(m => new { m.Id, m.Name, m.Rarity, m.CharacterId, m.Duration }));
+        }
+
+        [HttpGet]
+        [Route("start/{id}")]
+        public IActionResult StartMission(Int64 id)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            Character character = this.dbContext.Users.Include(u => u.Character).ThenInclude(c => c.Missions).FirstOrDefault(u => u.Id == userId).Character;
+            Mission selectedMission;
+            //mission does not exist
+            if ((selectedMission = character.Missions.FirstOrDefault(m => m.Id == id)) == default)
+            {
+                return BadRequest();
+            }
+            //one mission is already started
+            if (character.Missions.FirstOrDefault(m => m.Started) != default)
+            {
+                return BadRequest();
+            }
+            dbContext.Update(selectedMission);
+            selectedMission.Started = true;
+            selectedMission.StartTime = DateTime.Now;
+            dbContext.SaveChanges();
+            return Ok();
         }
 
         private void GenerateNewMissions(Character character)
