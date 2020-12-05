@@ -26,6 +26,19 @@ namespace taleOfDungir.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             Character character = this.dbContext.Users.Include(u => u.Character).ThenInclude(c => c.Missions).FirstOrDefault(u => u.Id == userId).Character;
+            //Mission is already active
+            Mission activeMission;
+            if ((activeMission = character.Missions.FirstOrDefault(m => m.Started)) != default)
+            {
+                return Ok(new
+                {
+                    activeMission.Id,
+                    activeMission.Name,
+                    activeMission.Rarity,
+                    activeMission.CharacterId,
+                    activeMission.Duration
+                });
+            }
             if (character.Missions.Count < 3)
             {
                 this.GenerateNewMissions(character);
@@ -57,6 +70,39 @@ namespace taleOfDungir.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Route("active")]
+        public IActionResult GetActiveMission()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            Mission mission = this.dbContext.Users.Include(u => u.Character.Missions).FirstOrDefault(u => u.Id == userId).Character.Missions.FirstOrDefault(m => m.Started);
+            //No active mission
+            if (mission == default)
+            {
+                return Ok();
+            }
+            //Mission finished
+            else if (DateTime.Now > mission.StartTime.Value.AddSeconds(mission.Duration))
+            {
+                Character character = this.dbContext.Users.Include(u => u.Character.Missions).FirstOrDefault(u => u.Id == userId).Character;
+                this.GenerateNewMissions(character);
+                return Ok();
+            }
+            //Active mission
+            else
+            {
+                return Ok(new
+                {
+                    mission.Id,
+                    mission.Name,
+                    mission.Rarity,
+                    mission.Started,
+                    mission.StartTime,
+                    mission.Duration
+                });
+            }
+        }
+
         private void GenerateNewMissions(Character character)
         {
             this.dbContext.Update(character);
@@ -70,7 +116,7 @@ namespace taleOfDungir.Controllers
 
         private Mission NewMission(Character character)
         {
-            return new Mission() { Name = "Dung", CharacterId = character.CharacterId, Character = character, Rarity = RarityHelper.RandomRarity(), Duration = 100 };
+            return new Mission() { Name = "Dung", CharacterId = character.CharacterId, Character = character, Rarity = RarityHelper.RandomRarity(), Duration = 10 };
         }
     }
 }
