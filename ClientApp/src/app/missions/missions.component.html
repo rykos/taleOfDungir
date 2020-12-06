@@ -1,1 +1,10 @@
-<p>missions works!</p>
+<div *ngIf="availableMissions">
+    <div class="list-group">
+        <a class="list-group-item list-group-item-action" style="cursor: pointer;" *ngFor="let mission of availableMissions" (click)="Activate(mission.id)">
+            {{mission.name}} Duration: {{mission.duration}} Rarity:{{mission.rarity | rarity}}
+        </a>
+    </div>
+</div>
+<div *ngIf="activeMission">
+    Your mission will be finished in {{timeLeft}}
+</div>

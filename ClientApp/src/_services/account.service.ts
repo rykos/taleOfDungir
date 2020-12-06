@@ -26,4 +26,8 @@ export class AccountService {
   GetActiveMission(): Observable<Mission> {
     return this.httpClient.get<Mission>(`${environment.apiUrl}/missions/active`);
   }
+
+  StartMission(missionId: number): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/missions/start/${missionId}`);
+  }
 }

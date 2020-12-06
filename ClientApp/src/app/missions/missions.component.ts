@@ -10,15 +10,23 @@ import { Component, OnInit } from '@angular/core';
 export class MissionsComponent implements OnInit {
   availableMissions: Mission[];
   activeMission: Mission;
+  timeLeft;
 
   constructor(private accountService: AccountService) { }
 
   ngOnInit(): void {
+    let end;
+    if ((end = localStorage.getItem('missionEnd'))) {
+      console.log(new Date(JSON.parse(end)));
+      //this.timeLeft = ((new Date(JSON.parse(end)).getTime() - Date.now().valueOf()) / 1000);
+    }
+    this.Update();
+  }
+
+  Update() {
     this.accountService.GetMissions().subscribe(m => {
       if (!m) { }
       else if (m.length > 1) {
-        console.log("I should present you with those missions");
-        console.log(m);
         this.activeMission = null;
         this.availableMissions = m;
       }
@@ -26,14 +34,36 @@ export class MissionsComponent implements OnInit {
         //Mission is already active
         this.accountService.GetActiveMission().subscribe(m => {
           if (m) {
-            console.log("This is active mission");
-            console.log(m);
             this.availableMissions = null;
             this.activeMission = m;
+            let start = new Date(this.activeMission.startTime);
+            let end = new Date(start.getTime() + this.activeMission.duration * 1000);
+            localStorage.setItem('missionEnd', JSON.stringify(end));
+            this.timeLeft = ((end.getTime() - Date.now().valueOf()) / 1000);
+            this.timeLeft = Math.round(this.timeLeft);
+            let timer = setInterval(() => {
+              this.timeLeft = ((end.getTime() - Date.now().valueOf()) / 1000);
+              this.timeLeft = Math.round(this.timeLeft);
+              if (this.timeLeft <= 0) {
+                this.timeLeft = 0;
+                this.Update();
+                clearInterval(timer);
+              }
+            }, 1000);
+          }
+          else{
+            console.log("none received");
+            this.Update();
           }
         });
       }
     });
   }
 
+  Activate(id: number) {
+    console.log(`activating ${id}`);
+    this.accountService.StartMission(id).subscribe(x => {
+      this.Update();
+    });
+  }
 }
