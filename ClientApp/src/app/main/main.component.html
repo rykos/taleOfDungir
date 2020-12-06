@@ -3,7 +3,11 @@
     <div>
         <div class="list-group">
             <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
-                [ngClass]="{'active': IsActive('Missions')}" style="cursor: pointer;">Missions</a>
+                [ngClass]="{'active': IsActive('Missions')}" style="cursor: pointer;">Missions
+                <div *ngIf="staticAccountService.MissionTimeLeft" class="text-center">
+                    {{staticAccountService.MissionTimeLeft}}
+                </div>
+            </a>
             <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
                 [ngClass]="{'active': IsActive('Character')}" style="cursor: pointer;">Character</a>
         </div>

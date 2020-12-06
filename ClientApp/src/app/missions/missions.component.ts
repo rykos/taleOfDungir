@@ -11,15 +11,15 @@ export class MissionsComponent implements OnInit {
   availableMissions: Mission[];
   activeMission: Mission;
   timeLeft;
+  percentage?: number;
 
   constructor(private accountService: AccountService) { }
 
   ngOnInit(): void {
-    let end;
-    if ((end = localStorage.getItem('missionEnd'))) {
-      console.log(new Date(JSON.parse(end)));
-      //this.timeLeft = ((new Date(JSON.parse(end)).getTime() - Date.now().valueOf()) / 1000);
-    }
+    // let end;
+    // if ((end = localStorage.getItem('missionEnd'))) {
+    //   console.log(new Date(JSON.parse(end)));
+    // }
     this.Update();
   }
 
@@ -39,11 +39,9 @@ export class MissionsComponent implements OnInit {
             let start = new Date(this.activeMission.startTime);
             let end = new Date(start.getTime() + this.activeMission.duration * 1000);
             localStorage.setItem('missionEnd', JSON.stringify(end));
-            this.timeLeft = ((end.getTime() - Date.now().valueOf()) / 1000);
-            this.timeLeft = Math.round(this.timeLeft);
+            this.UpdateMissionTime(end);
             let timer = setInterval(() => {
-              this.timeLeft = ((end.getTime() - Date.now().valueOf()) / 1000);
-              this.timeLeft = Math.round(this.timeLeft);
+              this.UpdateMissionTime(end);
               if (this.timeLeft <= 0) {
                 this.timeLeft = 0;
                 this.Update();
@@ -51,8 +49,7 @@ export class MissionsComponent implements OnInit {
               }
             }, 1000);
           }
-          else{
-            console.log("none received");
+          else {
             this.Update();
           }
         });
@@ -60,8 +57,14 @@ export class MissionsComponent implements OnInit {
     });
   }
 
+  UpdateMissionTime(end) {
+    this.timeLeft = ((end.getTime() - Date.now().valueOf()) / 1000);
+    this.timeLeft = Math.round(this.timeLeft);
+    this.percentage = Math.round((1 - this.timeLeft / this.activeMission.duration) * 100);
+    AccountService.MissionTimeLeft = this.timeLeft;
+  }
+
   Activate(id: number) {
-    console.log(`activating ${id}`);
     this.accountService.StartMission(id).subscribe(x => {
       this.Update();
     });

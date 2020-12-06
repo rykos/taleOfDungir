@@ -1,3 +1,4 @@
+import { AccountService } from './../../_services/account.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -10,10 +11,9 @@ export class MainComponent implements OnInit {
   selected: string = "";
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
-  
+
   IsActive(name: string): boolean {
     if (name.toLowerCase().replace(/\s/g, "") == this.selected.toLowerCase().replace(/\s/g, "")) {
       return true;
@@ -22,7 +22,11 @@ export class MainComponent implements OnInit {
   }
 
   MenuItemClick(elem: Element) {
-    this.selected = elem.innerHTML;
+    this.selected = elem.textContent;
+  }
+
+  get staticAccountService() {
+    return AccountService;
   }
 
 }

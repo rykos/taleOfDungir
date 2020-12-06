@@ -10,6 +10,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AccountService {
+  public static MissionTimeLeft;
 
   constructor(private authenticationService: AuthenticationService, private httpClient: HttpClient) {
 
