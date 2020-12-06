@@ -1,3 +1,6 @@
+import { first } from 'rxjs/operators';
+import { WebVars } from '../_models/WebVars';
+import { Title } from '@angular/platform-browser';
 import { Mission } from './../_models/Mission';
 import { Character } from './../_models/Character';
 import { Observable } from 'rxjs';
@@ -11,9 +14,69 @@ import { Injectable } from '@angular/core';
 })
 export class AccountService {
   public static MissionTimeLeft;
+  public static MissionTimeLeftPercent;
+  public static availableMissions: Mission[];
+  public static activeMission: Mission;
 
-  constructor(private authenticationService: AuthenticationService, private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private titleService: Title) {
 
+  }
+
+  public UpdateMissions() {
+    this.GetMissions().subscribe(missions => {
+      if (!missions) { this.UpdateMissions(); }
+      else if (missions.length > 1) {
+        this.onMissionsSelect(missions);
+      }
+      else {
+        this.onMissionActive(missions[0]);
+      }
+    });
+  }
+
+  private UpdateMissionTime(end) {
+    if (AccountService.activeMission) {
+      AccountService.MissionTimeLeft = Math.round((end.getTime() - Date.now().valueOf()) / 1000);
+      AccountService.MissionTimeLeftPercent = Math.round((1 - AccountService.MissionTimeLeft / AccountService.activeMission.duration) * 100);
+    }
+    else {
+      AccountService.MissionTimeLeft = 0;
+    }
+    if (AccountService.MissionTimeLeft > 0) {
+      this.titleService.setTitle(`${WebVars.Title} (${AccountService.MissionTimeLeft}s)`);
+    }
+    else {
+      this.titleService.setTitle(WebVars.Title);
+    }
+  }
+
+  private onMissionActive(mission: Mission) {
+    //Mission is already active
+    this.GetActiveMission().subscribe(m => {
+      if (m) {
+        AccountService.availableMissions = null;
+        AccountService.activeMission = m;
+        let start = new Date(AccountService.activeMission.startTime);
+        let end = new Date(start.getTime() + AccountService.activeMission.duration * 1000);
+        this.UpdateMissionTime(end);
+        let timer = setInterval(() => {
+          this.UpdateMissionTime(end);
+          if (AccountService.MissionTimeLeft <= 0) {
+            AccountService.MissionTimeLeft = 0;
+            this.UpdateMissions();
+            clearInterval(timer);
+          }
+        }, 1000);
+      }
+      else {
+        this.UpdateMissions();
+      }
+    });
+  }
+
+  private onMissionsSelect(missions: Mission[]) {
+    AccountService.activeMission = null;
+    AccountService.availableMissions = missions;
   }
 
   Details(): Observable<Character> {

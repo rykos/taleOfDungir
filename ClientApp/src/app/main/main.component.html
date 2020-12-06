@@ -2,13 +2,13 @@
     <!-- Left Menu -->
     <div>
         <div class="list-group">
-            <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
+            <a class="list-group-item list-group-item-action" (click)="MenuItemClick('Missions')"
                 [ngClass]="{'active': IsActive('Missions')}" style="cursor: pointer;">Missions
                 <div *ngIf="staticAccountService.MissionTimeLeft" class="text-center">
                     {{staticAccountService.MissionTimeLeft}}
                 </div>
             </a>
-            <a class="list-group-item list-group-item-action" (click)="MenuItemClick($event.target)"
+            <a class="list-group-item list-group-item-action" (click)="MenuItemClick('Character')"
                 [ngClass]="{'active': IsActive('Character')}" style="cursor: pointer;">Character</a>
         </div>
     </div>

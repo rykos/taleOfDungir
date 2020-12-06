@@ -1,16 +1,16 @@
-<div *ngIf="availableMissions">
+<div *ngIf="AS.availableMissions">
     <div class="list-group">
         <a class="list-group-item list-group-item-action" style="cursor: pointer;"
-            *ngFor="let mission of availableMissions" (click)="Activate(mission.id)">
+            *ngFor="let mission of AS.availableMissions" (click)="Activate(mission.id)">
             {{mission.name}} Duration: {{mission.duration}} Rarity:{{mission.rarity | rarity}}
         </a>
     </div>
 </div>
-<div *ngIf="activeMission">
-    Your mission will be finished in {{timeLeft}}
+<div *ngIf="AS.activeMission">
+    Your mission will be finished in {{AS.MissionTimeLeft}}
 </div>
 
-<div class="progress" *ngIf="percentage !== null && percentage < 100">
-    <div class="progress-bar" role="progressbar" [style.width]="percentage + '%' " aria-valuenow="25"
-        aria-valuemin="0" aria-valuemax="100">{{percentage}}%</div>
+<div class="progress" *ngIf="AS.MissionTimeLeftPercent !== null && AS.MissionTimeLeftPercent < 100">
+    <div class="progress-bar" role="progressbar" [style.width]="AS.MissionTimeLeftPercent + '%' " aria-valuenow="25"
+        aria-valuemin="0" aria-valuemax="100">{{AS.MissionTimeLeftPercent}}%</div>
 </div>

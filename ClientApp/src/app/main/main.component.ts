@@ -21,8 +21,8 @@ export class MainComponent implements OnInit {
     return false;
   }
 
-  MenuItemClick(elem: Element) {
-    this.selected = elem.textContent;
+  MenuItemClick(name: string) {
+    this.selected = name;
   }
 
   get staticAccountService() {

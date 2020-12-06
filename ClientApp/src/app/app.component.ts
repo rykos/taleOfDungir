@@ -1,7 +1,5 @@
-import { AuthenticationService } from './../_services/authentication.service';
-import { User } from './../_models/User';
+import { AccountService } from './../_services/account.service';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +7,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Tale of Dungir';
+  public static title = 'Tale of Dungir';
+  public constructor(private accountService: AccountService) { 
+    accountService.UpdateMissions();
+  }
 }
