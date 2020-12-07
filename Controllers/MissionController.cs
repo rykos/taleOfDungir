@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -16,9 +17,11 @@ namespace taleOfDungir.Controllers
     public class MissionController : ControllerBase
     {
         private readonly AppDbContext dbContext;
-        public MissionController(AppDbContext dbContext)
+        private readonly CharacterHelperProvider characterHelper;
+        public MissionController(AppDbContext dbContext, CharacterHelperProvider characterHelper)
         {
             this.dbContext = dbContext;
+            this.characterHelper = characterHelper;
         }
 
         [HttpGet]
@@ -85,8 +88,9 @@ namespace taleOfDungir.Controllers
             else if (DateTime.Now > mission.StartTime.Value.AddSeconds(mission.Duration))
             {
                 Character character = this.dbContext.Users.Include(u => u.Character.Missions).FirstOrDefault(u => u.Id == userId).Character;
+                this.RewardCharacter(character, mission);
                 this.GenerateNewMissions(character);
-                return Ok();
+                return Ok(Fight(character));
             }
             //Active mission
             else
@@ -101,6 +105,29 @@ namespace taleOfDungir.Controllers
                     mission.Duration
                 });
             }
+        }
+
+        private void RewardCharacter(Character character, Mission mission)
+        {
+            this.characterHelper.AddExp(character, 50 * ((int)mission.Rarity + 1));
+        }
+
+        private List<FightTurn> Fight(Character character)
+        {
+            List<FightTurn> fightTurns = new List<FightTurn>();
+            Monster monster = new Monster() { Health = 50, Damage = 5 };
+            while (character.Health > 0 && monster.Health > 0)
+            {
+                monster.Health -= character.Damage;
+                fightTurns.Add(new FightTurn() { DamageDealt = character.Damage, PlayerAttack = true });
+                if (monster.Health <= 0)
+                    break;
+                character.Health -= monster.Damage;
+                fightTurns.Add(new FightTurn() { DamageDealt = monster.Damage, PlayerAttack = false });
+                if (character.Health <= 0)
+                    break;
+            }
+            return fightTurns;
         }
 
         private void GenerateNewMissions(Character character)

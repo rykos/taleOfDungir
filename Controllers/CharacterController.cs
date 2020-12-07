@@ -49,7 +49,6 @@ namespace taleOfDungir.Controllers
                     .ThenInclude(c => c.LifeSkills)
                 .Include(u => u.Character.Inventory)
                 .Where(u => u.Id == userId).Select(u => u.Character)).FirstOrDefault();
-            this.characterHelper.AddExp(character, 50);
 
             return Ok(new
             {

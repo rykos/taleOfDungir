@@ -1,5 +1,9 @@
 <div *ngIf="character">
     <p>level:{{character.level}}</p>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" [style.width]="(character.exp/character.reqExp)*100 + '%'" aria-valuenow="25" aria-valuemin="0"
+        aria-valuemax="100">{{(character.exp/character.reqExp) | percent}}</div>
+    </div>
     <p>exp:{{character.exp}}/{{character.reqExp}}</p>
     <p>gold:{{character.gold}}</p>
     <p>health:{{character.health}}</p>

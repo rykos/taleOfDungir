@@ -14,6 +14,7 @@ namespace taleOfDungir.Models
 
         //Stats, WORK_IN_PROGRESS
         public Int64 Health { get; set; }
+        public Int64 Damage { get; set; }
         //
 
         public List<Item> Inventory { get; set; }//Items in bag

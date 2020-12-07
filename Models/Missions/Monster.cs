@@ -1,3 +1,5 @@
+using System;
+
 namespace taleOfDungir.Models
 {
     public class Monster
@@ -5,6 +7,7 @@ namespace taleOfDungir.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
-        public int Health { get; set; }
+        public Int64 Health { get; set; }
+        public Int64 Damage { get; set; }
     }
 }
