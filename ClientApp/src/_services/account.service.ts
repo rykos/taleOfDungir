@@ -1,3 +1,4 @@
+import { FightTurn } from './../_models/FightTurn';
 import { first } from 'rxjs/operators';
 import { WebVars } from '../_models/WebVars';
 import { Title } from '@angular/platform-browser';
@@ -8,6 +9,7 @@ import { environment } from './../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { typeofExpr } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -53,9 +55,9 @@ export class AccountService {
   private onMissionActive(mission: Mission) {
     //Mission is already active
     this.GetActiveMission().subscribe(m => {
-      if (m) {
+      if ((m as Mission).name) {
         AccountService.availableMissions = null;
-        AccountService.activeMission = m;
+        AccountService.activeMission = <Mission>m;
         let start = new Date(AccountService.activeMission.startTime);
         let end = new Date(start.getTime() + AccountService.activeMission.duration * 1000);
         this.UpdateMissionTime(end);
@@ -67,6 +69,10 @@ export class AccountService {
             clearInterval(timer);
           }
         }, 1000);
+      }
+      else if(Array.isArray(m) && (m[0] as FightTurn).damageDealt != null){
+        console.log(<FightTurn[]>m);
+        this.UpdateMissions();
       }
       else {
         this.UpdateMissions();
@@ -87,8 +93,8 @@ export class AccountService {
     return this.httpClient.get<Mission[]>(`${environment.apiUrl}/missions`);
   }
 
-  GetActiveMission(): Observable<Mission> {
-    return this.httpClient.get<Mission>(`${environment.apiUrl}/missions/active`);
+  GetActiveMission(): Observable<Mission | FightTurn[]> {
+    return this.httpClient.get<Mission | FightTurn[]>(`${environment.apiUrl}/missions/active`);
   }
 
   StartMission(missionId: number): Observable<any> {

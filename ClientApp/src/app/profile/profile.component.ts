@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit {
   character: Character;
   constructor(private authenticationService: AuthenticationService, private accountService: AccountService, private httpClient: HttpClient) {
     this.user = authenticationService.currentUserValue;
-    accountService.Details().subscribe(x => { this.character = x; console.log(x); console.log(this.character); });
+    accountService.Details().subscribe(x => { this.character = x; });
   }
 
   ngOnInit(): void {
