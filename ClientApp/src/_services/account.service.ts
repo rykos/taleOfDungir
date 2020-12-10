@@ -4,11 +4,11 @@ import { WebVars } from '../_models/WebVars';
 import { Title } from '@angular/platform-browser';
 import { Mission } from './../_models/Mission';
 import { Character } from './../_models/Character';
-import { Observable } from 'rxjs';
+import { observable, Observable, of, BehaviorSubject } from 'rxjs';
 import { environment } from './../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { typeofExpr } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
@@ -19,9 +19,12 @@ export class AccountService {
   public static MissionTimeLeftPercent;
   public static availableMissions: Mission[];
   public static activeMission: Mission;
+  public static fight: FightTurn[];
+  //
+  public currentFightSubject: BehaviorSubject<FightTurn[]>;
 
   constructor(private httpClient: HttpClient, private titleService: Title) {
-
+    this.currentFightSubject = new BehaviorSubject<FightTurn[]>(AccountService.fight);
   }
 
   public UpdateMissions() {
@@ -31,7 +34,7 @@ export class AccountService {
         this.onMissionsSelect(missions);
       }
       else {
-        this.onMissionActive(missions[0]);
+        this.onMissionActive();
       }
     });
   }
@@ -52,7 +55,7 @@ export class AccountService {
     }
   }
 
-  private onMissionActive(mission: Mission) {
+  private onMissionActive() {
     //Mission is already active
     this.GetActiveMission().subscribe(m => {
       if ((m as Mission).name) {
@@ -70,9 +73,8 @@ export class AccountService {
           }
         }, 1000);
       }
-      else if(Array.isArray(m) && (m[0] as FightTurn).damageDealt != null){
-        console.log(<FightTurn[]>m);
-        this.UpdateMissions();
+      else if (Array.isArray(m) && (m[0] as FightTurn).damageDealt != null) {
+        this.onMissionFinished(<FightTurn[]>m);
       }
       else {
         this.UpdateMissions();
@@ -83,6 +85,11 @@ export class AccountService {
   private onMissionsSelect(missions: Mission[]) {
     AccountService.activeMission = null;
     AccountService.availableMissions = missions;
+  }
+
+  private onMissionFinished(fight: FightTurn[]) {
+    AccountService.fight = fight;
+    this.currentFightSubject.next(fight);
   }
 
   Details(): Observable<Character> {
