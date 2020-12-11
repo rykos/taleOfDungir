@@ -1,4 +1,4 @@
-import { FightTurn } from './../_models/FightTurn';
+import { Fight } from './../_models/Fight';
 import { first } from 'rxjs/operators';
 import { WebVars } from '../_models/WebVars';
 import { Title } from '@angular/platform-browser';
@@ -8,8 +8,7 @@ import { observable, Observable, of, BehaviorSubject } from 'rxjs';
 import { environment } from './../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { typeofExpr } from '@angular/compiler/src/output/output_ast';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +18,12 @@ export class AccountService {
   public static MissionTimeLeftPercent;
   public static availableMissions: Mission[];
   public static activeMission: Mission;
-  public static fight: FightTurn[];
+  public static fight: Fight;
   //
-  public currentFightSubject: BehaviorSubject<FightTurn[]>;
+  public currentFightSubject: BehaviorSubject<Fight>;
 
   constructor(private httpClient: HttpClient, private titleService: Title) {
-    this.currentFightSubject = new BehaviorSubject<FightTurn[]>(AccountService.fight);
+    this.currentFightSubject = new BehaviorSubject<Fight>(AccountService.fight);
   }
 
   public UpdateMissions() {
@@ -73,8 +72,8 @@ export class AccountService {
           }
         }, 1000);
       }
-      else if (Array.isArray(m) && (m[0] as FightTurn).damageDealt != null) {
-        this.onMissionFinished(<FightTurn[]>m);
+      else if (m && (m as Fight).turns) {
+        this.onMissionFinished(<Fight>m);
       }
       else {
         this.UpdateMissions();
@@ -87,7 +86,7 @@ export class AccountService {
     AccountService.availableMissions = missions;
   }
 
-  private onMissionFinished(fight: FightTurn[]) {
+  private onMissionFinished(fight: Fight) {
     AccountService.fight = fight;
     this.currentFightSubject.next(fight);
   }
@@ -100,8 +99,8 @@ export class AccountService {
     return this.httpClient.get<Mission[]>(`${environment.apiUrl}/missions`);
   }
 
-  GetActiveMission(): Observable<Mission | FightTurn[]> {
-    return this.httpClient.get<Mission | FightTurn[]>(`${environment.apiUrl}/missions/active`);
+  GetActiveMission(): Observable<Mission | Fight> {
+    return this.httpClient.get<Mission | Fight>(`${environment.apiUrl}/missions/active`);
   }
 
   StartMission(missionId: number): Observable<any> {

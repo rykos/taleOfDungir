@@ -112,7 +112,7 @@ namespace taleOfDungir.Controllers
             this.characterHelper.AddExp(character, 50 * ((int)mission.Rarity + 1));
         }
 
-        private List<FightTurn> Fight(Character character)
+        private object Fight(Character character)
         {
             List<FightTurn> fightTurns = new List<FightTurn>();
             Monster monster = new Monster() { Health = 50, Damage = 5 };
@@ -127,7 +127,15 @@ namespace taleOfDungir.Controllers
                 if (character.Health <= 0)
                     break;
             }
-            return fightTurns;
+            return new
+            {
+                turns = fightTurns,
+                player = new
+                {
+                    health = character.Health
+                },
+                enemy = monster
+            };
         }
 
         private void GenerateNewMissions(Character character)
