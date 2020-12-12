@@ -1,10 +1,12 @@
-<div *ngIf="AS.fight">
-    <div *ngFor="let turn of AS.fight">
-        turn.damageDealt
+<div *ngIf="fight">
+    <div *ngFor="let turn of fight.turns">
+        <label *ngIf="turn.playerAttack">Player:</label>
+        <label *ngIf="!turn.playerAttack">Enemy:</label>
+        {{turn.damageDealt}}
     </div>
     <button class="button" (click)="FinishMission()">Finish</button>
 </div>
-<div *ngIf="!AS.fight">
+<div *ngIf="!fight">
     <div *ngIf="AS.availableMissions">
         <div class="list-group">
             <a class="list-group-item list-group-item-action" style="cursor: pointer;"

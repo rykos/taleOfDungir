@@ -88,9 +88,7 @@ namespace taleOfDungir.Controllers
             else if (DateTime.Now > mission.StartTime.Value.AddSeconds(mission.Duration))
             {
                 Character character = this.dbContext.Users.Include(u => u.Character.Missions).FirstOrDefault(u => u.Id == userId).Character;
-                this.RewardCharacter(character, mission);
-                this.GenerateNewMissions(character);
-                return Ok(Fight(character));
+                return this.MissionFinished(mission, character);
             }
             //Active mission
             else
@@ -105,6 +103,23 @@ namespace taleOfDungir.Controllers
                     mission.Duration
                 });
             }
+        }
+
+        private IActionResult MissionFinished(Mission mission, Character character)
+        {
+            this.CloseMission(mission, character);
+            if (mission.Events != default)
+            {
+                MissionSkillReq missionSkillReq = SystemHelper.Deserialize<MissionSkillReq>(mission.Events);
+                return Ok(this.Event(mission, missionSkillReq));
+            }
+            return Ok(Fight(character));
+        }
+
+        private void CloseMission(Mission mission, Character character)
+        {
+            this.RewardCharacter(character, mission);
+            this.GenerateNewMissions(character);
         }
 
         private void RewardCharacter(Character character, Mission mission)
@@ -138,6 +153,18 @@ namespace taleOfDungir.Controllers
             };
         }
 
+        //Event occured, send it to client
+        private object Event(Mission mission, MissionSkillReq missionSkillReq)
+        {
+            Event e = this.dbContext.Events.FirstOrDefault(e => e.Id == missionSkillReq.EventId);
+            if (e == default)
+            {
+                mission.Events = null;
+                return new Response(taleOfDungir.Models.Response.Error, "event does not exist");
+            }
+            return missionSkillReq;
+        }
+
         private void GenerateNewMissions(Character character)
         {
             this.dbContext.Update(character);
@@ -151,7 +178,24 @@ namespace taleOfDungir.Controllers
 
         private Mission NewMission(Character character)
         {
-            return new Mission() { Name = "Dung", CharacterId = character.CharacterId, Character = character, Rarity = RarityHelper.RandomRarity(), Duration = 10 };
+            int amount = this.dbContext.Events.Count();
+            int x = new Random().Next(0, amount);
+            byte[] events = null;
+            Int64 eventId = this.dbContext.Events.Select(e => e.Id).Skip(x).FirstOrDefault();
+            if (eventId != default)
+            {
+                MissionSkillReq msr = new MissionSkillReq() { EventId = eventId, Value = 1 };
+                events = SystemHelper.Serialize(msr);
+            }
+            return new Mission()
+            {
+                Name = "Dung " + new Guid().ToString().Take(4),
+                CharacterId = character.CharacterId,
+                Character = character,
+                Rarity = RarityHelper.RandomRarity(),
+                Duration = 10,
+                Events = events
+            };
         }
     }
 }

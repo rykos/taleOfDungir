@@ -24,5 +24,7 @@ namespace taleOfDungir.Models
         public bool Started { get; set; } = false;
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? StartTime { get; set; } = null;
+        
+        public byte[] Events { get; set; }
     }
 }

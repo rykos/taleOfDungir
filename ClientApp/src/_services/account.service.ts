@@ -18,12 +18,12 @@ export class AccountService {
   public static MissionTimeLeftPercent;
   public static availableMissions: Mission[];
   public static activeMission: Mission;
-  public static fight: Fight;
+  // public static fight: Fight;
   //
   public currentFightSubject: BehaviorSubject<Fight>;
 
   constructor(private httpClient: HttpClient, private titleService: Title) {
-    this.currentFightSubject = new BehaviorSubject<Fight>(AccountService.fight);
+    this.currentFightSubject = new BehaviorSubject<Fight>(null);
   }
 
   public UpdateMissions() {
@@ -87,7 +87,7 @@ export class AccountService {
   }
 
   private onMissionFinished(fight: Fight) {
-    AccountService.fight = fight;
+    // AccountService.fight = fight;
     this.currentFightSubject.next(fight);
   }
 

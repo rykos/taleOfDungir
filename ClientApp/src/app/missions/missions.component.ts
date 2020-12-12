@@ -16,7 +16,7 @@ export class MissionsComponent implements OnInit {
 
   constructor(private accountService: AccountService) {
     this.accountService.currentFightSubject.subscribe((val) => {
-      this.fight = this.fight;
+      this.fight = val;
     });
   }
 

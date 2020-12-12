@@ -40,13 +40,21 @@ namespace taleOfDungir.Data
                 .WithOne(m => m.Character)
                 .HasForeignKey(m => m.CharacterId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Event>()
+                .HasMany(e => e.EventActions)
+                .WithOne()
+                .HasForeignKey(ea => ea.EventId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<Character> Characters { get; set; }//Player characters
         //
         public DbSet<Item> Items { get; set; }//Generic Items
-
         public DbSet<ItemName> ItemNames { get; set; }//Table for item names with specific ItemType
+        //
         public DbSet<Mission> Missions { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<EventAction> EventActions { get; set; }
     }
 }
