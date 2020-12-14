@@ -1,3 +1,5 @@
+import { MissionEvents } from './../_models/MissionEvents';
+import { MissionEvent } from './../_models/MissionEvent';
 import { Fight } from './../_models/Fight';
 import { first } from 'rxjs/operators';
 import { WebVars } from '../_models/WebVars';
@@ -32,6 +34,7 @@ export class AccountService {
       else if (missions.length > 1) {
         this.onMissionsSelect(missions);
       }
+
       else {
         this.onMissionActive();
       }
@@ -75,7 +78,11 @@ export class AccountService {
       else if (m && (m as Fight).turns) {
         this.onMissionFinished(<Fight>m);
       }
+      else if(m && (m as MissionEvents).event){
+        
+      }
       else {
+        console.warn("unknown response");
         this.UpdateMissions();
       }
     });
@@ -99,8 +106,8 @@ export class AccountService {
     return this.httpClient.get<Mission[]>(`${environment.apiUrl}/missions`);
   }
 
-  GetActiveMission(): Observable<Mission | Fight> {
-    return this.httpClient.get<Mission | Fight>(`${environment.apiUrl}/missions/active`);
+  GetActiveMission(): Observable<Mission | Fight | MissionEvents> {
+    return this.httpClient.get<Mission | Fight | MissionEvents>(`${environment.apiUrl}/missions/active`);
   }
 
   StartMission(missionId: number): Observable<any> {

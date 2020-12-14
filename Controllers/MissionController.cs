@@ -105,15 +105,87 @@ namespace taleOfDungir.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("active/event/{eventActionId}")]
+        public IActionResult MissionEventAction(Int64 eventActionId)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            Mission mission = this.dbContext.Users.Include(u => u.Character.Missions)
+                .ThenInclude(m => m.Events).FirstOrDefault(u => u.Id == userId).Character.Missions.FirstOrDefault(m => m.Started);
+            if (mission == default)
+            {
+                return BadRequest();
+            }
+            MissionSkillReq msr = SystemHelper.Deserialize<MissionSkillReq>(mission.Events);
+            if (msr.Equals(default))
+            {
+                return BadRequest();
+            }
+            Event e = this.dbContext.Events.Include(e => e.EventActions).FirstOrDefault(e => e.Id == msr.EventId);
+            EventAction ea = e.EventActions.FirstOrDefault(ea => ea.Id == eventActionId);
+            Character character = this.dbContext.Characters.Include(c => c.Skills).FirstOrDefault(c => c.ApplicationUserId == userId);
+            this.dbContext.Update(mission);
+            mission.EventsFinished = true;
+            this.dbContext.SaveChanges();
+            //Success
+            if (CheckStat(character, ea, msr.Value))
+            {
+                this.MissionFinished(mission, character);
+                return Ok(new Response(Models.Response.Success, "Event finished with a success"));
+            }
+            //Failure
+            else
+            {
+                return this.MissionFinished(mission, character);
+            }
+        }
+
+        private bool CheckStat(Character character, EventAction eventAction, int value)
+        {
+            if (eventAction.SkillName == "Vitality")
+            {
+                return Compare(character.Skills.Vitality, value);
+            }
+            else if (eventAction.SkillName == "Vitality")
+            {
+                return Compare(character.Skills.Vitality, value);
+            }
+            else if (eventAction.SkillName == "Luck")
+            {
+                return Compare(character.Skills.Vitality, value);
+            }
+            else if (eventAction.SkillName == "Perception")
+            {
+                return Compare(character.Skills.Vitality, value);
+            }
+            return false;
+        }
+
+        private bool Compare(int skillValue, int value)
+        {
+            if (skillValue >= value)
+            {
+                return true;
+            }
+            return false;
+        }
+
         private IActionResult MissionFinished(Mission mission, Character character)
         {
-            this.CloseMission(mission, character);
-            if (mission.Events != default)
+            //No event
+            if (mission.Events == default)
+            {
+                this.CloseMission(mission, character);
+                return Ok(this.Fight(character));
+            }
+            //Event not finished
+            else if (mission.Events != default && mission.EventsFinished == false)
             {
                 MissionSkillReq missionSkillReq = SystemHelper.Deserialize<MissionSkillReq>(mission.Events);
                 return Ok(this.Event(mission, missionSkillReq));
             }
-            return Ok(Fight(character));
+            this.CloseMission(mission, character);
+            return Ok();
         }
 
         private void CloseMission(Mission mission, Character character)
@@ -144,6 +216,7 @@ namespace taleOfDungir.Controllers
             }
             return new
             {
+                won = (character.Health > 0),
                 turns = fightTurns,
                 player = new
                 {
@@ -156,13 +229,17 @@ namespace taleOfDungir.Controllers
         //Event occured, send it to client
         private object Event(Mission mission, MissionSkillReq missionSkillReq)
         {
-            Event e = this.dbContext.Events.FirstOrDefault(e => e.Id == missionSkillReq.EventId);
+            Event e = this.dbContext.Events.Include(e => e.EventActions).FirstOrDefault(e => e.Id == missionSkillReq.EventId);
             if (e == default)
             {
                 mission.Events = null;
                 return new Response(taleOfDungir.Models.Response.Error, "event does not exist");
             }
-            return missionSkillReq;
+            return new
+            {
+                Event = e,
+                Msr = missionSkillReq
+            };
         }
 
         private void GenerateNewMissions(Character character)
@@ -189,7 +266,7 @@ namespace taleOfDungir.Controllers
             }
             return new Mission()
             {
-                Name = "Dung " + new Guid().ToString().Take(4),
+                Name = "Dung " + Guid.NewGuid().ToString().Substring(0, 4),
                 CharacterId = character.CharacterId,
                 Character = character,
                 Rarity = RarityHelper.RandomRarity(),
