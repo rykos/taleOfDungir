@@ -20,12 +20,12 @@ export class AccountService {
   public static MissionTimeLeftPercent;
   public static availableMissions: Mission[];
   public static activeMission: Mission;
-  // public static fight: Fight;
-  //
+  public currentMissionEvents: BehaviorSubject<MissionEvents>;
   public currentFightSubject: BehaviorSubject<Fight>;
 
   constructor(private httpClient: HttpClient, private titleService: Title) {
     this.currentFightSubject = new BehaviorSubject<Fight>(null);
+    this.currentMissionEvents = new BehaviorSubject<MissionEvents>(null);
   }
 
   public UpdateMissions() {
@@ -34,7 +34,6 @@ export class AccountService {
       else if (missions.length > 1) {
         this.onMissionsSelect(missions);
       }
-
       else {
         this.onMissionActive();
       }
@@ -78,8 +77,8 @@ export class AccountService {
       else if (m && (m as Fight).turns) {
         this.onMissionFinished(<Fight>m);
       }
-      else if(m && (m as MissionEvents).event){
-        
+      else if (m && (m as MissionEvents).event) {
+        this.currentMissionEvents.next(<MissionEvents>m);
       }
       else {
         console.warn("unknown response");

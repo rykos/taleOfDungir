@@ -19,6 +19,7 @@ import { ApItemsComponent } from './ap-items/ap-items.component';
 import { ApPlayersComponent } from './ap-players/ap-players.component';
 import { MissionsComponent } from './missions/missions.component';
 import { RarityPipe } from './rarity.pipe';
+import { MissionEventComponent } from './mission-event/mission-event.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { RarityPipe } from './rarity.pipe';
     ApItemsComponent,
     ApPlayersComponent,
     MissionsComponent,
-    RarityPipe
+    RarityPipe,
+    MissionEventComponent
   ],
   imports: [
     BrowserModule,

@@ -1,3 +1,6 @@
+<div *ngIf="missionEvents">
+    <app-mission-event [missionEvents]="missionEvents"></app-mission-event>
+</div>
 <div *ngIf="fight">
     <div *ngFor="let turn of fight.turns">
         <label *ngIf="turn.playerAttack">Player:</label>
