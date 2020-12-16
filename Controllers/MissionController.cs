@@ -128,7 +128,7 @@ namespace taleOfDungir.Controllers
             mission.EventsFinished = true;
             this.dbContext.SaveChanges();
             //Success
-            if (CheckStat(character, ea, msr.Value))
+            if (CheckStat(character, ea, msr.EventActionIdToValue[eventActionId]))
             {
                 this.MissionFinished(mission, character);
                 return Ok(new Response(Models.Response.Success, "Event finished with a success"));
@@ -238,7 +238,11 @@ namespace taleOfDungir.Controllers
             return new
             {
                 Event = e,
-                Msr = missionSkillReq
+                Msr = new
+                {
+                    missionSkillReq.EventId,
+                    EventActionIdToValue = missionSkillReq.EventActionIdToValue.ToArray()
+                }
             };
         }
 
@@ -258,10 +262,20 @@ namespace taleOfDungir.Controllers
             int amount = this.dbContext.Events.Count();
             int x = new Random().Next(0, amount);
             byte[] events = null;
-            Int64 eventId = this.dbContext.Events.Select(e => e.Id).Skip(x).FirstOrDefault();
-            if (eventId != default)
+            Event e = this.dbContext.Events.Include(e => e.EventActions).Skip(x).FirstOrDefault();
+            if (e.Id != default)
             {
-                MissionSkillReq msr = new MissionSkillReq() { EventId = eventId, Value = 1 };
+                int eventActionCount = e.EventActions.Count();
+                Dictionary<Int64, int> values = new Dictionary<Int64, int>();
+                for (int i = 0; i < eventActionCount; i++)
+                {
+                    values.Add(e.EventActions[i].Id, i + 10);
+                }
+                MissionSkillReq msr = new MissionSkillReq()
+                {
+                    EventId = e.Id,
+                    EventActionIdToValue = values
+                };
                 events = SystemHelper.Serialize(msr);
             }
             return new Mission()

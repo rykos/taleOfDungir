@@ -16,4 +16,11 @@ export class MissionEventComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  EventActionClick(eventActionId: number) {
+    console.log(eventActionId);
+  }
+
+  eventActionIdToValue(eventActionId: number): number {
+    return this.missionEvents.msr.eventActionIdToValue.find(x => x.Key == eventActionId).Value;
+  }
 }
