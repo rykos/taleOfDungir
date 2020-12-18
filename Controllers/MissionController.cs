@@ -88,7 +88,7 @@ namespace taleOfDungir.Controllers
             else if (DateTime.Now > mission.StartTime.Value.AddSeconds(mission.Duration))
             {
                 Character character = this.dbContext.Users.Include(u => u.Character.Missions).FirstOrDefault(u => u.Id == userId).Character;
-                return this.MissionFinished(mission, character);
+                return Ok(this.MissionFinished(mission, character));
             }
             //Active mission
             else
@@ -110,8 +110,10 @@ namespace taleOfDungir.Controllers
         public IActionResult MissionEventAction(Int64 eventActionId)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            Mission mission = this.dbContext.Users.Include(u => u.Character.Missions)
-                .ThenInclude(m => m.Events).FirstOrDefault(u => u.Id == userId).Character.Missions.FirstOrDefault(m => m.Started);
+            // Mission mission = this.dbContext.Users.Include(u => u.Character).ThenInclude(c => c.Missions)
+            //     .ThenInclude(m => m.Events).FirstOrDefault(u => u.Id == userId).Character.Missions.FirstOrDefault(m => m.Started);
+            Int64 charactedId = this.dbContext.Users.Select(u => new { u.Id, u.CharacterId }).FirstOrDefault(u => u.Id == userId).CharacterId;
+            Mission mission = this.dbContext.Missions.FirstOrDefault(m => m.CharacterId == charactedId && m.Started);
             if (mission == default)
             {
                 return BadRequest();
@@ -130,13 +132,20 @@ namespace taleOfDungir.Controllers
             //Success
             if (CheckStat(character, ea, msr.EventActionIdToValue[eventActionId]))
             {
-                this.MissionFinished(mission, character);
-                return Ok(new Response(Models.Response.Success, "Event finished with a success"));
+                return Ok(new MissionResoult("finished", new
+                {
+                    won = true,
+                    reward = this.MissionFinished(mission, character, true)
+                }));
             }
             //Failure
             else
             {
-                return this.MissionFinished(mission, character);
+                return Ok(new MissionResoult("finished", new
+                {
+                    won = false,
+                    reward = this.MissionFinished(mission, character, false)
+                }));
             }
         }
 
@@ -146,17 +155,17 @@ namespace taleOfDungir.Controllers
             {
                 return Compare(character.Skills.Vitality, value);
             }
-            else if (eventAction.SkillName == "Vitality")
+            else if (eventAction.SkillName == "Combat")
             {
-                return Compare(character.Skills.Vitality, value);
+                return Compare(character.Skills.Combat, value);
             }
             else if (eventAction.SkillName == "Luck")
             {
-                return Compare(character.Skills.Vitality, value);
+                return Compare(character.Skills.Luck, value);
             }
             else if (eventAction.SkillName == "Perception")
             {
-                return Compare(character.Skills.Vitality, value);
+                return Compare(character.Skills.Perception, value);
             }
             return false;
         }
@@ -170,33 +179,41 @@ namespace taleOfDungir.Controllers
             return false;
         }
 
-        private IActionResult MissionFinished(Mission mission, Character character)
+        private object MissionFinished(Mission mission, Character character, bool won = false)
         {
             //No event
             if (mission.Events == default)
             {
                 this.CloseMission(mission, character);
-                return Ok(this.Fight(character));
+                return new MissionResoult("fight", this.Fight(character));
             }
             //Event not finished
             else if (mission.Events != default && mission.EventsFinished == false)
             {
                 MissionSkillReq missionSkillReq = SystemHelper.Deserialize<MissionSkillReq>(mission.Events);
-                return Ok(this.Event(mission, missionSkillReq));
+                return new MissionResoult("event", this.Event(mission, missionSkillReq));
             }
+            object rewardValue = this.RewardCharacter(character, mission);
             this.CloseMission(mission, character);
-            return Ok();
+            return rewardValue;
         }
 
         private void CloseMission(Mission mission, Character character)
         {
-            this.RewardCharacter(character, mission);
             this.GenerateNewMissions(character);
         }
 
-        private void RewardCharacter(Character character, Mission mission)
+        private object RewardCharacter(Character character, Mission mission)
         {
-            this.characterHelper.AddExp(character, 50 * ((int)mission.Rarity + 1));
+            Int64 expAmount = 50 * ((int)mission.Rarity + 1);
+            Int64 goldAmount = new Random().Next(0, 10);
+            this.characterHelper.AddExp(character, expAmount);
+            this.characterHelper.AddGold(character, goldAmount);
+            return new
+            {
+                expAmount,
+                goldAmount
+            };
         }
 
         private object Fight(Character character)
@@ -248,6 +265,7 @@ namespace taleOfDungir.Controllers
 
         private void GenerateNewMissions(Character character)
         {
+            character.Missions = this.dbContext.Missions.Where(m => m.CharacterId == character.CharacterId).ToList();
             this.dbContext.Update(character);
             character.Missions.Clear();
             for (int i = 0; i < 3; i++)

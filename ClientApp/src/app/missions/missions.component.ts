@@ -6,6 +6,7 @@ import { Mission } from './../../_models/Mission';
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, observable, Observable, Subscription } from 'rxjs';
+import { isFormattedError } from '@angular/compiler';
 
 @Component({
   selector: 'app-missions',
@@ -25,7 +26,6 @@ export class MissionsComponent implements OnInit, OnDestroy {
     });
     this.currentMissionEvents = this.accountService.currentMissionEvents.subscribe((val) => {
       this.missionEvents = val;
-      console.log(val);
     });
   }
 

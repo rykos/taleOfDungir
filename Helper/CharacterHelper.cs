@@ -28,6 +28,13 @@ namespace taleOfDungir.Helpers
             this.dbContext.SaveChanges();
         }
 
+        public void AddGold(Character character, long amount)
+        {
+            this.dbContext.Characters.Update(character);
+            character.Gold += amount;
+            this.dbContext.SaveChanges();
+        }
+
         public void TakeDamage(Character character, Int64 amount)
         {
             this.dbContext.Characters.Update(character);
@@ -43,5 +50,6 @@ namespace taleOfDungir.Helpers
     public interface CharacterHelperProvider
     {
         void AddExp(Character character, Int64 amount);
+        void AddGold(Character character, Int64 amount);
     }
 }

@@ -1,3 +1,4 @@
+import { AccountService } from './../../_services/account.service';
 import { MissionEvents } from './../../_models/MissionEvents';
 import { Component, Input, OnInit } from '@angular/core';
 
@@ -11,13 +12,15 @@ export class MissionEventComponent implements OnInit {
   @Input()
   missionEvents: MissionEvents;
 
-  constructor() { }
+  constructor(private accountService: AccountService) { }
 
   ngOnInit(): void {
   }
 
   EventActionClick(eventActionId: number) {
-    console.log(eventActionId);
+    this.accountService.PickMissionEventAction(eventActionId).subscribe(x => {
+      console.log(x);
+    });
   }
 
   eventActionIdToValue(eventActionId: number): number {

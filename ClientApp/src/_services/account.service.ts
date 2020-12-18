@@ -1,3 +1,4 @@
+import { MissionResoult } from './../_models/MissionResoult';
 import { MissionEvents } from './../_models/MissionEvents';
 import { MissionEvent } from './../_models/MissionEvent';
 import { Fight } from './../_models/Fight';
@@ -59,9 +60,9 @@ export class AccountService {
   private onMissionActive() {
     //Mission is already active
     this.GetActiveMission().subscribe(m => {
-      if ((m as Mission).name) {
+      if (m.state == "mission") {
         AccountService.availableMissions = null;
-        AccountService.activeMission = <Mission>m;
+        AccountService.activeMission = <Mission>m.value;
         let start = new Date(AccountService.activeMission.startTime);
         let end = new Date(start.getTime() + AccountService.activeMission.duration * 1000);
         this.UpdateMissionTime(end);
@@ -74,15 +75,15 @@ export class AccountService {
           }
         }, 1000);
       }
-      else if (m && (m as Fight).turns) {
-        this.onMissionFinished(<Fight>m);
+      else if (m.state == "fight") {
+        this.onMissionFinished(<Fight>m.value);
       }
-      else if (m && (m as MissionEvents).event) {
-        this.currentMissionEvents.next(<MissionEvents>m);
+      else if (m.state == "event") {
+        this.currentMissionEvents.next(<MissionEvents>m.value);
       }
       else {
         console.warn("unknown response");
-        this.UpdateMissions();
+        //this.UpdateMissions();
       }
     });
   }
@@ -105,11 +106,15 @@ export class AccountService {
     return this.httpClient.get<Mission[]>(`${environment.apiUrl}/missions`);
   }
 
-  GetActiveMission(): Observable<Mission | Fight | MissionEvents> {
-    return this.httpClient.get<Mission | Fight | MissionEvents>(`${environment.apiUrl}/missions/active`);
+  GetActiveMission(): Observable<MissionResoult> {
+    return this.httpClient.get<MissionResoult>(`${environment.apiUrl}/missions/active`);
   }
 
   StartMission(missionId: number): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}/missions/start/${missionId}`);
+  }
+
+  PickMissionEventAction(eventActionId: number): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/missions/active/event/${eventActionId}`);
   }
 }

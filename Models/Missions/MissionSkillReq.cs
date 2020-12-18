@@ -7,10 +7,6 @@ namespace taleOfDungir.Models
     public struct MissionSkillReq
     {
         public Int64 EventId { get; set; }
-        // /// <summary>
-        // /// Minimum required value
-        // /// </summary>
-        // public int[] Value { get; set; }
 
         public Dictionary<Int64, int> EventActionIdToValue { get; set; }
     }
