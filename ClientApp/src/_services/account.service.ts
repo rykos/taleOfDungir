@@ -1,3 +1,4 @@
+import { MissionFinishedObject } from './../_models/MissionFinishedObject';
 import { MissionResoult } from './../_models/MissionResoult';
 import { MissionEvents } from './../_models/MissionEvents';
 import { MissionEvent } from './../_models/MissionEvent';
@@ -23,6 +24,7 @@ export class AccountService {
   public static activeMission: Mission;
   public currentMissionEvents: BehaviorSubject<MissionEvents>;
   public currentFightSubject: BehaviorSubject<Fight>;
+  public currentMissionFinishedSubject: BehaviorSubject<MissionFinishedObject> = new BehaviorSubject<MissionFinishedObject>(null);
 
   constructor(private httpClient: HttpClient, private titleService: Title) {
     this.currentFightSubject = new BehaviorSubject<Fight>(null);
@@ -81,9 +83,13 @@ export class AccountService {
       else if (m.state == "event") {
         this.currentMissionEvents.next(<MissionEvents>m.value);
       }
+      else if (m.state == "finished") {
+        console.log("mission got finished");
+        console.log(m.value);
+      }
       else {
         console.warn("unknown response");
-        //this.UpdateMissions();
+        this.UpdateMissions();
       }
     });
   }
@@ -114,7 +120,7 @@ export class AccountService {
     return this.httpClient.get(`${environment.apiUrl}/missions/start/${missionId}`);
   }
 
-  PickMissionEventAction(eventActionId: number): Observable<any> {
-    return this.httpClient.get(`${environment.apiUrl}/missions/active/event/${eventActionId}`);
+  PickMissionEventAction(eventActionId: number): Observable<MissionResoult> {
+    return this.httpClient.get<MissionResoult>(`${environment.apiUrl}/missions/active/event/${eventActionId}`);
   }
 }

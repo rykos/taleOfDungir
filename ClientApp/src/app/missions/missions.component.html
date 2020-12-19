@@ -1,29 +1,37 @@
-<div *ngIf="missionEvents">
-    <app-mission-event [missionEvents]="missionEvents"></app-mission-event>
+<div *ngIf="missionFinished">
+    Missin finished <br>
+    exp +{{missionFinished.reward.expAmount}} <br>
+    gold +{{missionFinished.reward.goldAmount}} <br>
+    <button (click)="FinishMission()">Continue</button>
 </div>
-<div *ngIf="fight">
-    <div *ngFor="let turn of fight.turns">
-        <label *ngIf="turn.playerAttack">Player:</label>
-        <label *ngIf="!turn.playerAttack">Enemy:</label>
-        {{turn.damageDealt}}
+<div *ngIf="!missionFinished">
+    <div *ngIf="missionEvents">
+        <app-mission-event [missionEvents]="missionEvents"></app-mission-event>
     </div>
-    <button class="button" (click)="FinishMission()">Finish</button>
-</div>
-<div *ngIf="!fight">
-    <div *ngIf="AS.availableMissions">
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action" style="cursor: pointer;"
-                *ngFor="let mission of AS.availableMissions" (click)="Activate(mission.id)">
-                {{mission.name}} Duration: {{mission.duration}} Rarity:{{mission.rarity | rarity}}
-            </a>
+    <div *ngIf="fight">
+        <div *ngFor="let turn of fight.turns">
+            <label *ngIf="turn.playerAttack">Player:</label>
+            <label *ngIf="!turn.playerAttack">Enemy:</label>
+            {{turn.damageDealt}}
         </div>
+        <button class="button" (click)="FinishMission()">Finish</button>
     </div>
-    <div *ngIf="AS.activeMission">
-        Your mission will be finished in {{AS.MissionTimeLeft}}
-    </div>
+    <div *ngIf="!fight">
+        <div *ngIf="AS.availableMissions">
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action" style="cursor: pointer;"
+                    *ngFor="let mission of AS.availableMissions" (click)="Activate(mission.id)">
+                    {{mission.name}} Duration: {{mission.duration}} Rarity:{{mission.rarity | rarity}}
+                </a>
+            </div>
+        </div>
+        <div *ngIf="AS.activeMission && AS.MissionTimeLeft > 0">
+            Your mission will be finished in {{AS.MissionTimeLeft}}
+        </div>
 
-    <div class="progress" *ngIf="AS.MissionTimeLeftPercent !== null && AS.MissionTimeLeftPercent < 100">
-        <div class="progress-bar" role="progressbar" [style.width]="AS.MissionTimeLeftPercent + '%' " aria-valuenow="25"
-            aria-valuemin="0" aria-valuemax="100">{{AS.MissionTimeLeftPercent}}%</div>
+        <div class="progress" *ngIf="AS.MissionTimeLeftPercent !== null && AS.MissionTimeLeftPercent < 100">
+            <div class="progress-bar" role="progressbar" [style.width]="AS.MissionTimeLeftPercent + '%' "
+                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{AS.MissionTimeLeftPercent}}%</div>
+        </div>
     </div>
 </div>

@@ -93,7 +93,7 @@ namespace taleOfDungir.Controllers
             //Active mission
             else
             {
-                return Ok(new
+                return Ok(new MissionResoult("mission", new
                 {
                     mission.Id,
                     mission.Name,
@@ -101,7 +101,7 @@ namespace taleOfDungir.Controllers
                     mission.Started,
                     mission.StartTime,
                     mission.Duration
-                });
+                }));
             }
         }
 

@@ -1,3 +1,4 @@
+import { MissionFinishedObject } from './../../_models/MissionFinishedObject';
 import { AccountService } from './../../_services/account.service';
 import { MissionEvents } from './../../_models/MissionEvents';
 import { Component, Input, OnInit } from '@angular/core';
@@ -19,7 +20,11 @@ export class MissionEventComponent implements OnInit {
 
   EventActionClick(eventActionId: number) {
     this.accountService.PickMissionEventAction(eventActionId).subscribe(x => {
-      console.log(x);
+      if (x.state == "finished") {
+        this.accountService.currentMissionEvents.next(null);
+        this.accountService.currentMissionFinishedSubject.next(<MissionFinishedObject>x.value);
+        this.accountService.UpdateMissions();
+      }
     });
   }
 

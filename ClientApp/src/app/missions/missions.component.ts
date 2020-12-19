@@ -1,3 +1,4 @@
+import { MissionFinishedObject } from './../../_models/MissionFinishedObject';
 import { MissionEvents } from './../../_models/MissionEvents';
 import { Fight } from './../../_models/Fight';
 import { AppComponent } from './../app.component';
@@ -16,9 +17,11 @@ import { isFormattedError } from '@angular/compiler';
 export class MissionsComponent implements OnInit, OnDestroy {
   fight: Fight;
   missionEvents: MissionEvents;
+  missionFinished: MissionFinishedObject;
 
   currentFight: Subscription;
   currentMissionEvents: Subscription;
+  currentMissionFinished: Subscription;
 
   constructor(private accountService: AccountService) {
     this.currentFight = this.accountService.currentFightSubject.subscribe((val) => {
@@ -27,11 +30,15 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.currentMissionEvents = this.accountService.currentMissionEvents.subscribe((val) => {
       this.missionEvents = val;
     });
+    this.currentMissionFinished = this.accountService.currentMissionFinishedSubject.subscribe((val) => {
+      this.missionFinished = val;
+    });
   }
 
   ngOnDestroy(): void {
     this.currentFight.unsubscribe();
     this.currentMissionEvents.unsubscribe();
+    this.currentMissionFinished.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -62,5 +69,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
   FinishMission() {
     this.accountService.UpdateMissions();
     this.accountService.currentFightSubject.next(null);
+    this.accountService.currentMissionEvents.next(null);
+    this.accountService.currentMissionFinishedSubject.next(null);
   }
 }
