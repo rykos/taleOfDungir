@@ -3,7 +3,7 @@
     <br>
     {{missionEvents.event.description}}
     <div *ngFor="let ea of missionEvents.event.eventActions">
-        <button (click)="EventActionClick(ea.id)">
+        <button (click)="EventActionClick(ea.id)" [disabled]="!ViableOption(ea.skillName, eventActionIdToValue(ea.id))">
             {{ea.text}} ({{eventActionIdToValue(ea.id)}} {{ea.skillName}})
         </button>
     </div>

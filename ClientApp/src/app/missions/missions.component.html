@@ -1,5 +1,5 @@
 <div *ngIf="missionFinished">
-    Missin finished <br>
+    Mission {{missionFinished.won}} <br>
     exp +{{missionFinished.reward.expAmount}} <br>
     gold +{{missionFinished.reward.goldAmount}} <br>
     <button (click)="FinishMission()">Continue</button>

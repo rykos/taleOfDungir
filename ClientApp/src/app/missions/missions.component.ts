@@ -1,13 +1,12 @@
+import { Character } from './../../_models/Character';
 import { MissionFinishedObject } from './../../_models/MissionFinishedObject';
 import { MissionEvents } from './../../_models/MissionEvents';
 import { Fight } from './../../_models/Fight';
-import { AppComponent } from './../app.component';
 import { AccountService } from './../../_services/account.service';
 import { Mission } from './../../_models/Mission';
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, observable, Observable, Subscription } from 'rxjs';
-import { isFormattedError } from '@angular/compiler';
 
 @Component({
   selector: 'app-missions',
@@ -18,10 +17,12 @@ export class MissionsComponent implements OnInit, OnDestroy {
   fight: Fight;
   missionEvents: MissionEvents;
   missionFinished: MissionFinishedObject;
+  currentCharacter: Character;
 
   currentFight: Subscription;
   currentMissionEvents: Subscription;
   currentMissionFinished: Subscription;
+  currentCharacterSubcription: Subscription;
 
   constructor(private accountService: AccountService) {
     this.currentFight = this.accountService.currentFightSubject.subscribe((val) => {
@@ -33,12 +34,16 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.currentMissionFinished = this.accountService.currentMissionFinishedSubject.subscribe((val) => {
       this.missionFinished = val;
     });
+    this.currentCharacterSubcription = this.accountService.currentCharacterSubject.subscribe((val) => {
+      this.currentCharacter = val;
+    });
   }
 
   ngOnDestroy(): void {
     this.currentFight.unsubscribe();
     this.currentMissionEvents.unsubscribe();
     this.currentMissionFinished.unsubscribe();
+    this.currentCharacterSubcription.unsubscribe();
   }
 
   ngOnInit(): void {

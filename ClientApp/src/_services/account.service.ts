@@ -25,6 +25,7 @@ export class AccountService {
   public currentMissionEvents: BehaviorSubject<MissionEvents>;
   public currentFightSubject: BehaviorSubject<Fight>;
   public currentMissionFinishedSubject: BehaviorSubject<MissionFinishedObject> = new BehaviorSubject<MissionFinishedObject>(null);
+  public currentCharacterSubject: BehaviorSubject<Character> = new BehaviorSubject<Character>(null);
 
   constructor(private httpClient: HttpClient, private titleService: Title) {
     this.currentFightSubject = new BehaviorSubject<Fight>(null);
@@ -106,6 +107,10 @@ export class AccountService {
 
   Details(): Observable<Character> {
     return this.httpClient.get<Character>(environment.apiUrl + "/character/details");
+  }
+
+  RefreshCharacter(): void {
+    this.Details().subscribe(c => this.currentCharacterSubject.next(c));
   }
 
   GetMissions(): Observable<Mission[]> {
