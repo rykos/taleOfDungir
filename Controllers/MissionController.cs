@@ -227,20 +227,20 @@ namespace taleOfDungir.Controllers
         {
             Monster monster = new Monster() { Health = 50, Damage = 5 };
             List<FightTurn> fightTurns = new List<FightTurn>();
-            long playerHealth = character.Health;
-            long enemyHealth = monster.Health;
-            while (character.Health > 0 && monster.Health > 0)
+            long playerHealth = character.Health, maxPlayerHealth = character.Health;
+            long enemyHealth = monster.Health, maxEnemyHealth = monster.Health;
+            while (playerHealth > 0 && enemyHealth > 0)
             {
-                monster.Health -= character.Damage;
+                enemyHealth -= character.Damage;
                 fightTurns.Add(new FightTurn() { DamageDealt = character.Damage, PlayerAttack = true });
-                if (monster.Health <= 0)
+                if (enemyHealth <= 0)
                     break;
-                character.Health -= monster.Damage;
+                playerHealth -= monster.Damage;
                 fightTurns.Add(new FightTurn() { DamageDealt = monster.Damage, PlayerAttack = false });
-                if (character.Health <= 0)
+                if (playerHealth <= 0)
                     break;
             }
-            return new FightResoult((character.Health > 0), fightTurns, playerHealth, enemyHealth);
+            return new FightResoult((character.Health > 0), fightTurns, maxPlayerHealth, maxEnemyHealth);
         }
 
         //Event occured, send it to client

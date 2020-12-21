@@ -87,6 +87,9 @@ export class AccountService {
       else if (m.state == "finished") {
         console.log("mission got finished");
         console.log(m.value);
+        if (m.value.fight) {
+          this.currentFightSubject.next(m.value.fight);
+        }
       }
       else {
         console.warn("unknown response");
