@@ -225,8 +225,10 @@ namespace taleOfDungir.Controllers
 
         private FightResoult Fight(Character character)
         {
-            List<FightTurn> fightTurns = new List<FightTurn>();
             Monster monster = new Monster() { Health = 50, Damage = 5 };
+            List<FightTurn> fightTurns = new List<FightTurn>();
+            long playerHealth = character.Health;
+            long enemyHealth = monster.Health;
             while (character.Health > 0 && monster.Health > 0)
             {
                 monster.Health -= character.Damage;
@@ -238,7 +240,7 @@ namespace taleOfDungir.Controllers
                 if (character.Health <= 0)
                     break;
             }
-            return new FightResoult((character.Health > 0), fightTurns, character.Health, monster.Health);
+            return new FightResoult((character.Health > 0), fightTurns, playerHealth, enemyHealth);
         }
 
         //Event occured, send it to client

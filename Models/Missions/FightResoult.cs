@@ -4,10 +4,10 @@ namespace taleOfDungir.Models
 {
     public class FightResoult
     {
-        public bool Won;
-        public List<FightTurn> Turns;
-        public long PlayerHealth;
-        public long EnemyHealth;
+        public bool Won { get; set; }
+        public List<FightTurn> Turns { get; set; }
+        public long PlayerHealth { get; set; }
+        public long EnemyHealth { get; set; }
 
         public FightResoult(bool won, List<FightTurn> turns, long playerHealth, long enemyHealth)
         {
