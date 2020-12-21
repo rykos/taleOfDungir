@@ -27,5 +27,8 @@ namespace taleOfDungir.Models
 
         public byte[] Events { get; set; }
         public bool EventsFinished { get; set; }
+        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public bool Finished { get; set; } = false;
     }
 }
