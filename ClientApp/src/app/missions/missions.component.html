@@ -9,12 +9,7 @@
         <app-mission-event [missionEvents]="missionEvents"></app-mission-event>
     </div>
     <div *ngIf="fight">
-        <div *ngFor="let turn of fight.turns">
-            <label *ngIf="turn.playerAttack">Player:</label>
-            <label *ngIf="!turn.playerAttack">Enemy:</label>
-            {{turn.damageDealt}}
-        </div>
-        <button class="button" (click)="FinishMission()">Finish</button>
+        <app-fight [fight]="fight"></app-fight>
     </div>
     <div *ngIf="!fight">
         <div *ngIf="AS.availableMissions">

@@ -85,8 +85,6 @@ export class AccountService {
         this.currentMissionEvents.next(<MissionEvents>m.value);
       }
       else if (m.state == "finished") {
-        console.log("mission got finished");
-        console.log(m.value);
         if (m.value.fight) {
           this.currentFightSubject.next(m.value.fight);
         }

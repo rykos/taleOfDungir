@@ -1,10 +1,21 @@
 <div *ngIf="missionEvents">
-    {{missionEvents.event.name}}
-    <br>
-    {{missionEvents.event.description}}
-    <div *ngFor="let ea of missionEvents.event.eventActions">
-        <button (click)="EventActionClick(ea.id)" [disabled]="!ViableOption(ea.skillName, eventActionIdToValue(ea.id))">
-            {{ea.text}} ({{eventActionIdToValue(ea.id)}} {{ea.skillName}})
+    <div class="container-fluid d-flex justify-content-center">
+        {{missionEvents.event.name}}
+        <br>
+        {{missionEvents.event.description}}
+    </div>
+    <div class="row">
+        <div *ngFor="let ea of missionEvents.event.eventActions" class="col-sm">
+            <button (click)="EventActionClick(ea.id)"
+                [disabled]="!ViableOption(ea.skillName, eventActionIdToValue(ea.id))"
+                class="btn btn-primary container-fluid">
+                {{ea.text}} <br> ({{eventActionIdToValue(ea.id)}} {{ea.skillName}})
+            </button>
+        </div>
+    </div>
+    <div class="w-100 d-flex justify-content-center">
+        <button (click)="EventActionClick(-1)" class="btn btn-danger">
+            Forfeit
         </button>
     </div>
 </div>

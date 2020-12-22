@@ -1,3 +1,4 @@
+import { Entity } from './../../_models/Entity';
 import { Character } from './../../_models/Character';
 import { MissionFinishedObject } from './../../_models/MissionFinishedObject';
 import { MissionEvents } from './../../_models/MissionEvents';
@@ -48,6 +49,14 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.accountService.UpdateMissions();
+    let x = new Fight();
+    let c = new Entity();
+    let m = new Entity();
+    c.health = 100;
+    m.health = 50;
+    x.enemyHealth = m;
+    x.playerHealth = c;
+    this.fight = x;
   }
 
   get AS() {
