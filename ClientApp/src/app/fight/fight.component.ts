@@ -1,3 +1,4 @@
+import { AccountService } from './../../_services/account.service';
 import { Fight } from './../../_models/Fight';
 import { Component, Input, OnInit } from '@angular/core';
 
@@ -9,10 +10,14 @@ import { Component, Input, OnInit } from '@angular/core';
 export class FightComponent implements OnInit {
   @Input()
   fight: Fight;
-  
-  constructor() { }
+
+  constructor(private accountService: AccountService) { }
 
   ngOnInit(): void {
+  }
+
+  FinishMission(): void {
+    this.accountService.currentFightSubject.next(null);
   }
 
 }

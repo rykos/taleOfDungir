@@ -21,6 +21,7 @@ import { MissionsComponent } from './missions/missions.component';
 import { RarityPipe } from './rarity.pipe';
 import { MissionEventComponent } from './mission-event/mission-event.component';
 import { FightComponent } from './fight/fight.component';
+import { EntityCardComponent } from './entity-card/entity-card.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { FightComponent } from './fight/fight.component';
     MissionsComponent,
     RarityPipe,
     MissionEventComponent,
-    FightComponent
+    FightComponent,
+    EntityCardComponent
   ],
   imports: [
     BrowserModule,

@@ -1,11 +1,17 @@
-<div class="container-fluid">
-    <div style="width: 200px; height: 300px; background-color: red;">
-
-    </div>
+<div class="container-fluid d-flex row justify-content-between">
+    <!-- avatar -->
+    <app-entity-card [entity]="fight.playerHealth"></app-entity-card>
+    <app-entity-card [entity]="fight.enemyHealth"></app-entity-card>
 </div>
 <div *ngFor="let turn of fight.turns">
     <label *ngIf="turn.playerAttack">Player:</label>
     <label *ngIf="!turn.playerAttack">Enemy:</label>
     {{turn.damageDealt}}
 </div>
-<button class="button" (click)="FinishMission()">Finish</button>
+<div class="d-flex container justify-content-center border">
+    <div class="d-flex flex-column align-items-center">
+        <div>Reward</div>
+        <i>none</i>
+        <button class="btn btn-primary" (click)="FinishMission()">Finish</button>
+    </div>
+</div>

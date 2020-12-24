@@ -56,7 +56,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
     m.health = 50;
     x.enemyHealth = m;
     x.playerHealth = c;
-    this.fight = x;
+    this.accountService.currentFightSubject.next(x);
   }
 
   get AS() {

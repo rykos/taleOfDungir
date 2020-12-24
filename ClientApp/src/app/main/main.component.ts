@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  selected: string = "";
+  selected: string = "missions";
   constructor() { }
 
   ngOnInit(): void { }
