@@ -11,9 +11,25 @@ export class FightComponent implements OnInit {
   @Input()
   fight: Fight;
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService) { 
+    
+  }
 
   ngOnInit(): void {
+    var pa = true;
+    var t = setInterval(() => {
+      if(pa){
+        this.fight.enemy.health -= 10;
+      }
+      else{
+        this.fight.player.health -= 10;
+      }
+      if (this.fight.enemy.health <= 0 || this.fight.player.health <= 0) {
+        clearInterval(t);
+      }
+      pa = !pa;
+    }, 1000);
+    console.log(this.fight);
   }
 
   FinishMission(): void {

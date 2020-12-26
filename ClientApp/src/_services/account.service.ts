@@ -1,3 +1,4 @@
+import { MissionReward } from './../_models/MissionReward';
 import { MissionFinishedObject } from './../_models/MissionFinishedObject';
 import { MissionResoult } from './../_models/MissionResoult';
 import { MissionEvents } from './../_models/MissionEvents';
@@ -26,6 +27,7 @@ export class AccountService {
   public currentFightSubject: BehaviorSubject<Fight>;
   public currentMissionFinishedSubject: BehaviorSubject<MissionFinishedObject> = new BehaviorSubject<MissionFinishedObject>(null);
   public currentCharacterSubject: BehaviorSubject<Character> = new BehaviorSubject<Character>(null);
+  public currentMissionRewardSubject: BehaviorSubject<MissionReward> = new BehaviorSubject<MissionReward>(null);
 
   constructor(private httpClient: HttpClient, private titleService: Title) {
     this.currentFightSubject = new BehaviorSubject<Fight>(null);
@@ -79,14 +81,17 @@ export class AccountService {
         }, 1000);
       }
       else if (m.state == "fight") {
-        this.onMissionFinished(<Fight>m.value);
+        this.onMissionFinished(new Fight(m.value.turns, m.value.playerHealth, m.value.enemyHealth));
       }
       else if (m.state == "event") {
         this.currentMissionEvents.next(<MissionEvents>m.value);
       }
       else if (m.state == "finished") {
         if (m.value.fight) {
-          this.currentFightSubject.next(m.value.fight);
+          this.currentFightSubject.next(new Fight(m.value.fight.turns, m.value.fight.playerHealth, m.value.fight.enemyHealth));
+        }
+        if (m.value.reward) {
+          this.currentMissionRewardSubject.next(m.value.reward);
         }
       }
       else {
@@ -102,7 +107,6 @@ export class AccountService {
   }
 
   private onMissionFinished(fight: Fight) {
-    // AccountService.fight = fight;
     this.currentFightSubject.next(fight);
   }
 

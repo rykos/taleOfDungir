@@ -49,14 +49,16 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.accountService.UpdateMissions();
-    let x = new Fight();
-    let c = new Entity();
-    let m = new Entity();
-    c.health = 100;
-    m.health = 50;
-    x.enemyHealth = m;
-    x.playerHealth = c;
-    this.accountService.currentFightSubject.next(x);
+    // let x = new Fight();
+    // let c = new Entity();
+    // let m = new Entity();
+    // c.health = 100;
+    // c.maxHealth = 100;
+    // m.health = 50;
+    // m.maxHealth = 50;
+    // x.enemyHealth = m;
+    // x.playerHealth = c;
+    // this.accountService.currentFightSubject.next(x);
   }
 
   get AS() {
