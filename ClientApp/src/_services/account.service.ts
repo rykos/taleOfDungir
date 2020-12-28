@@ -46,6 +46,13 @@ export class AccountService {
     });
   }
 
+  public FinishMission() {
+    this.UpdateMissions();
+    this.currentFightSubject.next(null);
+    this.currentMissionEvents.next(null);
+    this.currentMissionFinishedSubject.next(null);
+  }
+
   private UpdateMissionTime(end) {
     if (AccountService.activeMission) {
       AccountService.MissionTimeLeft = Math.round((end.getTime() - Date.now().valueOf()) / 1000);

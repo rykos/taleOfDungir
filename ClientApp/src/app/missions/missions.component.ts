@@ -71,21 +71,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  StartFight(fight: Fight) {
-    this.fight = fight;
-    let i = 0;
-    let timer = setInterval(() => {
-      if (i > this.fight.turns.length)
-        clearInterval(timer);
-      console.log(this.fight[i]);
-      i++;
-    }, 400);
-  }
-
   FinishMission() {
-    this.accountService.UpdateMissions();
-    this.accountService.currentFightSubject.next(null);
-    this.accountService.currentMissionEvents.next(null);
-    this.accountService.currentMissionFinishedSubject.next(null);
+    this.accountService.FinishMission();
   }
 }

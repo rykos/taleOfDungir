@@ -10,7 +10,10 @@
             <label *ngIf="!turn.playerAttack">Enemy:</label>
             {{turn.damageDealt}}
         </div>
-        <div class="d-flex container justify-content-center border">
+        <div *ngIf="!fightFinished">
+            <button class="btn btn-primary" (click)="SkipFight()">Skip</button>
+        </div>
+        <div class="d-flex container justify-content-center border" *ngIf="fightFinished">
             <div class="d-flex flex-column align-items-center">
                 <div>Reward</div>
                 <i>none</i>

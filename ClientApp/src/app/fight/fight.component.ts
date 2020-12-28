@@ -10,30 +10,55 @@ import { Component, Input, OnInit } from '@angular/core';
 export class FightComponent implements OnInit {
   @Input()
   fight: Fight;
+  fightFinished: boolean = false;
+  fightTimer: number;
+  ph: number;
+  eh: number;
 
-  constructor(private accountService: AccountService) { 
-    
+  constructor(private accountService: AccountService) {
+
   }
 
   ngOnInit(): void {
-    var pa = true;
-    var t = setInterval(() => {
-      if(pa){
-        this.fight.enemy.health -= 10;
+    this.CalculateFinalHealth();
+    var i = 0;
+    this.fightTimer = setInterval(() => {
+      if (this.fight.turns[i].playerAttack) {
+        this.fight.enemy.health -= this.fight.turns[i].damageDealt;
       }
-      else{
-        this.fight.player.health -= 10;
+      else {
+        this.fight.player.health -= this.fight.turns[i].damageDealt;
       }
-      if (this.fight.enemy.health <= 0 || this.fight.player.health <= 0) {
-        clearInterval(t);
+      i++;
+      if (i >= this.fight.turns.length) {
+        this.fightFinished = true;
+        clearInterval(this.fightTimer);
       }
-      pa = !pa;
     }, 1000);
-    console.log(this.fight);
+  }
+
+  CalculateFinalHealth() {
+    this.ph = this.fight.player.health;
+    this.eh = this.fight.enemy.health;
+    for (var i = 0; i < this.fight.turns.length; i++) {
+      if (this.fight.turns[i].playerAttack) {
+        this.eh -= this.fight.turns[i].damageDealt;
+      }
+      else {
+        this.ph -= this.fight.turns[i].damageDealt;
+      }
+    }
   }
 
   FinishMission(): void {
-    this.accountService.currentFightSubject.next(null);
+    this.accountService.FinishMission();
+  }
+
+  SkipFight(): void {
+    clearInterval(this.fightTimer);
+    this.fight.player.health = this.ph;
+    this.fight.enemy.health = this.eh;
+    this.fightFinished = true;
   }
 
 }

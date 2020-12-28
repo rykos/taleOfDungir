@@ -1,4 +1,4 @@
 export class FightTurn {
     damageDealt: number;
-    PlayerAttack: boolean;
+    playerAttack: boolean;
 }
