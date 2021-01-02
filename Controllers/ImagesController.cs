@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using taleOfDungir.Data;
@@ -30,6 +31,7 @@ namespace taleOfDungir.Controllers
             return File(imageDBModel.Image, "image/jpeg");
         }
 
+        [Authorize("admin")]
         [HttpPost]
         public IActionResult NewImage([FromForm] ImageDTO imageDTO)
         {
