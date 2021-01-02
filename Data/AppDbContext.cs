@@ -56,5 +56,7 @@ namespace taleOfDungir.Data
         public DbSet<Mission> Missions { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<EventAction> EventActions { get; set; }
+        //
+        public DbSet<ImageDBModel> ImageDBModels { get; set; }
     }
 }
