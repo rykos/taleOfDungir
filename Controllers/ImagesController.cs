@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
@@ -31,19 +32,34 @@ namespace taleOfDungir.Controllers
             return File(imageDBModel.Image, "image/jpeg");
         }
 
-        [Authorize("admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult NewImage([FromForm] ImageDTO imageDTO)
         {
-            //No file
-            if (imageDTO.File.Length < 1)
+            if (imageDTO.Category != "item" || imageDTO.Category != "avatar")
             {
-                return BadRequest();
+                return BadRequest(new Response(Models.Response.Error, "Bad category"));
+            }
+            //No file | file size > 5MB
+            if (imageDTO.File.Length < 1 || imageDTO.File.Length > 5242880)
+            {
+                return BadRequest(new Response(Models.Response.Error, "Invalid file"));
             }
             using (MemoryStream ms = new MemoryStream())
             {
                 imageDTO.File.CopyTo(ms);
-                ImageDBModel imageDBModel = new ImageDBModel() { Image = ms.ToArray(), Category = imageDTO.Category };
+                ItemType itemType;
+                //ItemType conversion failed
+                if (!Enum.TryParse<ItemType>(imageDTO.ItemType, true, out itemType))
+                {
+                    return BadRequest(new Response(Models.Response.Error, "Invalid ItemType"));
+                }
+                ImageDBModel imageDBModel = new ImageDBModel()
+                {
+                    Image = ms.ToArray(),
+                    Category = imageDTO.Category,
+                    ItemType = itemType
+                };
                 this.dbContext.ImageDBModels.Add(imageDBModel);
                 if (this.dbContext.SaveChanges() == 1)
                 {
@@ -51,6 +67,14 @@ namespace taleOfDungir.Controllers
                 }
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("category/{category}")]
+        public IActionResult GetImagesIdByCategory(string category)
+        {
+            long[] ids = this.dbContext.ImageDBModels.Where(img => img.Category == category).Select(img => img.Id).ToArray();
+            return Ok(ids);
         }
     }
 }

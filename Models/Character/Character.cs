@@ -8,6 +8,8 @@ namespace taleOfDungir.Models
     {
         public Int64 CharacterId { get; set; }
 
+        public long CharacterAvatarId { get; set; }
+
         public Int64 Gold { get; set; }
         public int Level { get; set; }
         public Int64 Exp { get; set; }

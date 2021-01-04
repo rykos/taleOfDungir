@@ -25,13 +25,13 @@ namespace taleOfDungir.Helpers
             {
                 Level = level,
                 Name = this.nameHelper.GetNameFor(itemType),
-                Description = "",
+                Description = "none",
                 Rarity = itemRarity,
                 Power = (Int64)(this.GetPowerScale(itemRarity) * level),
-                Stats = null,
-                Value = power * 2
+                Value = power * 2,
+                ItemId = this.RandomItemImageID(itemType)
             };
-            this.CreateStats(ref item);
+            item.Stats = SystemHelper.Serialize(this.CreateStats(item));
             return item;
         }
 
@@ -101,7 +101,7 @@ namespace taleOfDungir.Helpers
             return (ItemType)itemTypes.GetValue(new Random().Next(0, itemTypes.Length));
         }
 
-        private void CreateStats(ref Item item)
+        private Stats CreateStats(Item item)
         {
             Stats stats = new Stats()
             {
@@ -110,7 +110,24 @@ namespace taleOfDungir.Helpers
                 Perception = 2,
                 Vitality = 3
             };
-            item.Stats = SystemHelper.Serialize(stats);
+            //item.Stats = SystemHelper.Serialize(stats);
+            return stats;
+        }
+
+        /// <summary>
+        /// Returns random image id with specific itemType. (-1 if non existant)
+        /// </summary>
+        private long RandomItemImageID(ItemType itemType)
+        {
+            Random rnd = new Random();
+            int amount = this.dbContext.ImageDBModels.Where(img => img.ItemType == itemType).Count();
+            if (amount == 0)
+            {
+                DebugHelper.WriteError($"ERROR: NO IMAGE FOR ItemType:({itemType})");
+                return -1;
+            }
+            long imgId = this.dbContext.ImageDBModels.Where(img => img.ItemType == itemType).Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
+            return imgId;
         }
     }
 

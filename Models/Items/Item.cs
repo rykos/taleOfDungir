@@ -22,6 +22,11 @@ namespace taleOfDungir.Models
         /// </summary>
         public Int64 Power { get; set; }
 
+        /// <summary>
+        /// Image ID in ImageDBModel
+        /// </summary>
+        public long ImageId { get; set; }
+
         public byte[] Stats { get; set; } = null;//Serialized stats structure
 
         public Character Character { get; set; }
