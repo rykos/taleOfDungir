@@ -42,10 +42,12 @@
         </div>
         <div class="row">
             <div class="col">
-                <div class="row border" *ngFor="let foundItem of foundItems; index as i;"
+                <div class="row border d-flex justify-content-between" *ngFor="let foundItem of foundItems; index as i;"
                     [ngClass]="{'list-group-item-dark': i%2==0}">
-                    ID:{{foundItem.id}} Name:{{foundItem.name}}
-                    ItemType:{{ItemTypeToString(foundItem.itemType)}}
+                    <div class="">
+                        ID:{{foundItem.id}} Name:{{foundItem.name}}
+                        ItemType:{{ItemTypeToString(foundItem.itemType)}}
+                    </div>
                     <button style="background-color: red;" (click)="Delete(foundItem.id)">X</button>
                 </div>
             </div>

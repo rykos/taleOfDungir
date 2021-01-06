@@ -22,4 +22,8 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ImgLink(imageId: string): string {
+    return this.accountService.GetImageLink(imageId);
+  }
+
 }

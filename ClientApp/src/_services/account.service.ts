@@ -121,6 +121,10 @@ export class AccountService {
     return this.httpClient.get<Character>(environment.apiUrl + "/character/details");
   }
 
+  GetImageLink(imageId: string): string {
+    return `${environment.apiUrl}/images/${imageId}`;
+  }
+
   RefreshCharacter(): void {
     this.Details().subscribe(c => this.currentCharacterSubject.next(c));
   }

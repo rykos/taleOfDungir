@@ -34,7 +34,8 @@ namespace taleOfDungir.Controllers
                 Name = item.Name,
                 Level = item.Level,
                 Rarity = item.Rarity,
-                Description = item.Description
+                Description = item.Description,
+                IconID = item.ImageId
             };
             return x;
         }

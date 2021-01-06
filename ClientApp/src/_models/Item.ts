@@ -6,4 +6,5 @@ export class Item {
     power: number;
     value: number;
     itemType?: ItemType;
+    iconID?: number;
 }
