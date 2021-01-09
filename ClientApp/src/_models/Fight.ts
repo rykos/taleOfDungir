@@ -5,9 +5,9 @@ export class Fight {
     player?: Entity;
     enemy?: Entity;
 
-    constructor(turns: FightTurn[], playerHealth: number, enemyHealth: number){
+    constructor(turns: FightTurn[], player: Entity, enemy: Entity){
         this.turns = turns;
-        this.player = new Entity(playerHealth);
-        this.enemy = new Entity(enemyHealth);
+        this.player = player;
+        this.enemy = enemy;
     }
 }

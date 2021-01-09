@@ -27,7 +27,7 @@ namespace taleOfDungir.Controllers
             ImageDBModel imageDBModel = this.dbContext.ImageDBModels.FirstOrDefault(img => img.Id == id);
             if (imageDBModel == default)
             {
-                return null;
+                return Ok();
             }
             return File(imageDBModel.Image, "image/jpeg");
         }
@@ -36,7 +36,7 @@ namespace taleOfDungir.Controllers
         [HttpPost]
         public IActionResult NewImage([FromForm] ImageDTO imageDTO)
         {
-            if (imageDTO.Category != "item" || imageDTO.Category != "avatar")
+            if (imageDTO.Category != "item" && imageDTO.Category != "avatar")
             {
                 return BadRequest(new Response(Models.Response.Error, "Bad category"));
             }
@@ -48,17 +48,13 @@ namespace taleOfDungir.Controllers
             using (MemoryStream ms = new MemoryStream())
             {
                 imageDTO.File.CopyTo(ms);
-                ItemType itemType;
-                //ItemType conversion failed
-                if (!Enum.TryParse<ItemType>(imageDTO.ItemType, true, out itemType))
-                {
-                    return BadRequest(new Response(Models.Response.Error, "Invalid ItemType"));
-                }
+                ItemType itemType = ItemType.None;
+                Enum.TryParse<ItemType>(imageDTO.Type, true, out itemType);
                 ImageDBModel imageDBModel = new ImageDBModel()
                 {
                     Image = ms.ToArray(),
                     Category = imageDTO.Category,
-                    ItemType = itemType
+                    Type = (byte)itemType
                 };
                 this.dbContext.ImageDBModels.Add(imageDBModel);
                 if (this.dbContext.SaveChanges() == 1)

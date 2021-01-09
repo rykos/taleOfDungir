@@ -1,5 +1,6 @@
 import { Entity } from './../../_models/Entity';
 import { Component, Input, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-entity-card',
@@ -12,6 +13,10 @@ export class EntityCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ImgLink(imageId: string): string {
+    return `${environment.apiUrl}/images/${imageId}`;
   }
 
 }

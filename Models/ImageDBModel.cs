@@ -7,10 +7,7 @@ namespace taleOfDungir.Models
         /// Image category [item, avatar]
         /// </summary>
         public string Category { get; set; }
-        /// <summary>
-        /// ItemType enum
-        /// </summary>
-        public ItemType ItemType { get; set; } = 0;
+        public byte Type { get; set; } = 0;
         /// <summary>
         /// Serialized image
         /// </summary>

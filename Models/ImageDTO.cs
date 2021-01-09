@@ -8,11 +8,9 @@ namespace taleOfDungir.Models
         [Required(ErrorMessage = "File required")]
         public IFormFile File { get; set; }
         [Required(ErrorMessage = "Category required")]
+        //item, avatar
         public string Category { get; set; }
-        /// <summary>
-        /// Represented as string for smaller margin of error in transport
-        /// </summary>
-        [Required(ErrorMessage = "Item type required")]
-        public string ItemType { get; set; }
+        
+        public string Type { get; set; }
     }
 }

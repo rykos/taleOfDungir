@@ -8,13 +8,17 @@ namespace taleOfDungir.Models
         public List<FightTurn> Turns { get; set; }
         public long PlayerHealth { get; set; }
         public long EnemyHealth { get; set; }
+        public long PlayerAvatarId { get; set; }
+        public long EnemyAvatarId { get; set; }
 
-        public FightResoult(bool won, List<FightTurn> turns, long playerHealth, long enemyHealth)
+        public FightResoult(bool won, List<FightTurn> turns, long playerHealth, long enemyHealth, long playerAvatarId, long enemyAvatarId)
         {
-            Won = won;
-            Turns = turns;
-            PlayerHealth = playerHealth;
-            EnemyHealth = enemyHealth;
+            this.Won = won;
+            this.Turns = turns;
+            this.PlayerHealth = playerHealth;
+            this.EnemyHealth = enemyHealth;
+            this.PlayerAvatarId = playerAvatarId;
+            this.EnemyAvatarId = enemyAvatarId;
         }
     }
 }

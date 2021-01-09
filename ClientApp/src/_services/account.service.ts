@@ -14,6 +14,7 @@ import { environment } from './../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Entity } from 'src/_models/Entity';
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +96,9 @@ export class AccountService {
       }
       else if (m.state == "finished") {
         if (m.value.fight) {
-          this.currentFightSubject.next(new Fight(m.value.fight.turns, m.value.fight.playerHealth, m.value.fight.enemyHealth));
+          this.currentFightSubject.next(
+            new Fight(m.value.fight.turns, new Entity(m.value.fight.playerHealth, m.value.fight.playerAvatarId), new Entity(m.value.fight.enemyHealth, m.value.fight.enemyAvatarId))
+          );
         }
         if (m.value.reward) {
           this.currentMissionRewardSubject.next(m.value.reward);

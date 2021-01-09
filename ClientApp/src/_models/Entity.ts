@@ -3,12 +3,12 @@ import { typeWithParameters } from "@angular/compiler/src/render3/util";
 export class Entity {
     health: number;
     maxHealth: number;
-    avatar?: string;
+    avatarId?: string;
 
     constructor(health: number, avatar?: string) {
         this.health = health;
         this.maxHealth = health;
-        this.avatar = avatar;
+        this.avatarId = avatar;
     }
 
     get HealthPercentage(): number {

@@ -23,10 +23,35 @@ namespace taleOfDungir.Helpers
             Random rnd = new Random();
             return this.dbContext.ItemNames.Where(i => i.ItemType == itemType).Skip(rnd.Next(0, count))?.First().Name ?? "Missing names";
         }
+
+        public long RandomAvatarId()
+        {
+            int count = this.dbContext.ImageDBModels.Where(img => img.Category == "avatar").Count();
+            Random rnd = new Random();
+            return this.dbContext.ImageDBModels.Where(img => img.Category == "avatar").Select(img => img.Id).Skip(rnd.Next(0, count)).First();
+        }
+
+        /// <summary>
+        /// Returns random image id with specific itemType. (-1 if non existant)
+        /// </summary>
+        public long RandomItemImageID(ItemType itemType)
+        {
+            Random rnd = new Random();
+            int amount = this.dbContext.ImageDBModels.Where(img => img.Type == (byte)itemType).Count();
+            if (amount == 0)
+            {
+                DebugHelper.WriteError($"ERROR: NO IMAGE FOR ItemType:({itemType})");
+                return -1;
+            }
+            long imgId = this.dbContext.ImageDBModels.Where(img => img.Type == (byte)itemType).Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
+            return imgId;
+        }
     }
 
     public interface NameHelperProvider
     {
         string GetNameFor(ItemType itemType);
+        long RandomAvatarId();
+        long RandomItemImageID(ItemType itemType);
     }
 }

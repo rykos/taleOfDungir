@@ -18,10 +18,12 @@ namespace taleOfDungir.Controllers
     {
         private readonly AppDbContext dbContext;
         private readonly CharacterHelperProvider characterHelper;
-        public MissionController(AppDbContext dbContext, CharacterHelperProvider characterHelper)
+        private readonly NameHelperProvider nameHelper;
+        public MissionController(AppDbContext dbContext, CharacterHelperProvider characterHelper, NameHelperProvider nameHelper)
         {
             this.dbContext = dbContext;
             this.characterHelper = characterHelper;
+            this.nameHelper = nameHelper;
         }
 
         [HttpGet]
@@ -240,7 +242,7 @@ namespace taleOfDungir.Controllers
                 if (playerHealth <= 0)
                     break;
             }
-            return new FightResoult((character.Health > 0), fightTurns, maxPlayerHealth, maxEnemyHealth);
+            return new FightResoult((character.Health > 0), fightTurns, maxPlayerHealth, maxEnemyHealth, character.CharacterAvatarId, nameHelper.RandomAvatarId());
         }
 
         //Event occured, send it to client

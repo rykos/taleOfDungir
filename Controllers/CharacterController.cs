@@ -52,6 +52,7 @@ namespace taleOfDungir.Controllers
 
             return Ok(new
             {
+                avatarId = character.CharacterAvatarId,
                 level = character.Level,
                 exp = character.Exp,
                 reqExp = character.Level * 100,
