@@ -15,7 +15,11 @@
         </form>
         <hr>
         <div class="list-group">
-            <a *ngFor="let player of foundPlayers" class="list-group-item list-group-item-action">{{player.userName}}</a>
+            <a *ngFor="let player of foundPlayers"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-content-center">
+                <div>{{player.userName}}</div>
+                <span class="badge badge-success">Good</span>
+            </a>
         </div>
         <hr>
     </div>

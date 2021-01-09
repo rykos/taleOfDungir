@@ -5,11 +5,11 @@
             <app-entity-card [entity]="fight.player"></app-entity-card>
             <app-entity-card [entity]="fight.enemy"></app-entity-card>
         </div>
-        <div *ngFor="let turn of fight.turns">
+        <!-- <div *ngFor="let turn of fight.turns">
             <label *ngIf="turn.playerAttack">Player:</label>
             <label *ngIf="!turn.playerAttack">Enemy:</label>
             {{turn.damageDealt}}
-        </div>
+        </div> -->
         <div *ngIf="!fightFinished">
             <button class="btn btn-primary" (click)="SkipFight()">Skip</button>
         </div>

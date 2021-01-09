@@ -12,26 +12,38 @@ export class ImagesCrudComponent implements OnInit {
   createForm: FormGroup;
   itemTypes = Object.values(ItemType).filter(value => isNaN(Number(value)));
   fileList: FileList;
-  urls: SafeUrl[] = [];
+  fileListUrls: SafeUrl[] = [];
 
   constructor(private formBuilder: FormBuilder, private sanitezer: DomSanitizer) {
     this.createForm = this.formBuilder.group({
-      itemType: ['Trash', Validators.required]
+      imageType: ['item', Validators.required],
+      itemType: ['Trash', Validators.required],
+      avatarType: ['Player', Validators.required],
+      images: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
   }
 
-  onSubmit(data) { }
+  onSubmit(data) {
+    this.createForm.value.images = this.fileList;
+    console.log(data);
+    console.log(this.createForm.value.imageType);
+  }
+
+  get form(){
+    return this.createForm.value;
+  }
 
   inputChanged(files: FileList) {
     this.fileList = files;
+    //Clear previous urls
+    this.fileListUrls = [];
     Array.prototype.forEach.call(this.fileList, (file) => {
       let url = URL.createObjectURL(file)
-      this.urls.push(this.sanitezer.bypassSecurityTrustUrl(url));
+      this.fileListUrls.push(this.sanitezer.bypassSecurityTrustUrl(url));
     });
-    console.log(this.urls);
   }
 
 }
