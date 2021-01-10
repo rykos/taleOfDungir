@@ -13,7 +13,7 @@ namespace taleOfDungir.Helpers
             this.dbContext = dbContext;
         }
 
-        public string GetNameFor(ItemType itemType)
+        public string NameFor(ItemType itemType)
         {
             int count = this.dbContext.ItemNames.Count();
             if (count == 0)
@@ -31,10 +31,18 @@ namespace taleOfDungir.Helpers
             return this.dbContext.ImageDBModels.Where(img => img.Category == "avatar").Select(img => img.Id).Skip(rnd.Next(0, count)).First();
         }
 
+        public long RandomAvatarIdFor(EntityType entityType)
+        {
+            int count = this.dbContext.ImageDBModels.Where(img => img.Category == "avatar" && img.Type == (byte)entityType).Count();
+            Random rnd = new Random();
+            return this.dbContext.ImageDBModels.Where(img => img.Category == "avatar" && img.Type == (byte)entityType)
+                .Select(img => img.Id).Skip(rnd.Next(0, count)).First();
+        }
+
         /// <summary>
         /// Returns random image id with specific itemType. (-1 if non existant)
         /// </summary>
-        public long RandomItemImageID(ItemType itemType)
+        public long RandomItemImageIDFor(ItemType itemType)
         {
             Random rnd = new Random();
             int amount = this.dbContext.ImageDBModels.Where(img => img.Type == (byte)itemType).Count();
@@ -50,8 +58,9 @@ namespace taleOfDungir.Helpers
 
     public interface NameHelperProvider
     {
-        string GetNameFor(ItemType itemType);
+        string NameFor(ItemType itemType);
         long RandomAvatarId();
-        long RandomItemImageID(ItemType itemType);
+        long RandomAvatarIdFor(EntityType entityType);
+        long RandomItemImageIDFor(ItemType itemType);
     }
 }

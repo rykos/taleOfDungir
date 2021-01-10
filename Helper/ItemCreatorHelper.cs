@@ -24,12 +24,12 @@ namespace taleOfDungir.Helpers
             Item item = new Item()
             {
                 Level = level,
-                Name = this.nameHelper.GetNameFor(itemType),
+                Name = this.nameHelper.NameFor(itemType),
                 Description = "none",
                 Rarity = itemRarity,
                 Power = (Int64)(this.GetPowerScale(itemRarity) * level),
                 Value = power * 2,
-                ImageId = this.nameHelper.RandomItemImageID(itemType)
+                ImageId = this.nameHelper.RandomItemImageIDFor(itemType)
             };
             item.Stats = SystemHelper.Serialize(this.CreateStats(item));
             return item;

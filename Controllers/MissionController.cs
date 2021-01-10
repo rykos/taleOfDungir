@@ -149,6 +149,9 @@ namespace taleOfDungir.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks if character has enough stat to pass skill check
+        /// </summary>
         private bool CheckStat(Character character, EventAction eventAction, int value)
         {
             if (eventAction.SkillName == "Vitality")
@@ -245,7 +248,9 @@ namespace taleOfDungir.Controllers
             return new FightResoult((character.Health > 0), fightTurns, maxPlayerHealth, maxEnemyHealth, character.CharacterAvatarId, nameHelper.RandomAvatarId());
         }
 
-        //Event occured, send it to client
+        /// <summary>
+        /// return Event DTO
+        /// </summary>
         private object TransportEvent(Mission mission, MissionSkillReq missionSkillReq)
         {
             Event e = this.dbContext.Events.Include(e => e.EventActions).FirstOrDefault(e => e.Id == missionSkillReq.EventId);
@@ -265,6 +270,9 @@ namespace taleOfDungir.Controllers
             };
         }
 
+        /// <summary>
+        /// Replaces player missions with 3 new ones
+        /// </summary>
         private void GenerateNewMissions(Character character)
         {
             character.Missions = this.dbContext.Missions.Where(m => m.CharacterId == character.CharacterId).ToList();
@@ -277,6 +285,9 @@ namespace taleOfDungir.Controllers
             this.dbContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Creates new mission based on provided character
+        /// </summary>
         private Mission NewMission(Character character)
         {
             byte[] events = RandomEvent();

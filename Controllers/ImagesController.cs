@@ -36,25 +36,23 @@ namespace taleOfDungir.Controllers
         [HttpPost]
         public IActionResult NewImage([FromForm] ImageDTO imageDTO)
         {
-            if (imageDTO.Category != "item" && imageDTO.Category != "avatar")
+            if (new string[] { "item", "avatar" }.Contains(imageDTO.Category) == false)
             {
-                return BadRequest(new Response(Models.Response.Error, "Bad category"));
+                return BadRequest(Models.Response.ErrorResponse("Bad category"));
             }
             //No file | file size > 5MB
             if (imageDTO.File.Length < 1 || imageDTO.File.Length > 5242880)
             {
-                return BadRequest(new Response(Models.Response.Error, "Invalid file"));
+                return BadRequest(Models.Response.ErrorResponse("Invalid file"));
             }
             using (MemoryStream ms = new MemoryStream())
             {
                 imageDTO.File.CopyTo(ms);
-                ItemType itemType = ItemType.None;
-                Enum.TryParse<ItemType>(imageDTO.Type, true, out itemType);
                 ImageDBModel imageDBModel = new ImageDBModel()
                 {
                     Image = ms.ToArray(),
                     Category = imageDTO.Category,
-                    Type = (byte)itemType
+                    Type = this.GetImageType(imageDTO)
                 };
                 this.dbContext.ImageDBModels.Add(imageDBModel);
                 if (this.dbContext.SaveChanges() == 1)
@@ -62,7 +60,18 @@ namespace taleOfDungir.Controllers
                     return Ok();
                 }
             }
-            return BadRequest();
+            return BadRequest(Models.Response.ErrorResponse("Failed to add new image"));
+        }
+
+        private byte GetImageType(ImageDTO imageDTO)
+        {
+            object enumParsed = null;
+            foreach (Type type in new Type[] { typeof(ItemType), typeof(EntityType) })
+            {
+                if (Enum.TryParse(typeof(EntityType), imageDTO.Type, true, out enumParsed))
+                    break;
+            }
+            return (enumParsed == null) ? 0 : (byte)enumParsed;
         }
 
         [HttpGet]
