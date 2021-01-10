@@ -37,22 +37,23 @@ namespace taleOfDungir.Controllers
         public IActionResult NewImage([FromForm] ImageDTO imageDTO)
         {
             if (new string[] { "item", "avatar" }.Contains(imageDTO.Category) == false)
-            {
                 return BadRequest(Models.Response.ErrorResponse("Bad category"));
-            }
             //No file | file size > 5MB
             if (imageDTO.File.Length < 1 || imageDTO.File.Length > 5242880)
-            {
                 return BadRequest(Models.Response.ErrorResponse("Invalid file"));
-            }
+
             using (MemoryStream ms = new MemoryStream())
             {
                 imageDTO.File.CopyTo(ms);
+                byte imageType = this.GetImageType(imageDTO);
+                if (imageType == byte.MaxValue)
+                    return BadRequest(Models.Response.ErrorResponse("Bad type"));
+
                 ImageDBModel imageDBModel = new ImageDBModel()
                 {
                     Image = ms.ToArray(),
                     Category = imageDTO.Category,
-                    Type = this.GetImageType(imageDTO)
+                    Type = imageType
                 };
                 this.dbContext.ImageDBModels.Add(imageDBModel);
                 if (this.dbContext.SaveChanges() == 1)
@@ -63,6 +64,7 @@ namespace taleOfDungir.Controllers
             return BadRequest(Models.Response.ErrorResponse("Failed to add new image"));
         }
 
+        /// <returns>255 on error</returns>
         private byte GetImageType(ImageDTO imageDTO)
         {
             object enumParsed = null;
@@ -71,7 +73,7 @@ namespace taleOfDungir.Controllers
                 if (Enum.TryParse(typeof(EntityType), imageDTO.Type, true, out enumParsed))
                     break;
             }
-            return (enumParsed == null) ? 0 : (byte)enumParsed;
+            return (enumParsed == null) ? byte.MaxValue : (byte)enumParsed;
         }
 
         [HttpGet]

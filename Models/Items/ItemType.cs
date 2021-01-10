@@ -1,6 +1,6 @@
 namespace taleOfDungir.Models
 {
-    public enum ItemType
+    public enum ItemType : byte
     {
         None,
         Trash,

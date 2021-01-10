@@ -1,6 +1,6 @@
 namespace taleOfDungir
 {
-    public enum EntityType
+    public enum EntityType : byte
     {
         None,
         Player,
