@@ -39,29 +39,60 @@ namespace taleOfDungir.Controllers
             if (new string[] { "item", "avatar" }.Contains(imageDTO.Category) == false)
                 return BadRequest(Models.Response.ErrorResponse("Bad category"));
             //No file | file size > 5MB
-            if (imageDTO.File.Length < 1 || imageDTO.File.Length > 5242880)
-                return BadRequest(Models.Response.ErrorResponse("Invalid file"));
+            //|| imageDTO.Files.Length > 5242880
+            if (imageDTO.Files.Count() < 1)
+                return BadRequest(Models.Response.ErrorResponse("No files"));
 
             using (MemoryStream ms = new MemoryStream())
             {
-                imageDTO.File.CopyTo(ms);
-                byte imageType = this.GetImageType(imageDTO);
-                if (imageType == byte.MaxValue)
-                    return BadRequest(Models.Response.ErrorResponse("Bad type"));
+                foreach (IFormFile file in imageDTO.Files)
+                {
+                    file.CopyTo(ms);
+                    byte imageType = this.GetImageType(imageDTO);
+                    if (imageType == byte.MaxValue)
+                        return BadRequest(Models.Response.ErrorResponse("Bad type"));
 
-                ImageDBModel imageDBModel = new ImageDBModel()
+                    ImageDBModel imageDBModel = new ImageDBModel()
+                    {
+                        Image = ms.ToArray(),
+                        Category = imageDTO.Category,
+                        Type = imageType
+                    };
+                    this.dbContext.ImageDBModels.Add(imageDBModel);
+                }
+                int changesCount;
+                if ((changesCount = this.dbContext.SaveChanges()) > 0)
                 {
-                    Image = ms.ToArray(),
-                    Category = imageDTO.Category,
-                    Type = imageType
-                };
-                this.dbContext.ImageDBModels.Add(imageDBModel);
-                if (this.dbContext.SaveChanges() == 1)
-                {
-                    return Ok();
+                    return Ok(changesCount);
                 }
             }
             return BadRequest(Models.Response.ErrorResponse("Failed to add new image"));
+        }
+
+        [HttpGet]
+        [Route("category/{category}")]
+        public IActionResult GetImagesIdByCategory(string category)
+        {
+            long[] ids = this.dbContext.ImageDBModels.Where(img => img.Category == category).Select(img => img.Id).ToArray();
+            return Ok(ids);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult RemoveImageById(long id)
+        {
+            ImageDBModel imageDBModel = this.dbContext.ImageDBModels.FirstOrDefault(img => img.Id == id);
+            if (imageDBModel == default)
+            {
+                return NotFound();
+            }
+            else
+            {
+                this.dbContext.ImageDBModels.Remove(imageDBModel);
+                this.dbContext.SaveChanges();
+                return Ok();
+            }
         }
 
         /// <returns>255 on error</returns>
@@ -74,14 +105,6 @@ namespace taleOfDungir.Controllers
                     break;
             }
             return (enumParsed == null) ? byte.MaxValue : (byte)enumParsed;
-        }
-
-        [HttpGet]
-        [Route("category/{category}")]
-        public IActionResult GetImagesIdByCategory(string category)
-        {
-            long[] ids = this.dbContext.ImageDBModels.Where(img => img.Category == category).Select(img => img.Id).ToArray();
-            return Ok(ids);
         }
     }
 }
