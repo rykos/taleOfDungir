@@ -73,7 +73,7 @@ namespace taleOfDungir.Helpers
             return character.Level * 100;
         }
 
-        public void SpawnRandomItem(Character character)
+        public Item SpawnRandomItem(Character character)
         {
             //If inventory reference is missing, load it
             if (character.Inventory == null)
@@ -84,6 +84,7 @@ namespace taleOfDungir.Helpers
             Item item = this.itemCreatorHelper.CreateItem(character.Level);
             character.Inventory.Add(item);
             this.dbContext.SaveChanges();
+            return item;
         }
 
         public void TakeDamage(Character character, Int64 amount)
@@ -106,6 +107,6 @@ namespace taleOfDungir.Helpers
         object GetSkillsDTO(Character character);
         object GetLifeSkillsDTO(Character character);
         long RequiredExp(Character character);
-        void SpawnRandomItem(Character character);
+        Item SpawnRandomItem(Character character);
     }
 }

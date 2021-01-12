@@ -16,6 +16,6 @@
     </div>
     <div *ngFor="let item of character.inventory; index as i;">
         {{i+1}}) Name:{{item.name}} Level: {{item.level}} Power:{{item.power}} Value: {{item.value}}
-        <img [src]="ImgLink(item.iconID)">
+        <img [src]="ImgLink(item.iconID)" height="64px" width="64px">
     </div>
 </div>

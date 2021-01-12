@@ -1,22 +1,23 @@
 <form [formGroup]="createForm" (ngSubmit)="onSubmit(createForm.value)">
     <div class="form-group row mr-0">
         <label class="col-sm-3 col-form-label">Image Type</label>
-        <select formControlName="imageType" name="imageType" id="imageType" class="col-sm form-control">
+        <select formControlName="category" name="category" id="category" class="col-sm form-control" (change)="categoryChanged($event.target.value)">
             <option>item</option>
             <option>avatar</option>
         </select>
     </div>
-    <div class="form-group row mr-0" *ngIf="form.imageType === 'item'">
+    <!-- <div class="form-group row mr-0" *ngIf="form.category === 'item'">
         <label class="col-sm-3 col-form-label">Item Type</label>
         <select formControlName="itemType" name="itemType" id="itemType" class="col-sm form-control">
             <option *ngFor="let item of itemTypes">{{item}}</option>
         </select>
-    </div>
-    <div class="form-group row mr-0" *ngIf="form.imageType === 'avatar'">
-        <label class="col-sm-3 col-form-label">Avatar Type</label>
-        <select formControlName="avatarType" name="avatarType" id="avatarType" class="col-sm form-control">
-            <option>Player</option>
-            <option>Monster</option>
+    </div> -->
+    <div class="form-group row mr-0">
+        <label class="col-sm-3 col-form-label">{{selectedCategory}} Type</label>
+        <select formControlName="type" name="type" id="type" class="col-sm form-control">
+            <!-- <option>Player</option>
+            <option>Monster</option> -->
+            <option *ngFor="let type of types">{{type}}</option>
         </select>
     </div>
     <!-- <div class="form-group row">

@@ -221,10 +221,14 @@ namespace taleOfDungir.Controllers
             Int64 goldAmount = new Random().Next(0, 10);
             this.characterHelper.AddExp(character, expAmount);
             this.characterHelper.AddGold(character, goldAmount);
+            Item item = this.characterHelper.SpawnRandomItem(character);
             return new
             {
                 expAmount,
-                goldAmount
+                goldAmount,
+                items = new object[]{
+                    item.ItemDTO()
+                }
             };
         }
 

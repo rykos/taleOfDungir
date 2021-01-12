@@ -36,5 +36,22 @@ namespace taleOfDungir.Models
         /// Is item equipped by player
         /// </summary>
         public bool Worn { get; set; } = false;
+
+        public object ItemDTO()
+        {
+            return new
+            {
+                this.ItemId,
+                this.Name,
+                this.Description,
+                this.Level,
+                this.Power,
+                this.Value,
+                this.Worn,
+                this.Rarity,
+                this.Stats,
+                this.ItemType
+            };
+        }
     }
 }

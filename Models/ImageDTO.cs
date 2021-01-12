@@ -7,7 +7,7 @@ namespace taleOfDungir.Models
     public class ImageDTO
     {
         [Required(ErrorMessage = "File required")]
-        public IEnumerable<IFormFile> Files { get; set; }
+        public List<IFormFile> Files { get; set; }
         [Required(ErrorMessage = "Category required")]
         //item, avatar
         public string Category { get; set; }

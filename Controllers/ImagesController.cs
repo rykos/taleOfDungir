@@ -101,7 +101,7 @@ namespace taleOfDungir.Controllers
             object enumParsed = null;
             foreach (Type type in new Type[] { typeof(ItemType), typeof(EntityType) })
             {
-                if (Enum.TryParse(typeof(EntityType), imageDTO.Type, true, out enumParsed))
+                if (Enum.TryParse(type, imageDTO.Type, true, out enumParsed))
                     break;
             }
             return (enumParsed == null) ? byte.MaxValue : (byte)enumParsed;

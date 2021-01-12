@@ -21,7 +21,7 @@ namespace taleOfDungir.Helpers
                 return "Missing names";
             }
             Random rnd = new Random();
-            return this.dbContext.ItemNames.Where(i => i.ItemType == itemType).Skip(rnd.Next(0, count))?.First().Name ?? "Missing names";
+            return this.dbContext.ItemNames?.Where(i => i.ItemType == itemType)?.Skip(rnd.Next(0, count))?.FirstOrDefault()?.Name ?? "Missing names";
         }
 
         public long RandomAvatarId()
@@ -45,13 +45,13 @@ namespace taleOfDungir.Helpers
         public long RandomItemImageIDFor(ItemType itemType)
         {
             Random rnd = new Random();
-            int amount = this.dbContext.ImageDBModels.Where(img => img.Type == (byte)itemType).Count();
+            int amount = this.dbContext.ImageDBModels.Where(img => img.Type == Convert.ToByte(itemType)).Count();
             if (amount == 0)
             {
                 DebugHelper.WriteError($"ERROR: NO IMAGE FOR ItemType:({itemType})");
                 return -1;
             }
-            long imgId = this.dbContext.ImageDBModels.Where(img => img.Type == (byte)itemType).Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
+            long imgId = this.dbContext.ImageDBModels.Where(img => img.Type == Convert.ToByte(itemType)).Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
             return imgId;
         }
     }

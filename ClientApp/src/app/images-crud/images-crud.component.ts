@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { ItemType } from './../../_models/ItemType';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-images-crud',
@@ -11,16 +13,29 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class ImagesCrudComponent implements OnInit {
   createForm: FormGroup;
   itemTypes = Object.values(ItemType).filter(value => isNaN(Number(value)));
+  selectedCategory = "item";
+  types = [];
   fileList: FileList;
   fileListUrls: SafeUrl[] = [];
 
-  constructor(private formBuilder: FormBuilder, private sanitezer: DomSanitizer) {
+  constructor(private formBuilder: FormBuilder, private sanitezer: DomSanitizer, private httpClient: HttpClient) {
     this.createForm = this.formBuilder.group({
-      imageType: ['item', Validators.required],
-      itemType: ['Trash', Validators.required],
-      avatarType: ['Player', Validators.required],
+      category: ['item', Validators.required],
+      type: ["None", Validators.required],
       images: ['', Validators.required]
     });
+    this.categoryChanged("item");
+  }
+
+  categoryChanged(category: string) {
+    this.selectedCategory = category[0].toUpperCase() + category.slice(1);
+    if (category == "item") {
+      this.types = Object.values(ItemType).filter(value => isNaN(Number(value)));
+    }
+    else {
+      this.types = ["player", "monster"];
+    }
+    this.createForm.value.type = this.types[0];
   }
 
   ngOnInit(): void {
@@ -28,11 +43,22 @@ export class ImagesCrudComponent implements OnInit {
 
   onSubmit(data) {
     this.createForm.value.images = this.fileList;
-    console.log(data);
-    console.log(this.createForm.value.imageType);
+
+    var x = this.fileList[0];
+
+    let fd = new FormData();
+    fd.append('category', this.createForm.value.category);
+    fd.append('type', this.createForm.value.type);
+    for (let i = 0; i < this.fileList.length; i++) {
+      fd.append("Files", this.fileList[i]);
+    }
+    //https://localhost:5001/images
+    this.httpClient.post(`${environment.apiUrl}/images`, fd).subscribe(x => {
+      console.log(x);
+    });
   }
 
-  get form(){
+  get form() {
     return this.createForm.value;
   }
 
