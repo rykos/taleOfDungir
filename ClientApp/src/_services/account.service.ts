@@ -97,7 +97,7 @@ export class AccountService {
       else if (m.state == "finished") {
         if (m.value.fight) {
           this.currentFightSubject.next(
-            new Fight(m.value.fight.turns, new Entity(m.value.fight.playerHealth, m.value.fight.playerAvatarId), new Entity(m.value.fight.enemyHealth, m.value.fight.enemyAvatarId))
+            new Fight(m.value.fight.turns, new Entity(m.value.fight.player), new Entity(m.value.fight.enemy))
           );
         }
         if (m.value.reward) {

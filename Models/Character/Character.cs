@@ -15,7 +15,8 @@ namespace taleOfDungir.Models
         public Int64 Exp { get; set; }
 
         //Stats, WORK_IN_PROGRESS
-        public Int64 Health { get; set; }
+        public long Health { get; set; }
+        public long MaxHealth { get; set; }
         public Int64 Damage { get; set; }
         //
 

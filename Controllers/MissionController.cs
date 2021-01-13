@@ -234,10 +234,11 @@ namespace taleOfDungir.Controllers
 
         private FightResoult Fight(Character character)
         {
-            Monster monster = new Monster() { Health = 50, Damage = 5 };
+            Monster monster = EnemyHelper.CreateEnemy(character.Level);
             List<FightTurn> fightTurns = new List<FightTurn>();
-            long playerHealth = character.Health, maxPlayerHealth = character.Health;
+            long playerHealth = character.Health;
             long enemyHealth = monster.Health, maxEnemyHealth = monster.Health;
+            long tookDamage = 0;
             while (playerHealth > 0 && enemyHealth > 0)
             {
                 enemyHealth -= character.Damage;
@@ -245,11 +246,15 @@ namespace taleOfDungir.Controllers
                 if (enemyHealth <= 0)
                     break;
                 playerHealth -= monster.Damage;
+                tookDamage += monster.Damage;
                 fightTurns.Add(new FightTurn() { DamageDealt = monster.Damage, PlayerAttack = false });
                 if (playerHealth <= 0)
                     break;
             }
-            return new FightResoult((character.Health > 0), fightTurns, maxPlayerHealth, maxEnemyHealth, character.CharacterAvatarId, nameHelper.RandomAvatarId());
+            this.characterHelper.TakeDamage(character, tookDamage / 2);
+
+            return new FightResoult((playerHealth > 0), fightTurns,
+                new Entity(playerHealth, character.MaxHealth, character.CharacterAvatarId), new Entity(enemyHealth, maxEnemyHealth, nameHelper.RandomAvatarId()));
         }
 
         /// <summary>

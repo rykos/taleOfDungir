@@ -52,15 +52,14 @@ namespace taleOfDungir.Controllers
 
             return Ok(new
             {
-                avatarId = character.CharacterAvatarId,
                 level = character.Level,
                 exp = character.Exp,
                 reqExp = this.characterHelper.RequiredExp(character),
-                health = character.Health,
                 gold = character.Gold,
                 inventory = this.characterHelper.GetItemsDTO(character),
                 lifeSkills = this.characterHelper.GetLifeSkillsDTO(character),
-                skills = this.characterHelper.GetSkillsDTO(character)
+                skills = this.characterHelper.GetSkillsDTO(character),
+                entity = new Entity(character)
             });
         }
 
@@ -74,7 +73,7 @@ namespace taleOfDungir.Controllers
             {
                 return Unauthorized("User does not exist");
             }
-            
+
             this.dbContext.Update(applicationUser);
             System.Random rnd = new System.Random();
             Item newItem = this.itemCreatorHelper.CreateItem(rnd.Next(0, 2) + applicationUser.Character.Level);

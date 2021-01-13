@@ -204,7 +204,8 @@ namespace taleOfDungir.Controllers
         {
             Character character = new Character()
             {
-                Health = 99,
+                Health = 100,
+                MaxHealth = 100,
                 Gold = 0,
                 Exp = 0,
                 Skills = new Skills(),

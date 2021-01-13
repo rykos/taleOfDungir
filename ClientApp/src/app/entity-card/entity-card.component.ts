@@ -13,6 +13,7 @@ export class EntityCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.entity);
   }
 
   ImgLink(imageId: string): string {

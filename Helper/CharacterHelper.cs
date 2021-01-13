@@ -92,9 +92,7 @@ namespace taleOfDungir.Helpers
             this.dbContext.Characters.Update(character);
             character.Health -= Math.Abs(amount);
             if (character.Health < 1)
-            {
                 character.Health = 1;
-            }
             this.dbContext.SaveChanges();
         }
     }
@@ -108,5 +106,6 @@ namespace taleOfDungir.Helpers
         object GetLifeSkillsDTO(Character character);
         long RequiredExp(Character character);
         Item SpawnRandomItem(Character character);
+        void TakeDamage(Character character, Int64 amount);
     }
 }
