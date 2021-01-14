@@ -15,13 +15,13 @@ namespace taleOfDungir.Helpers
 
         public string NameFor(ItemType itemType)
         {
-            int count = this.dbContext.ItemNames.Count();
+            int count = this.dbContext.ItemNames.Where(i => i.ItemType == itemType)?.Count() ?? 0;
             if (count == 0)
             {
                 return "Missing names";
             }
             Random rnd = new Random();
-            return this.dbContext.ItemNames?.Where(i => i.ItemType == itemType)?.Skip(rnd.Next(0, count))?.FirstOrDefault()?.Name ?? "Missing names";
+            return this.dbContext.ItemNames.Where(i => i.ItemType == itemType)?.Skip(rnd.Next(0, count))?.FirstOrDefault()?.Name ?? "Missing names";
         }
 
         public long RandomAvatarId()

@@ -234,6 +234,8 @@ namespace taleOfDungir.Controllers
 
         private FightResoult Fight(Character character)
         {
+            this.characterHelper.HealthRegen(character);
+
             Monster monster = EnemyHelper.CreateEnemy(character.Level);
             List<FightTurn> fightTurns = new List<FightTurn>();
             long playerHealth = character.Health;

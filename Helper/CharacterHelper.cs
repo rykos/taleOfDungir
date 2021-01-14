@@ -108,7 +108,7 @@ namespace taleOfDungir.Helpers
         public void HealthRegen(Character character)
         {
             double passedMinutes = (DateTime.Now - character.LastHealthCheck).TotalMinutes;
-            long regeneratedHealth = (long)(passedMinutes * character.HealthRegen);
+            long regeneratedHealth = (long)Math.Round(passedMinutes * character.HealthRegen);
             if (regeneratedHealth == 0)
                 return;
 
