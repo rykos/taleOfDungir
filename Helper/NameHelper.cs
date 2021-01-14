@@ -45,13 +45,13 @@ namespace taleOfDungir.Helpers
         public long RandomItemImageIDFor(ItemType itemType)
         {
             Random rnd = new Random();
-            int amount = this.dbContext.ImageDBModels.Where(img => img.Type == Convert.ToByte(itemType)).Count();
+            int amount = this.dbContext.ImageDBModels.Where(img => img.Category == "item" && img.Type == Convert.ToByte(itemType)).Count();
             if (amount == 0)
             {
                 DebugHelper.WriteError($"ERROR: NO IMAGE FOR ItemType:({itemType})");
                 return -1;
             }
-            long imgId = this.dbContext.ImageDBModels.Where(img => img.Type == Convert.ToByte(itemType)).Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
+            long imgId = this.dbContext.ImageDBModels.Where(img => img.Category == "item" && img.Type == Convert.ToByte(itemType)).Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
             return imgId;
         }
     }
