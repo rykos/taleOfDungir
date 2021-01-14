@@ -12,6 +12,10 @@ export class Entity {
     }
 
     get HealthPercentage(): number {
-        return (this.health / this.maxHealth) * 100;
+        let percent = (this.health / this.maxHealth) * 100;
+        if (percent < 0)
+            percent = 0;
+            
+        return percent;
     }
 }

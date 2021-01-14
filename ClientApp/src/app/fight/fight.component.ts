@@ -23,6 +23,7 @@ export class FightComponent implements OnInit {
     this.CalculateFinalHealth();
     var i = 0;
     this.fightTimer = setInterval(() => {
+      console.log(i);
       if (this.fight.turns[i].playerAttack) {
         this.fight.enemy.health -= this.fight.turns[i].damageDealt;
       }

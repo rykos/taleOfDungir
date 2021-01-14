@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace taleOfDungir.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult NewImage([FromForm] ImageDTO imageDTO)
+        public async Task<IActionResult> NewImage([FromForm] ImageDTO imageDTO)
         {
             if (new string[] { "item", "avatar" }.Contains(imageDTO.Category) == false)
                 return BadRequest(Models.Response.ErrorResponse("Bad category"));
@@ -42,29 +43,42 @@ namespace taleOfDungir.Controllers
             //|| imageDTO.Files.Length > 5242880
             if (imageDTO.Files.Count() < 1)
                 return BadRequest(Models.Response.ErrorResponse("No files"));
-
-            using (MemoryStream ms = new MemoryStream())
+            //Wrong image type
+            byte imageType = this.GetImageType(imageDTO);
+            if (imageType == byte.MaxValue)
             {
-                foreach (IFormFile file in imageDTO.Files)
-                {
-                    file.CopyTo(ms);
-                    byte imageType = this.GetImageType(imageDTO);
-                    if (imageType == byte.MaxValue)
-                        return BadRequest(Models.Response.ErrorResponse("Bad type"));
+                return BadRequest(Models.Response.ErrorResponse("Bad type"));
+            }
 
-                    ImageDBModel imageDBModel = new ImageDBModel()
-                    {
-                        Image = ms.ToArray(),
-                        Category = imageDTO.Category,
-                        Type = imageType
-                    };
-                    this.dbContext.ImageDBModels.Add(imageDBModel);
-                }
-                int changesCount;
-                if ((changesCount = this.dbContext.SaveChanges()) > 0)
+            List<Task> fileTasks = new List<Task>();
+
+            foreach (IFormFile file in imageDTO.Files)
+            {
+                fileTasks.Add(Task.Run(() =>
                 {
-                    return Ok(changesCount);
-                }
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        file.CopyTo(ms);
+                        ImageDBModel imageDBModel = new ImageDBModel()
+                        {
+                            Image = ms.ToArray(),
+                            Category = imageDTO.Category,
+                            Type = imageType
+                        };
+                        lock (this.dbContext)
+                        {
+                            this.dbContext.ImageDBModels.Add(imageDBModel);
+                        }
+                    }
+                }));
+            }
+            //Wait for all images to insert into db
+            await Task.WhenAll(fileTasks.ToArray());
+
+            int changesCount;
+            if ((changesCount = this.dbContext.SaveChanges()) > 0)
+            {
+                return Ok(changesCount);
             }
             return BadRequest(Models.Response.ErrorResponse("Failed to add new image"));
         }
@@ -104,7 +118,7 @@ namespace taleOfDungir.Controllers
                 if (Enum.TryParse(type, imageDTO.Type, true, out enumParsed))
                     break;
             }
-            return (enumParsed == null) ? byte.MaxValue : (byte)enumParsed;
+            return (enumParsed == null) ? byte.MaxValue : Convert.ToByte(enumParsed);
         }
     }
 }

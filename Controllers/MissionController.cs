@@ -251,10 +251,12 @@ namespace taleOfDungir.Controllers
                 if (playerHealth <= 0)
                     break;
             }
+            FightResoult fr = new FightResoult((playerHealth > 0), fightTurns,
+                new Entity(character.Health, character.MaxHealth, character.CharacterAvatarId), new Entity(maxEnemyHealth, maxEnemyHealth, nameHelper.RandomAvatarId()));
+
             this.characterHelper.TakeDamage(character, tookDamage / 2);
 
-            return new FightResoult((playerHealth > 0), fightTurns,
-                new Entity(playerHealth, character.MaxHealth, character.CharacterAvatarId), new Entity(enemyHealth, maxEnemyHealth, nameHelper.RandomAvatarId()));
+            return fr;
         }
 
         /// <summary>

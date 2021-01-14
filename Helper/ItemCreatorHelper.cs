@@ -29,7 +29,8 @@ namespace taleOfDungir.Helpers
                 Rarity = itemRarity,
                 Power = (Int64)(this.GetPowerScale(itemRarity) * level),
                 Value = power * 2,
-                ImageId = this.nameHelper.RandomItemImageIDFor(itemType)
+                ImageId = this.nameHelper.RandomItemImageIDFor(itemType),
+                ItemType = itemType
             };
             item.Stats = SystemHelper.Serialize(this.CreateStats(item));
             return item;
