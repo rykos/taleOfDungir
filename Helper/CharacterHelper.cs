@@ -87,13 +87,33 @@ namespace taleOfDungir.Helpers
             return item;
         }
 
-        public void TakeDamage(Character character, Int64 amount)
+        public void TakeDamage(Character character, long amount)
         {
             this.dbContext.Characters.Update(character);
             character.Health -= Math.Abs(amount);
             if (character.Health < 1)
                 character.Health = 1;
             this.dbContext.SaveChanges();
+        }
+
+        public void TakeHealing(Character character, long amount)
+        {
+            this.dbContext.Update(character);
+            character.Health += amount;
+            if (character.Health > character.MaxHealth)
+                character.Health = character.MaxHealth;
+            this.dbContext.SaveChanges();
+        }
+
+        public void HealthRegen(Character character)
+        {
+            double passedMinutes = (DateTime.Now - character.LastHealthCheck).TotalMinutes;
+            long regeneratedHealth = (long)(passedMinutes * character.HealthRegen);
+            if (regeneratedHealth == 0)
+                return;
+
+            character.LastHealthCheck = DateTime.Now;
+            this.TakeHealing(character, regeneratedHealth);
         }
     }
 
@@ -107,5 +127,7 @@ namespace taleOfDungir.Helpers
         long RequiredExp(Character character);
         Item SpawnRandomItem(Character character);
         void TakeDamage(Character character, Int64 amount);
+        void TakeHealing(Character character, long amount);
+        void HealthRegen(Character character);
     }
 }

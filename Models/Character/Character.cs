@@ -29,5 +29,15 @@ namespace taleOfDungir.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         public List<Mission> Missions { get; set; }
+
+        /// <summary>
+        /// Time of last health regen check
+        /// </summary>
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime LastHealthCheck { get; set; } = DateTime.Now;
+        /// <summary>
+        /// Health regenerated per minute
+        /// </summary>
+        public float HealthRegen { get; set; }
     }
 }

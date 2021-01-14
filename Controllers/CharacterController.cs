@@ -50,6 +50,8 @@ namespace taleOfDungir.Controllers
                 .Include(u => u.Character.Inventory)
                 .Where(u => u.Id == userId).Select(u => u.Character)).FirstOrDefault();
 
+            this.characterHelper.HealthRegen(character);
+
             return Ok(new
             {
                 level = character.Level,
@@ -61,29 +63,6 @@ namespace taleOfDungir.Controllers
                 skills = this.characterHelper.GetSkillsDTO(character),
                 entity = new Entity(character)
             });
-        }
-
-        [HttpGet]
-        [Route("give")]
-        public IActionResult Give()
-        {
-            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ApplicationUser applicationUser = this.dbContext.Users.Include(u => u.Character.Inventory).Include(u => u.Character).FirstOrDefault(u => u.Id == userId);
-            if (applicationUser == default)
-            {
-                return Unauthorized("User does not exist");
-            }
-
-            this.dbContext.Update(applicationUser);
-            System.Random rnd = new System.Random();
-            Item newItem = this.itemCreatorHelper.CreateItem(rnd.Next(0, 2) + applicationUser.Character.Level);
-            newItem.CharacterId = applicationUser.CharacterId;
-
-            applicationUser.Character.Inventory.Add(newItem);
-
-            this.dbContext.SaveChanges();
-
-            return Ok();
         }
     }
 }
