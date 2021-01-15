@@ -19,6 +19,12 @@ namespace taleOfDungir.Helpers
         public Item CreateItem(int level)
         {
             ItemType itemType = GetRandomItemType();
+            return this.CreateItem(level, itemType);
+        }
+
+        public Item CreateItem(int level, ItemType itemType)
+        {
+            level = this.LevelVaration(level, 3);
             Rarity itemRarity = CreateItemRarity();
             Int64 power = (Int64)(this.GetPowerScale(itemRarity) * level);
             Item item = new Item()
@@ -34,6 +40,13 @@ namespace taleOfDungir.Helpers
             };
             item.Stats = SystemHelper.Serialize(this.CreateStats(item));
             return item;
+        }
+
+        private int LevelVaration(int level, int maxVariation)
+        {
+            Random rnd = new Random();
+            int newLevel = level + (SystemHelper.RandomSign() * rnd.Next(0, maxVariation + 1));
+            return newLevel < 1 ? 1 : newLevel;
         }
 
         private double GetPowerScale(Rarity rarity)
@@ -104,14 +117,20 @@ namespace taleOfDungir.Helpers
 
         private Stats CreateStats(Item item)
         {
+            Random rnd = new Random();
+            long availablePoints = (long)Math.Round(item.Level * 1.5f * this.GetPowerScale(item.Rarity));
+
+            // Generate weight for each stat
             Stats stats = new Stats()
             {
-                Combat = 1,
-                Luck = 2,
-                Perception = 2,
-                Vitality = 3
+                Combat = rnd.Next(1, 101),
+                Luck = rnd.Next(1, 101),
+                Perception = rnd.Next(1, 101),
+                Vitality = rnd.Next(1, 101)
             };
-            //item.Stats = SystemHelper.Serialize(stats);
+            // Normalize stats to allocate available points
+            stats.Normalize(availablePoints);
+
             return stats;
         }
     }
@@ -119,5 +138,6 @@ namespace taleOfDungir.Helpers
     public interface ItemCreatorHelperProvider
     {
         Item CreateItem(int level);
+        Item CreateItem(int level, ItemType itemType);
     }
 }

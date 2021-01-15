@@ -7,6 +7,12 @@ namespace taleOfDungir.Helpers
 {
     public static class SystemHelper
     {
+        public static int RandomSign()
+        {
+            Random rnd = new Random();
+            return rnd.Next(0, 2) * 2 - 1;
+        }
+
         public static byte[] Serialize(object obj)
         {
             IFormatter formatter = new BinaryFormatter();
