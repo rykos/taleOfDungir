@@ -1,3 +1,4 @@
+import { Item } from './../../_models/Item';
 import { Character } from './../../_models/Character';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +15,7 @@ import { Component, OnInit } from '@angular/core';
 export class ProfileComponent implements OnInit {
   user: User;
   character: Character;
+  ItemDescriptionBox: Item;
   constructor(private authenticationService: AuthenticationService, private accountService: AccountService, private httpClient: HttpClient) {
     this.user = authenticationService.currentUserValue;
     accountService.Details().subscribe(x => { this.character = x; });
@@ -24,6 +26,20 @@ export class ProfileComponent implements OnInit {
 
   ImgLink(imageId: string): string {
     return this.accountService.GetImageLink(imageId);
+  }
+
+  itemClick(item: HTMLElement, q: Item) {
+    this.ItemDescriptionBox = q;
+    console.log(this.ItemDescriptionBox);
+    let itemDescriptionItem = document.getElementById("ItemDescriptionBox");
+    itemDescriptionItem.style.visibility = "visible";
+    itemDescriptionItem.style.top = item.offsetTop + "px";
+    itemDescriptionItem.style.left = item.offsetLeft + "px";
+  }
+
+  itemClose() {
+    document.getElementById("ItemDescriptionBox").style.visibility = "hidden";
+    this.ItemDescriptionBox = null;
   }
 
 }

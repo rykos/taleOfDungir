@@ -1,3 +1,4 @@
+import { Stats } from './Stats';
 import { ItemType } from './ItemType';
 export class Item {
     id?: number;
@@ -7,4 +8,5 @@ export class Item {
     value: number;
     itemType?: ItemType;
     iconID?: number;
+    stats?: Stats;
 }

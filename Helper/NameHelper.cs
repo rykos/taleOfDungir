@@ -51,7 +51,8 @@ namespace taleOfDungir.Helpers
                 DebugHelper.WriteError($"ERROR: NO IMAGE FOR ItemType:({itemType})");
                 return -1;
             }
-            long imgId = this.dbContext.ImageDBModels.Where(img => img.Category == "item" && img.Type == Convert.ToByte(itemType)).Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
+            long imgId = this.dbContext.ImageDBModels.Where(img => img.Category == "item" && img.Type == Convert.ToByte(itemType))
+                .Select(img => img.Id).Skip(rnd.Next(0, amount)).FirstOrDefault();
             return imgId;
         }
     }

@@ -28,8 +28,19 @@
             <p>health:{{character.entity.health}}/{{character.entity.maxHealth}}</p>
         </div>
     </div>
-    <div *ngFor="let item of character.inventory; index as i;">
-        {{i+1}}) Name:{{item.name}} Level: {{item.level}} Power:{{item.power}} Value: {{item.value}}
-        <img [src]="ImgLink(item.iconID)" height="64px" width="64px">
+    <!-- {{i+1}}) Name:{{item.name}} Level: {{item.level}} Power:{{item.power}} Value: {{item.value}} -->
+    <div *ngFor="let item of character.inventory; index as i;" class="border m-1" style="width: 64px; height: 64px;"
+        (click)="itemClick($event.target, item)">
+        <img [src]="ImgLink(item.iconID)" width="100%" draggable="false">
+    </div>
+    <div id="ItemDescriptionBox"
+        style="display: flex; background-color: #4d3710; position: absolute; top: 0; left: 0; transform: translate(-10%,5%); visibility: hidden; min-width: 200px;">
+        <div *ngIf="ItemDescriptionBox" style="color: whitesmoke;">
+            {{ItemDescriptionBox.name}} <br> lvl: {{ItemDescriptionBox.level}} <br> Power:{{ItemDescriptionBox.power}}
+            <br>
+            Value: {{ItemDescriptionBox.value}}
+            <button class="btn btn-danger" (click)="itemClose()" style="position: absolute; top: 0; right: 0;">x</button>
+            <button class="btn btn-success">equip</button>
+        </div>
     </div>
 </div>

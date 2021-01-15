@@ -44,7 +44,15 @@ namespace taleOfDungir.Helpers
         /// <returns>Array of DataTransferObjects</returns>
         public object GetItemsDTO(Character character)
         {
-            return character.Inventory.Select(i => new { i.Name, i.Level, i.Power, i.Value, iconID = i.ImageId }).ToList();
+            return character.Inventory.Select(i => new
+            {
+                i.Name,
+                i.Level,
+                i.Power,
+                i.Value,
+                iconID = i.ImageId,
+                stats = SystemHelper.Deserialize<Stats>(i.Stats)
+            }).ToList();
         }
 
         public object GetSkillsDTO(Character character)
