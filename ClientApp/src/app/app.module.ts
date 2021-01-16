@@ -23,6 +23,7 @@ import { MissionEventComponent } from './mission-event/mission-event.component';
 import { FightComponent } from './fight/fight.component';
 import { EntityCardComponent } from './entity-card/entity-card.component';
 import { ImagesCrudComponent } from './images-crud/images-crud.component';
+import { ItemWidgetComponent } from './item-widget/item-widget.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ImagesCrudComponent } from './images-crud/images-crud.component';
     MissionEventComponent,
     FightComponent,
     EntityCardComponent,
-    ImagesCrudComponent
+    ImagesCrudComponent,
+    ItemWidgetComponent
   ],
   imports: [
     BrowserModule,

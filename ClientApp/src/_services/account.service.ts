@@ -124,7 +124,7 @@ export class AccountService {
     return this.httpClient.get<Character>(environment.apiUrl + "/character/details");
   }
 
-  GetImageLink(imageId: string): string {
+  static GetImageLink(imageId: string): string {
     return `${environment.apiUrl}/images/${imageId}`;
   }
 

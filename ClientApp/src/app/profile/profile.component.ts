@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { AccountService } from './../../_services/account.service';
 import { User } from './../../_models/User';
 import { AuthenticationService } from './../../_services/authentication.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
@@ -25,12 +25,11 @@ export class ProfileComponent implements OnInit {
   }
 
   ImgLink(imageId: string): string {
-    return this.accountService.GetImageLink(imageId);
+    return AccountService.GetImageLink(imageId);
   }
 
   itemClick(item: HTMLElement, q: Item) {
     this.ItemDescriptionBox = q;
-    console.log(this.ItemDescriptionBox);
     let itemDescriptionItem = document.getElementById("ItemDescriptionBox");
     itemDescriptionItem.style.visibility = "visible";
     itemDescriptionItem.style.top = item.offsetTop + "px";
