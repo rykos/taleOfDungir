@@ -10,12 +10,13 @@ import { WebVars } from '../_models/WebVars';
 import { Title } from '@angular/platform-browser';
 import { Mission } from './../_models/Mission';
 import { Character } from './../_models/Character';
-import { observable, Observable, of, BehaviorSubject } from 'rxjs';
+import { observable, Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { environment } from './../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Entity } from 'src/_models/Entity';
+import { Equipment } from 'src/_models/Equipment';
 
 @Injectable({
   providedIn: 'root'
@@ -129,8 +130,11 @@ export class AccountService {
     return `${environment.apiUrl}/images/${imageId}`;
   }
 
-  RefreshCharacter(): void {
-    this.Details().subscribe(c => this.currentCharacterSubject.next(c));
+  RefreshCharacter() {
+    this.Details().subscribe(c => {
+      c.equipment = new Equipment(c.inventory);
+      this.currentCharacterSubject.next(c);
+    });
   }
 
   GetMissions(): Observable<Mission[]> {

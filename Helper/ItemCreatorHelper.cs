@@ -112,7 +112,7 @@ namespace taleOfDungir.Helpers
         private ItemType GetRandomItemType()
         {
             Array itemTypes = Enum.GetValues(typeof(ItemType));
-            return (ItemType)itemTypes.GetValue(new Random().Next(0, itemTypes.Length));
+            return (ItemType)itemTypes.GetValue(new Random().Next(1, itemTypes.Length));
         }
 
         private Stats CreateStats(Item item)

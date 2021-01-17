@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { Equipment } from './../../_models/Equipment';
 import { Item } from './../../_models/Item';
 import { Character } from './../../_models/Character';
@@ -6,26 +7,31 @@ import { HttpClient } from '@angular/common/http';
 import { AccountService } from './../../_services/account.service';
 import { User } from './../../_models/User';
 import { AuthenticationService } from './../../_services/authentication.service';
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   user: User;
   character: Character;
   ItemDescriptionBox: Item;
+  characterSub: Subscription;
   constructor(private authenticationService: AuthenticationService, private accountService: AccountService, private httpClient: HttpClient) {
     this.user = authenticationService.currentUserValue;
-    accountService.Details().subscribe(x => {
-      this.character = x;
-      this.character.equipment = new Equipment(this.character.inventory);
+    accountService.RefreshCharacter();
+    this.characterSub = accountService.currentCharacterSubject.subscribe((c) => {
+      this.character = c;
     });
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.characterSub.unsubscribe();
   }
 
   ImgLink(imageId: string): string {
@@ -49,6 +55,7 @@ export class ProfileComponent implements OnInit {
     console.log(`equip ${this.ItemDescriptionBox.name}`);
     this.accountService.EquipItem(this.ItemDescriptionBox).subscribe(x => {
       console.log(x);
+      this.accountService.RefreshCharacter();
     });
   }
 
