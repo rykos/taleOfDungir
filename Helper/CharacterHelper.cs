@@ -46,11 +46,14 @@ namespace taleOfDungir.Helpers
         {
             return character.Inventory.Select(i => new
             {
+                i.ItemId,
+                i.ItemType,
                 i.Name,
                 i.Level,
                 i.Power,
                 i.Value,
                 iconID = i.ImageId,
+                i.Worn,
                 stats = SystemHelper.Deserialize<Stats>(i.Stats)
             }).ToList();
         }

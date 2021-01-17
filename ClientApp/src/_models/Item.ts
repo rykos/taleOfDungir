@@ -1,7 +1,7 @@
 import { Stats } from './Stats';
 import { ItemType } from './ItemType';
 export class Item {
-    id?: number;
+    itemId?: number;
     level: number;
     name: string;
     power: number;

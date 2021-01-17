@@ -1,3 +1,4 @@
+import { Item } from 'src/_models/Item';
 import { MissionReward } from './../_models/MissionReward';
 import { MissionFinishedObject } from './../_models/MissionFinishedObject';
 import { MissionResoult } from './../_models/MissionResoult';
@@ -146,5 +147,10 @@ export class AccountService {
 
   PickMissionEventAction(eventActionId: number): Observable<MissionResoult> {
     return this.httpClient.get<MissionResoult>(`${environment.apiUrl}/missions/active/event/${eventActionId}`);
+  }
+
+  EquipItem(item: Item): Observable<any> {
+    console.log(item);
+    return this.httpClient.get(`${environment.apiUrl}/character/equip/${item.itemId}`);
   }
 }

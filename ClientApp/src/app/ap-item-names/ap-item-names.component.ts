@@ -56,7 +56,7 @@ export class ApItemNamesComponent implements OnInit {
   Delete(id: number) {
     this.httpClient.delete<ComResponse>(`${environment.apiUrl}/admin/items/names/${id}`).subscribe(x => {
       if (x && x.type == "Success") {
-        let index = this.foundItems.findIndex(x => x.id === id);
+        let index = this.foundItems.findIndex(x => x.itemId === id);
         if (index > -1) {
           this.foundItems.splice(index, 1);
         }

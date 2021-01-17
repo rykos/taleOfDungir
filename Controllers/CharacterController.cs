@@ -64,5 +64,38 @@ namespace taleOfDungir.Controllers
                 entity = new Entity(character)
             });
         }
+
+        [HttpGet]
+        [Route("equip/{itemID}")]
+        public async Task<IActionResult> Equip(long itemID)
+        {
+            ApplicationUser activeUser = await this.GetActiveUser();
+            Item item = this.dbContext.Items.FirstOrDefault(i => i.ItemId == itemID);
+            if (activeUser == default)
+                return Unauthorized();
+            if (item.CharacterId != activeUser.CharacterId)
+                return Unauthorized();
+
+            Character character = this.dbContext.Characters.Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == activeUser.CharacterId);
+            Item alreadyWornItem = character.Inventory.FirstOrDefault(i => i.ItemType == item.ItemType && i.Worn);
+            if (alreadyWornItem != default)
+            {
+                this.dbContext.Update(alreadyWornItem);
+                alreadyWornItem.Worn = false;
+            }
+
+            this.dbContext.Update(item);
+            item.Worn = true;
+            this.dbContext.SaveChanges();
+
+            return Ok();
+        }
+
+        private async Task<ApplicationUser> GetActiveUser()
+        {
+            string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ApplicationUser applicationUser = await this.userManager.FindByIdAsync(userId);
+            return applicationUser;
+        }
     }
 }

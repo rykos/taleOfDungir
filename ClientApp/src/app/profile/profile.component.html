@@ -11,9 +11,9 @@
                     </div>
                     <img [src]="ImgLink(character.entity.avatarID)" width="216px" height="216px">
                     <div class="d-flex flex-wrap" style="background-color: aliceblue;">
-                        <app-item-widget [placeholder]="'neck'"></app-item-widget>
-                        <app-item-widget [placeholder]="'finger'" ></app-item-widget>
-                        <app-item-widget [placeholder]="'weapon'" ></app-item-widget>
+                        <app-item-widget [placeholder]="'neck'" [item]="character.equipment?.neck"></app-item-widget>
+                        <app-item-widget [placeholder]="'finger'" [item]="character.equipment?.finger"></app-item-widget>
+                        <app-item-widget [placeholder]="'weapon'" [item]="character.equipment?.weapon"></app-item-widget>
                     </div>
                 </div>
                 <div class="progress" style="position: relative;">

@@ -21,8 +21,7 @@ export class ProfileComponent implements OnInit {
     this.user = authenticationService.currentUserValue;
     accountService.Details().subscribe(x => {
       this.character = x;
-      this.character.equipment = new Equipment();
-      this.character.equipment.head = this.character.inventory[0];
+      this.character.equipment = new Equipment(this.character.inventory);
     });
   }
 
@@ -48,6 +47,9 @@ export class ProfileComponent implements OnInit {
 
   equipItem() {
     console.log(`equip ${this.ItemDescriptionBox.name}`);
+    this.accountService.EquipItem(this.ItemDescriptionBox).subscribe(x => {
+      console.log(x);
+    });
   }
 
 }

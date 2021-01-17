@@ -24,9 +24,8 @@ export class ItemWidgetComponent implements OnInit {
     return AccountService.GetImageLink(imageId);
   }
 
-  PlaceholderLink(type: string): string {
-    return AccountService.GetImageLink('471');
-    // return this.domSanitizer.bypassSecurityTrustResourceUrl(`http://localhost:4200/assets/${type}.svg`);
+  PlaceholderLink(type: string) {
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(`http://localhost:4200/assets/${type}.png`);
   }
 
 }
