@@ -8,5 +8,6 @@ export class Item {
     value: number;
     itemType?: ItemType;
     iconID?: number;
+    worn?: boolean;
     stats?: Stats;
 }

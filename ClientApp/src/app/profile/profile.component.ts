@@ -1,3 +1,4 @@
+import { Equipment } from './../../_models/Equipment';
 import { Item } from './../../_models/Item';
 import { Character } from './../../_models/Character';
 import { environment } from './../../environments/environment';
@@ -18,7 +19,11 @@ export class ProfileComponent implements OnInit {
   ItemDescriptionBox: Item;
   constructor(private authenticationService: AuthenticationService, private accountService: AccountService, private httpClient: HttpClient) {
     this.user = authenticationService.currentUserValue;
-    accountService.Details().subscribe(x => { this.character = x; });
+    accountService.Details().subscribe(x => {
+      this.character = x;
+      this.character.equipment = new Equipment();
+      this.character.equipment.head = this.character.inventory[0];
+    });
   }
 
   ngOnInit(): void {
@@ -28,17 +33,21 @@ export class ProfileComponent implements OnInit {
     return AccountService.GetImageLink(imageId);
   }
 
-  itemClick(item: HTMLElement, q: Item) {
-    this.ItemDescriptionBox = q;
+  itemClick(itemWidget: HTMLElement, item: Item) {
+    this.ItemDescriptionBox = item;
     let itemDescriptionItem = document.getElementById("ItemDescriptionBox");
     itemDescriptionItem.style.visibility = "visible";
-    itemDescriptionItem.style.top = item.offsetTop + "px";
-    itemDescriptionItem.style.left = item.offsetLeft + "px";
+    itemDescriptionItem.style.top = itemWidget.offsetTop + "px";
+    itemDescriptionItem.style.left = itemWidget.offsetLeft + "px";
   }
 
   itemClose() {
     document.getElementById("ItemDescriptionBox").style.visibility = "hidden";
     this.ItemDescriptionBox = null;
+  }
+
+  equipItem() {
+    console.log(`equip ${this.ItemDescriptionBox.name}`);
   }
 
 }
