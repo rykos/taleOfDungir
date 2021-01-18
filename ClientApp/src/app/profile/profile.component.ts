@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs';
+import { Item } from 'src/_models/Item';
+import { Subscription, interval } from 'rxjs';
 import { Equipment } from './../../_models/Equipment';
-import { Item } from './../../_models/Item';
 import { Character } from './../../_models/Character';
 import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +8,7 @@ import { AccountService } from './../../_services/account.service';
 import { User } from './../../_models/User';
 import { AuthenticationService } from './../../_services/authentication.service';
 import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { ItemType } from 'src/_models/ItemType';
 
 @Component({
   selector: 'app-profile',
@@ -17,13 +18,19 @@ import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
 export class ProfileComponent implements OnInit, OnDestroy {
   user: User;
   character: Character;
-  ItemDescriptionBox: Item;
+  SelectedItem: Item;
   characterSub: Subscription;
   constructor(private authenticationService: AuthenticationService, private accountService: AccountService, private httpClient: HttpClient) {
     this.user = authenticationService.currentUserValue;
     accountService.RefreshCharacter();
     this.characterSub = accountService.currentCharacterSubject.subscribe((c) => {
-      this.character = c;
+      if (c) {
+        this.character = c;
+        this.character.inventory = c.inventory.filter(i => !i?.worn);
+        for (let i = this.character.inventory.length; i < 21; i++) {
+          this.character.inventory.push(null);
+        }
+      }
     });
   }
 
@@ -39,7 +46,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   itemClick(itemWidget: HTMLElement, item: Item) {
-    this.ItemDescriptionBox = item;
+    this.SelectedItem = item;
     let itemDescriptionItem = document.getElementById("ItemDescriptionBox");
     itemDescriptionItem.style.visibility = "visible";
     itemDescriptionItem.style.top = itemWidget.offsetTop + "px";
@@ -48,15 +55,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   itemClose() {
     document.getElementById("ItemDescriptionBox").style.visibility = "hidden";
-    this.ItemDescriptionBox = null;
+    this.SelectedItem = null;
   }
 
   equipItem() {
-    console.log(`equip ${this.ItemDescriptionBox.name}`);
-    this.accountService.EquipItem(this.ItemDescriptionBox).subscribe(x => {
-      console.log(x);
+    console.log(`equip ${this.SelectedItem.name}`);
+    this.accountService.EquipItem(this.SelectedItem).subscribe(x => {
       this.accountService.RefreshCharacter();
+      this.itemClose();
     });
+  }
+
+  itemInteractionString(item: Item): string {
+    if(item.itemType == ItemType.None){
+      return '';
+    }
+    else if(item.itemType == ItemType.Consumable){
+      return 'consume';
+    }
+    return 'das';
   }
 
 }

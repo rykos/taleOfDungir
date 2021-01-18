@@ -24,6 +24,7 @@ import { FightComponent } from './fight/fight.component';
 import { EntityCardComponent } from './entity-card/entity-card.component';
 import { ImagesCrudComponent } from './images-crud/images-crud.component';
 import { ItemWidgetComponent } from './item-widget/item-widget.component';
+import { ItemDescriptionInteractButtonComponent } from './item-description-interact-button/item-description-interact-button.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ItemWidgetComponent } from './item-widget/item-widget.component';
     FightComponent,
     EntityCardComponent,
     ImagesCrudComponent,
-    ItemWidgetComponent
+    ItemWidgetComponent,
+    ItemDescriptionInteractButtonComponent
   ],
   imports: [
     BrowserModule,

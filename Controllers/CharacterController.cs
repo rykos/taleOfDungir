@@ -82,6 +82,11 @@ namespace taleOfDungir.Controllers
             {
                 this.dbContext.Update(alreadyWornItem);
                 alreadyWornItem.Worn = false;
+                if (alreadyWornItem.ItemId == itemID)
+                {
+                    this.dbContext.SaveChanges();
+                    return Ok();
+                }
             }
 
             this.dbContext.Update(item);

@@ -5,15 +5,15 @@
             <div style="width: 360px;">
                 <div class="d-flex" style="width: 360px;">
                     <div class="d-flex flex-wrap" style="background-color: aliceblue;">
-                        <app-item-widget [placeholder]="'head'" [item]="character.equipment?.head"></app-item-widget>
-                        <app-item-widget [placeholder]="'chest'" [item]="character.equipment?.body"></app-item-widget>
-                        <app-item-widget [placeholder]="'legs'" [item]="character.equipment?.legs"></app-item-widget>
+                        <app-item-widget [placeholder]="'head'" [item]="character.equipment?.head" (click)="itemClick($event.target, character.equipment?.head)"></app-item-widget>
+                        <app-item-widget [placeholder]="'chest'" [item]="character.equipment?.body" (click)="itemClick($event.target, character.equipment?.body)"></app-item-widget>
+                        <app-item-widget [placeholder]="'legs'" [item]="character.equipment?.legs" (click)="itemClick($event.target, character.equipment?.legs)"></app-item-widget>
                     </div>
                     <img [src]="ImgLink(character.entity.avatarID)" width="216px" height="216px">
                     <div class="d-flex flex-wrap" style="background-color: aliceblue;">
-                        <app-item-widget [placeholder]="'neck'" [item]="character.equipment?.neck"></app-item-widget>
-                        <app-item-widget [placeholder]="'finger'" [item]="character.equipment?.finger"></app-item-widget>
-                        <app-item-widget [placeholder]="'weapon'" [item]="character.equipment?.weapon"></app-item-widget>
+                        <app-item-widget [placeholder]="'neck'" [item]="character.equipment?.neck" (click)="itemClick($event.target, character.equipment?.neck)"></app-item-widget>
+                        <app-item-widget [placeholder]="'finger'" [item]="character.equipment?.finger"(click)="itemClick($event.target, character.equipment?.finger)"></app-item-widget>
+                        <app-item-widget [placeholder]="'weapon'" [item]="character.equipment?.weapon"(click)="itemClick($event.target, character.equipment?.weapon)"></app-item-widget>
                     </div>
                 </div>
                 <div class="progress" style="position: relative;">
@@ -40,10 +40,11 @@
                 <div class="d-flex flex-wrap" style="background-color: aliceblue;">
                     <div *ngFor="let item of character.inventory; index as i;"
                         (click)="itemClick($event.target, item)">
-                        <app-item-widget [placeholder]="head" [item]="item"></app-item-widget>
+                        <app-item-widget [placeholder]="none" [item]="item"></app-item-widget>
                     </div>
                 </div>
             </div>
+            <div style="width: 400px; height: 100px;"></div>
         </div>
     </div>
     <div>
@@ -56,15 +57,21 @@
 <!--  -->
 <div id="ItemDescriptionBox"
     style="display: flex; background-color: #4d3710; position: absolute; top: 0; left: 0; visibility: hidden; min-width: 200px;">
-    <div *ngIf="ItemDescriptionBox" class="container-fluid p-0 m-1" style="color: whitesmoke;">
+    <div *ngIf="SelectedItem" class="container-fluid p-0 m-1" style="color: whitesmoke;">
         <div>
-            {{ItemDescriptionBox.name}} <br> lvl: {{ItemDescriptionBox.level}} <br>
-            Power:{{ItemDescriptionBox.power}}
+            {{SelectedItem.name}} <br> lvl: {{SelectedItem.level}} <br>
+            Power:{{SelectedItem.power}}
             <br>
-            Value: {{ItemDescriptionBox.value}}
+            Value: {{SelectedItem.value}}
             <br>
         </div>
         <button class="btn btn-danger" (click)="itemClose()" style="position: absolute; top: 0; right: 0;">x</button>
-        <button class="btn btn-success w-100" (click)="equipItem()">equip</button>
+        <app-item-description-interact-button [item]="SelectedItem" (click)="equipItem()"></app-item-description-interact-button>   
     </div>
 </div>
+
+<!-- <button class="btn w-100 t-0" [ngClass]="{'btn-success': !SelectedItem.worn, 'btn-danger': SelectedItem.worn}" (click)="equipItem()">
+    <div>{{itemInteractionString(SelectedItem)}}</div>
+    <div *ngIf="!SelectedItem.worn">equip</div>
+    <div *ngIf="SelectedItem.worn">unequip</div>
+</button> -->
