@@ -1,6 +1,11 @@
-<div class="border m-1" style="width: 64px; height: 64px;">
-    <img src="http://localhost:4200/assets/A_Inventory_frame.png" width="64px" style="position: absolute;"
+<div class="border m-1" style="width: 64px; height: 64px; position: relative;">
+    <!--  -->
+    <img src="http://localhost:4200/assets/bg_grey.png" width="64px" style="position: absolute; top: 0px; left: 0px; pointer-events: none;"
         draggable="false">
-    <img *ngIf="item" [src]="ImgLink(item.iconID)" width="100%" draggable="false" width="64px">
-    <img *ngIf="!item && placeholder" [src]="PlaceholderLink(placeholder)" width="100%" draggable="false" width="64px">
+    <!--  -->
+    <img src="http://localhost:4200/assets/A_Inventory_frame.png" width="64px" style="position: absolute; pointer-events: none;"
+        draggable="false">
+    <img *ngIf="item" [src]="ImgLink(item.iconID)" width="64px" draggable="false" style="position: absolute; pointer-events: none;"
+        width="64px">
+    <img *ngIf="!item && placeholder" [src]="PlaceholderLink(placeholder)" width="100%" draggable="false" width="64px" style="pointer-events: none;">
 </div>
