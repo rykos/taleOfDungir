@@ -1,0 +1,21 @@
+<div style="background-color: silver;">
+    <div style="display: flex;">
+        <!-- backpack -->
+        <div *ngIf="character" style="width: 440px;">
+            <div class="d-flex flex-wrap" style="background-color: aliceblue;">
+                <div *ngFor="let item of character.inventory; index as i;" (click)="itemClick($event.target, item, 'sell')">
+                    <app-item-widget [placeholder]="none" [item]="item"></app-item-widget>
+                </div>
+            </div>
+        </div>
+        <!-- backpack -->
+        <div *ngIf="character" style="width: 440px;">
+            <div class="d-flex flex-wrap" style="background-color: aliceblue;">
+                <div *ngFor="let item of character.inventory; index as i;" (click)="itemClick($event.target, item, 'buy')">
+                    <app-item-widget [placeholder]="none" [item]="item"></app-item-widget>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-item-description-box [item]="SelectedItem" [context]="context"></app-item-description-box>

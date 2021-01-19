@@ -10,11 +10,14 @@
             </a>
             <a class="list-group-item list-group-item-action" (click)="MenuItemClick('Character')"
                 [ngClass]="{'active': IsActive('Character')}" style="cursor: pointer;">Character</a>
+            <a class="list-group-item list-group-item-action" (click)="MenuItemClick('Shop-Blacksmith')"
+                [ngClass]="{'active': IsActive('Shop-Blacksmith')}" style="cursor: pointer;">Blacksmith</a>
         </div>
     </div>
     <!-- Content -->
     <div>
         <app-missions *ngIf="IsActive('Missions')"></app-missions>
         <app-profile *ngIf="IsActive('Character')"></app-profile>
+        <app-shop-blacksmith *ngIf="IsActive('Shop-Blacksmith')"></app-shop-blacksmith>
     </div>
 </div>

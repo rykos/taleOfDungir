@@ -21,6 +21,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   character: Character;
   SelectedItem: Item;
   characterSub: Subscription;
+  context: string;
+
   constructor(private authenticationService: AuthenticationService, private accountService: AccountService, private httpClient: HttpClient) {
     this.user = authenticationService.currentUserValue;
     accountService.RefreshCharacter();
@@ -45,7 +47,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return AccountService.GetImageLink(imageId);
   }
 
-  itemClick(itemWidget: HTMLElement, item: Item) {
+  itemClick(itemWidget: HTMLElement, item: Item, context: string) {
+    this.context = context;
     this.SelectedItem = item;
     ItemDescriptionBoxComponent.ShowDescriptionBox(itemWidget, this.SelectedItem);
   }

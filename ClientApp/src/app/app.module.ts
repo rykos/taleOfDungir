@@ -26,6 +26,7 @@ import { ImagesCrudComponent } from './images-crud/images-crud.component';
 import { ItemWidgetComponent } from './item-widget/item-widget.component';
 import { ItemDescriptionInteractButtonComponent } from './item-description-interact-button/item-description-interact-button.component';
 import { ItemDescriptionBoxComponent } from './item-description-box/item-description-box.component';
+import { ShopBlacksmithComponent } from './shop-blacksmith/shop-blacksmith.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ItemDescriptionBoxComponent } from './item-description-box/item-descrip
     ImagesCrudComponent,
     ItemWidgetComponent,
     ItemDescriptionInteractButtonComponent,
-    ItemDescriptionBoxComponent
+    ItemDescriptionBoxComponent,
+    ShopBlacksmithComponent
   ],
   imports: [
     BrowserModule,

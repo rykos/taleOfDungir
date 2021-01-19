@@ -10,6 +10,8 @@ import { Item } from 'src/_models/Item';
 export class ItemDescriptionBoxComponent implements OnInit {
   @Input()
   item: Item;
+  @Input()
+  context: string;
 
   constructor(private accountService: AccountService) { }
 
@@ -20,14 +22,18 @@ export class ItemDescriptionBoxComponent implements OnInit {
   }
 
   useItem() {
-    console.log(`use item ${this.item.name}`);
-    this.accountService.EquipItem(this.item).subscribe(x => {
-      this.accountService.RefreshCharacter();
-      this.itemClose();
-    });
+    if (this.context == "equip") {
+      this.accountService.EquipItem(this.item).subscribe(x => {
+        this.accountService.RefreshCharacter();
+        this.itemClose();
+      });
+    }
+    else if (this.context == "eat") {
+      console.log("eating some food");
+    }
   }
 
-  static ShowDescriptionBox(itemWidget: HTMLElement, item: Item) {
+  static ShowDescriptionBox(itemWidget: HTMLElement, item: Item, ctx?: string) {
     let itemDescriptionItem = document.getElementById("ItemDescriptionBox");
     itemDescriptionItem.style.visibility = "visible";
     itemDescriptionItem.style.top = itemWidget.offsetTop + "px";

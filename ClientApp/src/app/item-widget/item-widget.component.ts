@@ -14,11 +14,9 @@ export class ItemWidgetComponent implements OnInit {
   @Input()
   placeholder: string;
 
-  constructor(private domSanitizer: DomSanitizer) {
-  }
+  constructor(private domSanitizer: DomSanitizer) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   ImgLink(imageId: string): string {
     return AccountService.GetImageLink(imageId);
