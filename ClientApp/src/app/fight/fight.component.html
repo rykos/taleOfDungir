@@ -16,9 +16,17 @@
         <div class="d-flex container justify-content-center border" *ngIf="fightFinished">
             <div class="d-flex flex-column align-items-center">
                 <div>Reward</div>
-                <i>none</i>
+                <div *ngIf="reward">
+                    exp {{reward.expAmount}}
+                    gold {{reward.goldAmount}}
+                    <div *ngFor="let item of reward.items" class="d-flex">
+                        <app-item-widget [item]="item" (click)="itemClick($event.target, item)"></app-item-widget>
+                    </div>
+                    <!-- (click)="itemClick($event.target, item)" -->
+                </div>
                 <button class="btn btn-primary" (click)="FinishMission()">Finish</button>
             </div>
         </div>
     </div>
 </div>
+<app-item-description-box [item]="SelectedItem"></app-item-description-box>

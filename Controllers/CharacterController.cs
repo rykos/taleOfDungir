@@ -71,27 +71,14 @@ namespace taleOfDungir.Controllers
         {
             ApplicationUser activeUser = await this.GetActiveUser();
             Item item = this.dbContext.Items.FirstOrDefault(i => i.ItemId == itemID);
+            if (item == default)
+                return NotFound();
             if (activeUser == default)
                 return Unauthorized();
             if (item.CharacterId != activeUser.CharacterId)
                 return Unauthorized();
 
-            Character character = this.dbContext.Characters.Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == activeUser.CharacterId);
-            Item alreadyWornItem = character.Inventory.FirstOrDefault(i => i.ItemType == item.ItemType && i.Worn);
-            if (alreadyWornItem != default)
-            {
-                this.dbContext.Update(alreadyWornItem);
-                alreadyWornItem.Worn = false;
-                if (alreadyWornItem.ItemId == itemID)
-                {
-                    this.dbContext.SaveChanges();
-                    return Ok();
-                }
-            }
-
-            this.dbContext.Update(item);
-            item.Worn = true;
-            this.dbContext.SaveChanges();
+            this.characterHelper.EquipItem(activeUser.CharacterId, item);
 
             return Ok();
         }

@@ -44,12 +44,13 @@ namespace taleOfDungir.Models
                 this.ItemId,
                 this.Name,
                 this.Description,
+                IconID = this.ImageId,
                 this.Level,
                 this.Power,
                 this.Value,
                 this.Worn,
                 this.Rarity,
-                this.Stats,
+                Stats = Helpers.SystemHelper.Deserialize<Stats>(this.Stats),
                 this.ItemType
             };
         }

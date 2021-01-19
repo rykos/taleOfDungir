@@ -1,3 +1,4 @@
+import { ItemDescriptionBoxComponent } from './../item-description-box/item-description-box.component';
 import { Item } from 'src/_models/Item';
 import { Subscription, interval } from 'rxjs';
 import { Equipment } from './../../_models/Equipment';
@@ -34,8 +35,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.characterSub.unsubscribe();
@@ -47,33 +47,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   itemClick(itemWidget: HTMLElement, item: Item) {
     this.SelectedItem = item;
-    let itemDescriptionItem = document.getElementById("ItemDescriptionBox");
-    itemDescriptionItem.style.visibility = "visible";
-    itemDescriptionItem.style.top = itemWidget.offsetTop + "px";
-    itemDescriptionItem.style.left = itemWidget.offsetLeft + "px";
-  }
-
-  itemClose() {
-    document.getElementById("ItemDescriptionBox").style.visibility = "hidden";
-    this.SelectedItem = null;
-  }
-
-  equipItem() {
-    console.log(`equip ${this.SelectedItem.name}`);
-    this.accountService.EquipItem(this.SelectedItem).subscribe(x => {
-      this.accountService.RefreshCharacter();
-      this.itemClose();
-    });
-  }
-
-  itemInteractionString(item: Item): string {
-    if(item.itemType == ItemType.None){
-      return '';
-    }
-    else if(item.itemType == ItemType.Consumable){
-      return 'consume';
-    }
-    return 'das';
+    ItemDescriptionBoxComponent.ShowDescriptionBox(itemWidget, this.SelectedItem);
   }
 
 }

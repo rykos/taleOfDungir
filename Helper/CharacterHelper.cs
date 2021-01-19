@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace taleOfDungir.Helpers
 {
@@ -84,6 +85,31 @@ namespace taleOfDungir.Helpers
             return character.Level * 100;
         }
 
+        public void EquipItem(long characterId, Item item)
+        {
+            if (item.ItemType == ItemType.Consumable || item.ItemType == ItemType.Resource || item.ItemType == ItemType.Trash)
+            {
+                return;
+            }
+            Character character = this.dbContext.Characters.Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == characterId);
+            Item alreadyWornItem = character.Inventory.FirstOrDefault(i => i.ItemType == item.ItemType && i.Worn);
+            if (alreadyWornItem != default)
+            {
+                this.dbContext.Update(alreadyWornItem);
+                alreadyWornItem.Worn = false;
+                //Unequiping active item
+                if (alreadyWornItem.ItemId == item.ItemId)
+                {
+                    this.dbContext.SaveChanges();
+                    return;
+                }
+            }
+
+            this.dbContext.Update(item);
+            item.Worn = true;
+            this.dbContext.SaveChanges();
+        }
+
         public Item SpawnRandomItem(Character character)
         {
             //If inventory reference is missing, load it
@@ -140,5 +166,6 @@ namespace taleOfDungir.Helpers
         void TakeDamage(Character character, Int64 amount);
         void TakeHealing(Character character, long amount);
         void HealthRegen(Character character);
+        void EquipItem(long characterId, Item item);
     }
 }

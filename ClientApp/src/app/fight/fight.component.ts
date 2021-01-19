@@ -1,6 +1,9 @@
+import { ItemDescriptionBoxComponent } from './../item-description-box/item-description-box.component';
+import { MissionReward } from './../../_models/MissionReward';
 import { AccountService } from './../../_services/account.service';
 import { Fight } from './../../_models/Fight';
 import { Component, Input, OnInit } from '@angular/core';
+import { Item } from 'src/_models/Item';
 
 @Component({
   selector: 'app-fight',
@@ -14,9 +17,11 @@ export class FightComponent implements OnInit {
   fightTimer: number;
   ph: number;
   eh: number;
+  reward: MissionReward;
+  SelectedItem: Item;
 
   constructor(private accountService: AccountService) {
-
+    this.reward = accountService.currentMissionRewardSubject.value;
   }
 
   ngOnInit(): void {
@@ -60,6 +65,11 @@ export class FightComponent implements OnInit {
     this.fight.player.health = this.ph;
     this.fight.enemy.health = this.eh;
     this.fightFinished = true;
+  }
+
+  itemClick(itemWidget: HTMLElement, item: Item) {
+    this.SelectedItem = item;
+    ItemDescriptionBoxComponent.ShowDescriptionBox(itemWidget, item);
   }
 
 }

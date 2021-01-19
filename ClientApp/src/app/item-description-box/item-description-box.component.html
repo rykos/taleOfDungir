@@ -1,0 +1,15 @@
+<div id="ItemDescriptionBox"
+    style="display: flex; background-color: #4d3710; position: absolute; top: 0; left: 0; min-width: 200px;">
+    <div *ngIf="item" class="container-fluid p-0 m-1" style="color: whitesmoke;">
+        <div>
+            {{item.name}} <br> lvl: {{item.level}} <br>
+            Power:{{item.power}}
+            <br>
+            Value: {{item.value}}
+            <br>
+        </div>
+        <button class="btn btn-danger" (click)="itemClose()" style="position: absolute; top: 0; right: 0;">x</button>
+        <app-item-description-interact-button [item]="item" (click)="useItem()">
+        </app-item-description-interact-button>
+    </div>
+</div>
