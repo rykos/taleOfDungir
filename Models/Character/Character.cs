@@ -28,6 +28,9 @@ namespace taleOfDungir.Models
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
+        public long CharacterMetaDataId { get; set; }
+        public CharacterMetaData CharacterMetaData { get; set; }
+
         public List<Mission> Missions { get; set; }
 
         /// <summary>

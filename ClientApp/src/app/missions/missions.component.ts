@@ -1,3 +1,4 @@
+import { Item } from 'src/_models/Item';
 import { Entity } from './../../_models/Entity';
 import { Character } from './../../_models/Character';
 import { MissionFinishedObject } from './../../_models/MissionFinishedObject';
@@ -8,6 +9,7 @@ import { Mission } from './../../_models/Mission';
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, observable, Observable, Subscription } from 'rxjs';
+import { ItemDescriptionBoxComponent } from '../item-description-box/item-description-box.component';
 
 @Component({
   selector: 'app-missions',
@@ -24,6 +26,9 @@ export class MissionsComponent implements OnInit, OnDestroy {
   currentMissionEvents: Subscription;
   currentMissionFinished: Subscription;
   currentCharacterSubcription: Subscription;
+
+  SelectedItem: Item;
+  context: string;
 
   constructor(private accountService: AccountService) {
     this.currentFight = this.accountService.currentFightSubject.subscribe((val) => {
@@ -49,16 +54,6 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.accountService.UpdateMissions();
-    // let x = new Fight();
-    // let c = new Entity();
-    // let m = new Entity();
-    // c.health = 100;
-    // c.maxHealth = 100;
-    // m.health = 50;
-    // m.maxHealth = 50;
-    // x.enemyHealth = m;
-    // x.playerHealth = c;
-    // this.accountService.currentFightSubject.next(x);
   }
 
   get AS() {
@@ -73,5 +68,11 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   FinishMission() {
     this.accountService.FinishMission();
+  }
+
+  itemClick(itemWidget: HTMLElement, item: Item, context: string) {
+    this.context = context;
+    this.SelectedItem = item;
+    ItemDescriptionBoxComponent.ShowDescriptionBox(itemWidget, this.SelectedItem);
   }
 }

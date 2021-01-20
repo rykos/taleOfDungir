@@ -29,10 +29,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.characterSub = accountService.currentCharacterSubject.subscribe((c) => {
       if (c) {
         this.character = c;
-        this.character.inventory = c.inventory.filter(i => !i?.worn);
-        for (let i = this.character.inventory.length; i < 21; i++) {
-          this.character.inventory.push(null);
-        }
       }
     });
   }

@@ -133,6 +133,10 @@ export class AccountService {
   RefreshCharacter() {
     this.Details().subscribe(c => {
       c.equipment = new Equipment(c.inventory);
+      c.inventory = c.inventory.filter(i => !i?.worn);
+      for (let i = c.inventory.length; i < 24; i++) {
+        c.inventory.push(null);
+      }
       this.currentCharacterSubject.next(c);
     });
   }

@@ -23,7 +23,10 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.accountService.RefreshCharacter();
     this.sub = this.accountService.currentCharacterSubject.subscribe(c => {
-      if (c) this.character = c;
+      if (c) {
+        this.character = c;
+        // this.character.inventory = c.inventory.filter(i => !i?.worn);
+      }
     });
   }
 

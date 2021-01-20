@@ -46,6 +46,12 @@ namespace taleOfDungir.Data
                 .WithOne()
                 .HasForeignKey(ea => ea.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Character>()
+                .HasOne(c => c.CharacterMetaData)
+                .WithOne()
+                .HasForeignKey<CharacterMetaData>(c => c.CharacterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<Character> Characters { get; set; }//Player characters
@@ -58,5 +64,7 @@ namespace taleOfDungir.Data
         public DbSet<EventAction> EventActions { get; set; }
         //
         public DbSet<ImageDBModel> ImageDBModels { get; set; }
+
+        public DbSet<CharacterMetaData> CharacterMetaDatas { get; set; }
     }
 }

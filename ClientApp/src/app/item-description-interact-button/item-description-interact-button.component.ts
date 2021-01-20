@@ -1,6 +1,7 @@
 import { Item } from 'src/_models/Item';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ItemType } from 'src/_models/ItemType';
+import { flatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-item-description-interact-button',
@@ -19,19 +20,28 @@ export class ItemDescriptionInteractButtonComponent implements OnInit, OnChanges
   color: string;
   // context: string;
 
-  constructor() { 
+  constructor() {
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.ngOnInit();
   }
 
+  //Needs rework
   ngOnInit(): void {
-    if (this.context) {
-      this.text = this.context;
-      this.color = 'green';
-      return;
+    if (this.context == "none") {
+      this.text = null;
     }
-    if (this.item.itemType == ItemType.None || this.item.itemType == ItemType.Trash) {
+    //forced context
+    else if (this.context) {
+      if (this.context == "buy" || this.context == "sell") {
+        this.text = this.context
+        this.color = "green";
+      }
+      else if (!this.equipable()) {
+        this.text = null;
+      }
+    }
+    else if (this.item.itemType == ItemType.None || this.item.itemType == ItemType.Trash) {
       this.text = '';
     }
     else if (this.item.itemType == ItemType.Consumable) {
@@ -42,6 +52,13 @@ export class ItemDescriptionInteractButtonComponent implements OnInit, OnChanges
       this.text = '';
     }
     else {
+      this.equipable();
+    }
+
+  }
+
+  equipable(): boolean {
+    if (<number>this.item.itemType > 3) {
       if (this.item.worn) {
         this.text = 'unequip';
         this.color = 'red';
@@ -50,8 +67,9 @@ export class ItemDescriptionInteractButtonComponent implements OnInit, OnChanges
         this.text = 'equip'
         this.color = 'green';
       }
+      return true;
     }
-
+    return false;
   }
 
 }

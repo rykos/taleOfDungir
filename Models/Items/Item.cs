@@ -36,6 +36,10 @@ namespace taleOfDungir.Models
         /// Is item equipped by player
         /// </summary>
         public bool Worn { get; set; } = false;
+        /// <summary>
+        /// Name of merchant that owns this, null if player owned
+        /// </summary>
+        public string Merchant { get; set; }
 
         public object ItemDTO()
         {
