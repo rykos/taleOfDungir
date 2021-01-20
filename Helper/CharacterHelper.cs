@@ -110,6 +110,15 @@ namespace taleOfDungir.Helpers
             this.dbContext.SaveChanges();
         }
 
+        public void SellItem(long characterId, Item item)
+        {
+            Character character = this.dbContext.Characters.Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == characterId);
+            character.Gold += item.Value;
+            this.dbContext.Remove(item);
+            this.dbContext.Update(character);
+            this.dbContext.SaveChanges();
+        }
+
         public Item SpawnRandomItem(Character character)
         {
             //If inventory reference is missing, load it
@@ -167,5 +176,6 @@ namespace taleOfDungir.Helpers
         void TakeHealing(Character character, long amount);
         void HealthRegen(Character character);
         void EquipItem(long characterId, Item item);
+        void SellItem(long characterId, Item item);
     }
 }

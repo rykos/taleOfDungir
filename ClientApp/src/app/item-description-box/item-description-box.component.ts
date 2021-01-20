@@ -22,14 +22,26 @@ export class ItemDescriptionBoxComponent implements OnInit {
   }
 
   useItem() {
-    if (this.context == "equip") {
+    if (this.context == "equip" || this.context == "unequip") {
       this.accountService.EquipItem(this.item).subscribe(x => {
+        this.accountService.RefreshCharacter();
+        this.itemClose();
+      });
+    }
+    else if (this.context == "buy") {
+
+    }
+    else if (this.context == "sell") {
+      this.accountService.SellItem(this.item).subscribe(x => {
         this.accountService.RefreshCharacter();
         this.itemClose();
       });
     }
     else if (this.context == "eat") {
       console.log("eating some food");
+    }
+    else {
+      console.error(`use item with invalid context: (${this.context})`);
     }
   }
 

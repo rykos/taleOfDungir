@@ -83,6 +83,23 @@ namespace taleOfDungir.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Route("sell/{itemID}")]
+        public async Task<IActionResult> Sell(long itemID)
+        {
+            ApplicationUser activeUser = await this.GetActiveUser();
+            Item item = this.dbContext.Items.FirstOrDefault(i => i.ItemId == itemID);
+            if (item == default)
+                return NotFound();
+            if (activeUser == default)
+                return Unauthorized();
+            if (item.CharacterId != activeUser.CharacterId)
+                return Unauthorized();
+
+            this.characterHelper.SellItem(activeUser.CharacterId, item);
+            return Ok();
+        }
+
         private async Task<ApplicationUser> GetActiveUser()
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;

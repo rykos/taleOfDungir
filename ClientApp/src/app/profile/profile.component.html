@@ -6,20 +6,20 @@
                 <div class="d-flex" style="width: 360px;">
                     <div class="d-flex flex-wrap" style="background-color: aliceblue;">
                         <app-item-widget [placeholder]="'head'" [item]="character.equipment?.head"
-                            (click)="itemClick($event.target, character.equipment?.head,'equip')"></app-item-widget>
+                            (click)="itemClick($event.target, character.equipment?.head,'unequip')"></app-item-widget>
                         <app-item-widget [placeholder]="'chest'" [item]="character.equipment?.body"
-                            (click)="itemClick($event.target, character.equipment?.body,'equip')"></app-item-widget>
+                            (click)="itemClick($event.target, character.equipment?.body,'unequip')"></app-item-widget>
                         <app-item-widget [placeholder]="'legs'" [item]="character.equipment?.legs"
-                            (click)="itemClick($event.target, character.equipment?.legs,'equip')"></app-item-widget>
+                            (click)="itemClick($event.target, character.equipment?.legs,'unequip')"></app-item-widget>
                     </div>
                     <img [src]="ImgLink(character.entity.avatarID)" width="216px" height="216px">
                     <div class="d-flex flex-wrap" style="background-color: aliceblue;">
                         <app-item-widget [placeholder]="'neck'" [item]="character.equipment?.neck"
-                            (click)="itemClick($event.target, character.equipment?.neck, 'equip')"></app-item-widget>
+                            (click)="itemClick($event.target, character.equipment?.neck, 'unequip')"></app-item-widget>
                         <app-item-widget [placeholder]="'finger'" [item]="character.equipment?.finger"
-                            (click)="itemClick($event.target, character.equipment?.finger,'equip')"></app-item-widget>
+                            (click)="itemClick($event.target, character.equipment?.finger,'unequip')"></app-item-widget>
                         <app-item-widget [placeholder]="'weapon'" [item]="character.equipment?.weapon"
-                            (click)="itemClick($event.target, character.equipment?.weapon,'equip')"></app-item-widget>
+                            (click)="itemClick($event.target, character.equipment?.weapon,'unequip')"></app-item-widget>
                     </div>
                 </div>
                 <div class="progress" style="position: relative;">

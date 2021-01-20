@@ -154,7 +154,10 @@ export class AccountService {
   }
 
   EquipItem(item: Item): Observable<any> {
-    console.log(item);
     return this.httpClient.get(`${environment.apiUrl}/character/equip/${item.itemId}`);
+  }
+
+  SellItem(item: Item): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/character/sell/${item.itemId}`);
   }
 }
