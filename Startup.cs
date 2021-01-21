@@ -66,6 +66,7 @@ namespace taleOfDungir
             services.AddScoped<CharacterHelperProvider, CharacterHelper>();
             services.AddScoped<ItemCreatorHelperProvider, ItemCreatorHelper>();
             services.AddScoped<NameHelperProvider, NameHelper>();
+            services.AddScoped<TownHelperProvider, TownHelper>();
 
             services.AddControllers();
         }

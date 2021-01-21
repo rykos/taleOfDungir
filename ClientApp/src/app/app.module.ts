@@ -27,6 +27,7 @@ import { ItemWidgetComponent } from './item-widget/item-widget.component';
 import { ItemDescriptionInteractButtonComponent } from './item-description-interact-button/item-description-interact-button.component';
 import { ItemDescriptionBoxComponent } from './item-description-box/item-description-box.component';
 import { ShopBlacksmithComponent } from './shop-blacksmith/shop-blacksmith.component';
+import { ProfileSkillBoxWidgetComponent } from './profile-skill-box-widget/profile-skill-box-widget.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ShopBlacksmithComponent } from './shop-blacksmith/shop-blacksmith.compo
     ItemWidgetComponent,
     ItemDescriptionInteractButtonComponent,
     ItemDescriptionBoxComponent,
-    ShopBlacksmithComponent
+    ShopBlacksmithComponent,
+    ProfileSkillBoxWidgetComponent
   ],
   imports: [
     BrowserModule,

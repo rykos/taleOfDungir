@@ -133,6 +133,70 @@ namespace taleOfDungir.Helpers
             return item;
         }
 
+        /// <returns>Enchance success</returns>
+        public bool EnchanceSkill(long characterId, string skillName)
+        {
+            Character c = this.dbContext.Characters.Include(c => c.Skills).FirstOrDefault(c => c.CharacterId == characterId);
+            bool success = false;
+            if (skillName == "vitality")
+            {
+                if (this.Pay(c, this.EnchanceSkillPrice(c.Skills.Vitality)))
+                {
+                    c.Skills.Vitality++;
+                    success = true;
+                }
+            }
+            else if (skillName == "combat")
+            {
+                if (this.Pay(c, this.EnchanceSkillPrice(c.Skills.Combat)))
+                {
+                    c.Skills.Combat++;
+                    success = true;
+                }
+            }
+            else if (skillName == "luck")
+            {
+                if (this.Pay(c, this.EnchanceSkillPrice(c.Skills.Luck)))
+                {
+                    c.Skills.Luck++;
+                    success = true;
+                }
+            }
+            else if (skillName == "perception")
+            {
+                if (this.Pay(c, this.EnchanceSkillPrice(c.Skills.Perception)))
+                {
+                    c.Skills.Perception++;
+                    success = true;
+                }
+            }
+            if (success)
+            {
+                dbContext.Update(c);
+                dbContext.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public long EnchanceSkillPrice(int skillLevel)
+        {
+            return (long)System.Math.Round((double)skillLevel * 1.5d);
+        }
+
+        private bool Pay(Character c, long amount)
+        {
+            if (c.Gold >= amount)
+            {
+                c.Gold -= amount;
+                return true;
+            }
+            return false;
+        }
+
         public void TakeDamage(Character character, long amount)
         {
             this.dbContext.Characters.Update(character);
@@ -177,5 +241,8 @@ namespace taleOfDungir.Helpers
         void HealthRegen(Character character);
         void EquipItem(long characterId, Item item);
         void SellItem(long characterId, Item item);
+        /// <returns>Enchance success</returns>
+        bool EnchanceSkill(long characterId, string skillName);
+        long EnchanceSkillPrice(int skillLevel);
     }
 }

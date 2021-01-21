@@ -153,6 +153,14 @@ export class AccountService {
     return this.httpClient.get(`${environment.apiUrl}/missions/start/${missionId}`);
   }
 
+  EnchanceSkillPrice(skillLevel: number): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/character/enchance/skill/${skillLevel}`);
+  }
+  // https://localhost:5001/character/enchance/skill/5
+  EnchanceSKill(skillName: string): Observable<any> {
+    return this.httpClient.post(`${environment.apiUrl}/character/enchance/skill/${skillName}`, null);
+  }
+
   PickMissionEventAction(eventActionId: number): Observable<MissionResoult> {
     return this.httpClient.get<MissionResoult>(`${environment.apiUrl}/missions/active/event/${eventActionId}`);
   }
@@ -162,6 +170,6 @@ export class AccountService {
   }
 
   SellItem(item: Item): Observable<any> {
-    return this.httpClient.get(`${environment.apiUrl}/character/sell/${item.itemId}`);
+    return this.httpClient.get(`${environment.apiUrl}/town/sell/${item.itemId}`);
   }
 }

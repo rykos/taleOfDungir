@@ -59,6 +59,13 @@
         <p>exp:{{character.exp}}/{{character.reqExp}}</p>
         <p>gold:{{character.gold}}</p>
         <p>health:{{character.entity.health}}/{{character.entity.maxHealth}}</p>
+        <br>
+        <div style="width: 150px;">
+            <app-profile-skill-box-widget [skillName]="'Combat'" [skillLevel]="character.skills.combat"></app-profile-skill-box-widget>
+            <app-profile-skill-box-widget [skillName]="'Luck'" [skillLevel]="character.skills.luck"></app-profile-skill-box-widget>
+            <app-profile-skill-box-widget [skillName]="'Perception'" [skillLevel]="character.skills.perception"></app-profile-skill-box-widget>
+            <app-profile-skill-box-widget [skillName]="'Vitality'" [skillLevel]="character.skills.vitality"></app-profile-skill-box-widget>
+        </div>
     </div>
 </div>
 <app-item-description-box [item]="SelectedItem" [context]="context"></app-item-description-box>

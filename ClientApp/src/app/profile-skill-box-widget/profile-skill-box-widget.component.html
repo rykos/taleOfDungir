@@ -1,0 +1,8 @@
+<div class="border d-flex justify-content-between align-items-center">
+    <div>{{skillName}}</div>
+    <div class="d-flex flex-row justify-content-center align-items-center">
+        {{skillLevel}}
+        <button class="btn btn-sm btn-success" (click)="EnchanceSkill()"
+        data-toggle="tooltip" data-placement="top" title="{{skillPrice$ | async}}">+</button>
+    </div>
+</div>

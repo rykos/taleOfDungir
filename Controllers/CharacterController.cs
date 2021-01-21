@@ -58,7 +58,7 @@ namespace taleOfDungir.Controllers
                 exp = character.Exp,
                 reqExp = this.characterHelper.RequiredExp(character),
                 gold = character.Gold,
-                inventory = this.characterHelper.GetItemsDTO(character),
+                inventory = character.Inventory.Where(i => i.Merchant == null).Select(i => i.ItemDTO()),
                 lifeSkills = this.characterHelper.GetLifeSkillsDTO(character),
                 skills = this.characterHelper.GetSkillsDTO(character),
                 entity = new Entity(character)
@@ -83,6 +83,30 @@ namespace taleOfDungir.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("enchance/skill/{skillName}")]
+        public async Task<IActionResult> EnchanceSkill(string skillName)
+        {
+            ApplicationUser user = await this.GetActiveUser();
+            if (this.characterHelper.EnchanceSkill(user.CharacterId, skillName))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("enchance/skill/{skillLevel}")]
+        public async Task<IActionResult> EnchanceSkillCost(int skillLevel)
+        {
+            ApplicationUser user = await this.GetActiveUser();
+            return Ok(this.characterHelper.EnchanceSkillPrice(skillLevel));
+        }
+
+        //
         private async Task<ApplicationUser> GetActiveUser()
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
