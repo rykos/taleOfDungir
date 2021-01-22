@@ -156,7 +156,7 @@ export class AccountService {
   EnchanceSkillPrice(skillLevel: number): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}/character/enchance/skill/${skillLevel}`);
   }
-  // https://localhost:5001/character/enchance/skill/5
+
   EnchanceSKill(skillName: string): Observable<any> {
     return this.httpClient.post(`${environment.apiUrl}/character/enchance/skill/${skillName}`, null);
   }
@@ -171,5 +171,13 @@ export class AccountService {
 
   SellItem(item: Item): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}/town/sell/${item.itemId}`);
+  }
+
+  BuyItem(item: Item, merchant: string): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}/town/buy?merchant=${merchant}&itemid=${item.itemId}`);
+  }
+
+  GetBlacksmithItems(): Observable<Item[]> {
+    return this.httpClient.get<Item[]>(`${environment.apiUrl}/town/blacksmith/items`);
   }
 }

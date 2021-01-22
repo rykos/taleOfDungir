@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using taleOfDungir.Data;
 using taleOfDungir.Helpers;
 using taleOfDungir.Models;
@@ -63,6 +64,32 @@ namespace taleOfDungir.Controllers
                 return Unauthorized();
 
             return Ok(this.townHelper.GetBlacksmithItems(user.CharacterId));
+        }
+
+        [HttpGet]
+        [Route("buy")]
+        public async Task<IActionResult> BuyItem(string merchant, long itemId)
+        {
+            ApplicationUser user = await this.GetActiveUser();
+            if (user == default)
+                return Unauthorized();
+
+            Character character = this.dbContext.Characters.Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == user.CharacterId);
+            Item item = character.Inventory.FirstOrDefault(i => i.ItemId == itemId);
+            if (item == default)
+                return BadRequest();
+
+            if (character.Gold < item.Value)
+                return BadRequest();
+
+            character.Gold -= item.Value;
+            item.Merchant = null;
+
+
+            this.dbContext.Update(character);
+            this.dbContext.SaveChanges();
+
+            return Ok();
         }
 
         private async Task<ApplicationUser> GetActiveUser()

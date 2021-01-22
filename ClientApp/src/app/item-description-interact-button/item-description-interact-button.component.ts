@@ -20,8 +20,8 @@ export class ItemDescriptionInteractButtonComponent implements OnInit, OnChanges
   color: string;
   // context: string;
 
-  constructor() {
-  }
+  constructor() {}
+  
   ngOnChanges(changes: SimpleChanges): void {
     this.ngOnInit();
   }

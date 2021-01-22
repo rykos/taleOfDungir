@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { AccountService } from './../../_services/account.service';
 import { Character } from './../../_models/Character';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -15,6 +15,7 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
   sub: Subscription;
   SelectedItem: Item;
   context: string;
+  blacksmithItems$: Observable<Item[]>;
 
   constructor(private accountService: AccountService) {
 
@@ -25,9 +26,9 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
     this.sub = this.accountService.currentCharacterSubject.subscribe(c => {
       if (c) {
         this.character = c;
-        // this.character.inventory = c.inventory.filter(i => !i?.worn);
       }
     });
+    this.blacksmithItems$ = this.accountService.GetBlacksmithItems();
   }
 
   ngOnDestroy(): void {

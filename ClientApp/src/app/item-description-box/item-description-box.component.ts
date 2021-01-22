@@ -12,6 +12,8 @@ export class ItemDescriptionBoxComponent implements OnInit {
   item: Item;
   @Input()
   context: string;
+  @Input()
+  merchant: string;
 
   constructor(private accountService: AccountService) { }
 
@@ -29,7 +31,10 @@ export class ItemDescriptionBoxComponent implements OnInit {
       });
     }
     else if (this.context == "buy") {
-
+      this.accountService.BuyItem(this.item, this.merchant).subscribe(x => {
+        this.accountService.RefreshCharacter();
+        this.itemClose();
+      });
     }
     else if (this.context == "sell") {
       this.accountService.SellItem(this.item).subscribe(x => {
