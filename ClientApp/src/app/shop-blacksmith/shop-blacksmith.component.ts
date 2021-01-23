@@ -19,6 +19,7 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
   SelectedItem: Item;
   context: string;
   blacksmithItems$: Observable<MerchantStock>;
+  restockTimerHandle: number;
 
   constructor(private accountService: AccountService) {
 
@@ -32,15 +33,7 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
         this.blacksmithItems$ = this.accountService.GetBlacksmithItems().pipe(
           retry(3),
           map(ms => {
-            let remaingSeconds = new Date(new Date(ms.restockTime).getTime() - Date.now()).getSeconds() + 1;
-            ms.restockTimeRemaining = new Time(remaingSeconds);
-            let timerHandle = setInterval(() => {
-              ms.restockTimeRemaining = new Time(ms.restockTimeRemaining.totalSeconds - 1);
-              if(ms.restockTimeRemaining.totalSeconds <= 0){
-                this.accountService.RefreshCharacter();
-                clearInterval(timerHandle);
-              }
-            }, 1000);
+            this.newStockReceived(ms);
             return ms;
           })
         );
@@ -48,8 +41,30 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
     });
   }
 
+  newStockReceived(ms: MerchantStock) {
+    let remaingSeconds = new Date(new Date(ms.restockTime).getTime() - Date.now()).getSeconds() + 1;
+    ms.restockTimeRemaining = new Time(remaingSeconds);
+    if (this.restockTimerHandle)
+      this.disableRestockTimer();
+    this.restockTimerHandle = setInterval(() => this.restockTimerTick(ms), 1000);
+  }
+
+  restockTimerTick(ms: MerchantStock) {
+    ms.restockTimeRemaining = new Time(ms.restockTimeRemaining.totalSeconds - 1);
+    if (ms.restockTimeRemaining.totalSeconds <= 0) {
+      this.accountService.RefreshCharacter();
+      this.disableRestockTimer();
+    }
+  }
+
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+    this.disableRestockTimer();
+  }
+
+  disableRestockTimer() {
+    clearInterval(this.restockTimerHandle);
+    this.restockTimerHandle = null;
   }
 
   itemClick(itemWidget: HTMLElement, item: Item, context: string) {

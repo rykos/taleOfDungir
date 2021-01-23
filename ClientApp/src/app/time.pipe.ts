@@ -7,7 +7,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TimePipe implements PipeTransform {
 
   transform(value: Time, ...args: unknown[]): string {
-    return `H:${value.hours} M:${value.minutes} S:${value.seconds}`;
+    let res = "";
+    if (value.hours) res += `H:${value.hours}`;
+    if (value.minutes) res += `M:${value.minutes}`;
+    if (value.seconds) res += `S:${value.seconds}`;
+    return res;
   }
 
 }
