@@ -25,21 +25,31 @@ namespace taleOfDungir.Helpers
             if (items.Length == 0 || DateTime.Now > characterMetaData.BlackSmithItemGenerationTime.AddMinutes(1))
             {
                 int level = this.dbContext.Characters.Select(c => new { c.CharacterId, c.Level }).FirstOrDefault(c => c.CharacterId == characterId).Level;
-                this.dbContext.Update(characterMetaData);
                 //Remove all previous items from store
                 if (items != default)
                     this.dbContext.Items.RemoveRange(items);
                 //Create new items
                 Item[] newItems = this.CreateItems(level, 8, "blacksmith", characterId).ToArray();
-                this.dbContext.Items.AddRange(newItems);
-
                 characterMetaData.BlackSmithItemGenerationTime = DateTime.Now;
-                this.dbContext.SaveChanges();
 
-                //items = newItems.Select(i => i.ItemDTO()).ToArray();
+                this.dbContext.Items.AddRange(newItems);
+                this.dbContext.CharacterMetaDatas.Update(characterMetaData);
+
+                /// <summary>
+                /// Suppress concurenccy exception
+                /// </summary>
+                try
+                {
+                    this.dbContext.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException) { return null; }
                 items = newItems;
             }
-            return new MerchantStock() { Items = items.Select(i => i.ItemDTO()).ToArray(), RestockTime = characterMetaData.BlackSmithItemGenerationTime.AddMinutes(1) };
+            return new MerchantStock()
+            {
+                Items = items.Select(i => i.ItemDTO()).ToArray(),
+                RestockTime = characterMetaData.BlackSmithItemGenerationTime.AddMinutes(1)
+            };
         }
 
         private Item[] CreateItems(int level, int amount, string merchant, long characterId)

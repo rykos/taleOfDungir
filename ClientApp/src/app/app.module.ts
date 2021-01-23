@@ -28,6 +28,7 @@ import { ItemDescriptionInteractButtonComponent } from './item-description-inter
 import { ItemDescriptionBoxComponent } from './item-description-box/item-description-box.component';
 import { ShopBlacksmithComponent } from './shop-blacksmith/shop-blacksmith.component';
 import { ProfileSkillBoxWidgetComponent } from './profile-skill-box-widget/profile-skill-box-widget.component';
+import { TimePipe } from './time.pipe';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ProfileSkillBoxWidgetComponent } from './profile-skill-box-widget/profi
     ItemDescriptionInteractButtonComponent,
     ItemDescriptionBoxComponent,
     ShopBlacksmithComponent,
-    ProfileSkillBoxWidgetComponent
+    ProfileSkillBoxWidgetComponent,
+    TimePipe
   ],
   imports: [
     BrowserModule,

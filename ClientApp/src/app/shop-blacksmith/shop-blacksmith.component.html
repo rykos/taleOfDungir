@@ -9,7 +9,7 @@
                 </div>
             </div>
         </div>
-        <!-- backpack -->
+        <!-- stock -->
         <div *ngIf="character" style="width: 440px;">
             <div class="d-flex flex-wrap" style="background-color: aliceblue;"
                 *ngIf="blacksmithItems$ | async as blacksmithItems">
@@ -18,7 +18,8 @@
                     (click)="itemClick($event.target, item, 'buy')">
                     <app-item-widget [placeholder]="none" [item]="item"></app-item-widget>
                 </div>
-
+                <div *ngIf="blacksmithItems.restockTimeRemaining; let restock" [innerHtml]="restock | time">
+                </div>
             </div>
         </div>
     </div>
