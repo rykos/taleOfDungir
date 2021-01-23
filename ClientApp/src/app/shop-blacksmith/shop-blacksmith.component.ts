@@ -1,9 +1,11 @@
+import { MerchantStock } from './../../_models/MerchantStock';
 import { Subscription, Observable } from 'rxjs';
 import { AccountService } from './../../_services/account.service';
 import { Character } from './../../_models/Character';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Item } from 'src/_models/Item';
 import { ItemDescriptionBoxComponent } from '../item-description-box/item-description-box.component';
+import { retry } from 'rxjs/operators';
 
 @Component({
   selector: 'app-shop-blacksmith',
@@ -15,7 +17,7 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
   sub: Subscription;
   SelectedItem: Item;
   context: string;
-  blacksmithItems$: Observable<Item[]>;
+  blacksmithItems$: Observable<MerchantStock>;
 
   constructor(private accountService: AccountService) {
 
@@ -26,9 +28,9 @@ export class ShopBlacksmithComponent implements OnInit, OnDestroy {
     this.sub = this.accountService.currentCharacterSubject.subscribe(c => {
       if (c) {
         this.character = c;
+        this.blacksmithItems$ = this.accountService.GetBlacksmithItems().pipe(retry(3));
       }
     });
-    this.blacksmithItems$ = this.accountService.GetBlacksmithItems();
   }
 
   ngOnDestroy(): void {

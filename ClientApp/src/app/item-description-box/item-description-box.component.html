@@ -1,12 +1,19 @@
 <div id="ItemDescriptionBox"
-    style="display: flex; background-color: #4d3710; position: absolute; top: 0; left: 0; min-width: 200px;">
+    style="display: flex; background-color: #4d3710; position: absolute; top: 0; left: 0; min-width: 200px; min-height: 100px; visibility: hidden;">
     <div *ngIf="item" class="container-fluid p-0 m-1" style="color: whitesmoke;">
         <div>
-            {{item.name}} <br> lvl: {{item.level}} <br>
-            Power:{{item.power}}
+            <!-- Power:{{item.power}}
             <br>
             Value: {{item.value}}
-            <br>
+            <br> -->
+            <div><h3>{{item.name}} lvl {{item.level}}</h3></div>
+            <h4 *ngIf="item.description != 'none'">{{item.description}}</h4>
+            <div *ngIf="item.stats">
+                <div *ngIf="item.stats.luck">+{{item.stats.combat}} combat</div>
+                <div *ngIf="item.stats.luck">+{{item.stats.luck}} luck</div>
+                <div *ngIf="item.stats.luck">+{{item.stats.perception}} perception</div>
+                <div *ngIf="item.stats.luck">+{{item.stats.vitality}} vitality</div>
+            </div>
         </div>
         <button class="btn btn-danger" (click)="itemClose()" style="position: absolute; top: 0; right: 0;">x</button>
         <app-item-description-interact-button [item]="item" [context]="context" (click)="useItem()">

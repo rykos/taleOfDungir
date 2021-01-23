@@ -17,34 +17,39 @@ namespace taleOfDungir.Helpers
             this.itemCreatorHelper = itemCreatorHelper;
         }
 
-        public object[] GetBlacksmithItems(long characterId)
+        public MerchantStock GetBlacksmithStock(long characterId)
         {
             Item[] items = this.dbContext.Items.Where(i => i.CharacterId == characterId && i.Merchant == "blacksmith").ToArray();
             CharacterMetaData characterMetaData = this.dbContext.CharacterMetaDatas.FirstOrDefault(c => c.CharacterId == characterId);
             //No items | older than 1 minute
             if (items.Length == 0 || DateTime.Now > characterMetaData.BlackSmithItemGenerationTime.AddMinutes(1))
             {
-                Character character = this.dbContext.Characters.Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == characterId);
-                this.dbContext.Update(character);
+                int level = this.dbContext.Characters.Select(c => new { c.CharacterId, c.Level }).FirstOrDefault(c => c.CharacterId == characterId).Level;
                 this.dbContext.Update(characterMetaData);
                 //Remove all previous items from store
-                character.Inventory.RemoveAll(i => i.Merchant == "blacksmith");
+                if (items != default)
+                    this.dbContext.Items.RemoveRange(items);
                 //Create new items
-                items = this.CreateItems(character.Level, 8, "blacksmith").ToArray();
-                character.Inventory.AddRange(items);
+                Item[] newItems = this.CreateItems(level, 8, "blacksmith", characterId).ToArray();
+                this.dbContext.Items.AddRange(newItems);
+
                 characterMetaData.BlackSmithItemGenerationTime = DateTime.Now;
                 this.dbContext.SaveChanges();
+
+                //items = newItems.Select(i => i.ItemDTO()).ToArray();
+                items = newItems;
             }
-            return items.Select(i => i.ItemDTO()).ToArray();
+            return new MerchantStock() { Items = items.Select(i => i.ItemDTO()).ToArray(), RestockTime = characterMetaData.BlackSmithItemGenerationTime.AddMinutes(1) };
         }
 
-        private Item[] CreateItems(int level, int amount, string merchant)
+        private Item[] CreateItems(int level, int amount, string merchant, long characterId)
         {
             Item[] items = new Item[amount];
             for (int i = 0; i < 8; i++)
             {
                 items[i] = this.itemCreatorHelper.CreateItem(level);
                 items[i].Merchant = merchant;
+                items[i].CharacterId = characterId;
             }
             return items;
         }
@@ -52,6 +57,6 @@ namespace taleOfDungir.Helpers
 
     public interface TownHelperProvider
     {
-        object[] GetBlacksmithItems(long characterId);
+        MerchantStock GetBlacksmithStock(long characterId);
     }
 }

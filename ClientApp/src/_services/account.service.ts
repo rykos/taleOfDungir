@@ -1,3 +1,4 @@
+import { MerchantStock } from './../_models/MerchantStock';
 import { Item } from 'src/_models/Item';
 import { MissionReward } from './../_models/MissionReward';
 import { MissionFinishedObject } from './../_models/MissionFinishedObject';
@@ -177,7 +178,7 @@ export class AccountService {
     return this.httpClient.get(`${environment.apiUrl}/town/buy?merchant=${merchant}&itemid=${item.itemId}`);
   }
 
-  GetBlacksmithItems(): Observable<Item[]> {
-    return this.httpClient.get<Item[]>(`${environment.apiUrl}/town/blacksmith/items`);
+  GetBlacksmithItems(): Observable<MerchantStock> {
+    return this.httpClient.get<MerchantStock>(`${environment.apiUrl}/town/blacksmith/items`);
   }
 }

@@ -63,7 +63,7 @@ namespace taleOfDungir.Controllers
             if (user == default)
                 return Unauthorized();
 
-            return Ok(this.townHelper.GetBlacksmithItems(user.CharacterId));
+            return Ok(this.townHelper.GetBlacksmithStock(user.CharacterId));
         }
 
         [HttpGet]

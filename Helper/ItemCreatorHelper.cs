@@ -38,7 +38,12 @@ namespace taleOfDungir.Helpers
                 ImageId = this.nameHelper.RandomItemImageIDFor(itemType),
                 ItemType = itemType
             };
-            item.Stats = SystemHelper.Serialize(this.CreateStats(item));
+            //If equipment
+            if ((int)itemType > 3 && (int)itemType < 10)
+                item.Stats = SystemHelper.Serialize(this.CreateStats(item));
+            else
+                item.Stats = new byte[0];
+
             return item;
         }
 

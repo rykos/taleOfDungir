@@ -50,10 +50,23 @@ export class ItemDescriptionBoxComponent implements OnInit {
     }
   }
 
+  statDescription(): string {
+    let desc = "";
+    desc += (this.item.stats.combat == 0) ? null : `Combat: ${this.item.stats.combat}\n`;
+    desc += (this.item.stats.luck == 0) ? null : `Luck: ${this.item.stats.luck}\n`;
+    return desc;
+  }
+
   static ShowDescriptionBox(itemWidget: HTMLElement, item: Item, ctx?: string) {
     let itemDescriptionItem = document.getElementById("ItemDescriptionBox");
-    itemDescriptionItem.style.visibility = "visible";
-    itemDescriptionItem.style.top = itemWidget.offsetTop + "px";
-    itemDescriptionItem.style.left = itemWidget.offsetLeft + "px";
+    if (!item) {
+      itemDescriptionItem.style.visibility = "hidden";
+      return;
+    }
+    else {
+      itemDescriptionItem.style.visibility = "visible";
+      itemDescriptionItem.style.top = itemWidget.offsetTop + "px";
+      itemDescriptionItem.style.left = itemWidget.offsetLeft + "px";
+    }
   }
 }

@@ -23,6 +23,8 @@ namespace taleOfDungir.Helpers
 
         public static T Deserialize<T>(byte[] buffer)
         {
+            if (buffer.Length == 0)
+                return default;
             IFormatter formatter = new BinaryFormatter();
             MemoryStream memoryStream = new MemoryStream(buffer);
             return (T)formatter.Deserialize(memoryStream);
