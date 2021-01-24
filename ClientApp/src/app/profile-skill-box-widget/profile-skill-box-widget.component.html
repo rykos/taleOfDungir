@@ -1,7 +1,7 @@
 <div class="border d-flex justify-content-between align-items-center" data-toggle="tooltip" data-placement="top" title="{{skillPrice$ | async}}">
     <div>{{skillName}}</div>
     <div class="d-flex flex-row justify-content-center align-items-center">
-        {{skillLevel}}
+        {{skillLevel}} <div *ngIf="skillBonus"> ({{skillBonus}})</div>
         <button class="btn btn-sm btn-success" (click)="EnchanceSkill()">+</button>
     </div>
 </div>

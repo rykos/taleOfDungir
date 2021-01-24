@@ -94,6 +94,7 @@ namespace taleOfDungir.Helpers
             this.dbContext.Characters.Update(character);
             this.dbContext.Items.Update(item);
 
+            item.Worn = true;
             //Unequiping active item
             if (alreadyWornItem != default)
             {
@@ -101,14 +102,6 @@ namespace taleOfDungir.Helpers
                 alreadyWornItem.Worn = false;
             }
 
-            if (alreadyWornItem.ItemId != item.ItemId)
-            {
-                item.Worn = true;
-            }
-            else
-            {
-                //Already worn item was unequipped
-            }
             this.RecalculateCharacterStats(character);
             this.dbContext.SaveChanges();
         }
@@ -150,7 +143,7 @@ namespace taleOfDungir.Helpers
         /// <returns>Enchance success</returns>
         public bool EnchanceSkill(long characterId, string skillName)
         {
-            Character c = this.dbContext.Characters.Include(c => c.Skills).FirstOrDefault(c => c.CharacterId == characterId);
+            Character c = this.dbContext.Characters.Include(c => c.Skills).Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == characterId);
             bool success = false;
             if (skillName == "vitality")
             {
@@ -187,6 +180,7 @@ namespace taleOfDungir.Helpers
             if (success)
             {
                 dbContext.Update(c);
+                this.RecalculateCharacterStats(c);
                 dbContext.SaveChanges();
                 return true;
             }

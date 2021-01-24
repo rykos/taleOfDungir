@@ -14,6 +14,8 @@ export class ProfileSkillBoxWidgetComponent implements OnChanges {
   skillName: string;
   @Input()
   skillLevel: number;
+  @Input()
+  skillBonus: number;
   //
   desc: string;
   skillPrice$: Observable<any>;

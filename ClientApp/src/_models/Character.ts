@@ -1,3 +1,4 @@
+import { Stats } from './Stats';
 import { Equipment } from './Equipment';
 import { Entity } from './Entity';
 import { Item } from './Item';
@@ -13,4 +14,5 @@ export class Character {
     inventory?: Item[];
     equipment?: Equipment;
     entity?: Entity;
+    characterStats?: any;
 }

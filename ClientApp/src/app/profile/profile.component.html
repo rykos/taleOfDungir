@@ -24,7 +24,8 @@
                     </div>
                 </div>
                 <!-- Exp bar -->
-                <div class="progress" style="position: relative;" data-toggle="tooltip" data-placement="top" title="{{character.exp}}/{{character.reqExp}}">
+                <div class="progress" style="position: relative;" data-toggle="tooltip" data-placement="top"
+                    title="{{character.exp}}/{{character.reqExp}}">
                     <div class="progress-bar bg-success" role="progressbar"
                         [style.width]="(character.exp/character.reqExp)*100 + '%'" aria-valuenow="25" aria-valuemin="0"
                         aria-valuemax="100">
@@ -34,7 +35,8 @@
                     </div>
                 </div>
                 <!-- Health Bar -->
-                <div class="progress" style="position: relative;" data-toggle="tooltip" data-placement="top" title="{{character.entity.health}}/{{character.entity.maxHealth}}">
+                <div class="progress" style="position: relative;" data-toggle="tooltip" data-placement="top"
+                    title="{{character.entity.health}}/{{character.entity.maxHealth}}">
                     <div class="progress-bar bg-danger" role="progressbar"
                         [style.width]="(character.entity.health/character.entity.maxHealth)*100 + '%'"
                         aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
@@ -60,11 +62,15 @@
     <div>
         <p>gold:{{character.gold}}</p>
         <br>
-        <div style="width: 150px;">
-            <app-profile-skill-box-widget [skillName]="'Combat'" [skillLevel]="character.skills.combat"></app-profile-skill-box-widget>
-            <app-profile-skill-box-widget [skillName]="'Luck'" [skillLevel]="character.skills.luck"></app-profile-skill-box-widget>
-            <app-profile-skill-box-widget [skillName]="'Perception'" [skillLevel]="character.skills.perception"></app-profile-skill-box-widget>
-            <app-profile-skill-box-widget [skillName]="'Vitality'" [skillLevel]="character.skills.vitality"></app-profile-skill-box-widget>
+        <div style="width: 200px;">
+            <app-profile-skill-box-widget [skillName]="'Combat'" [skillLevel]="character.skills.combat"
+                [skillBonus]="character.characterStats.finalStats.combat"></app-profile-skill-box-widget>
+            <app-profile-skill-box-widget [skillName]="'Luck'" [skillLevel]="character.skills.luck"
+                [skillBonus]="character.characterStats.finalStats.luck"></app-profile-skill-box-widget>
+            <app-profile-skill-box-widget [skillName]="'Perception'" [skillLevel]="character.skills.perception"
+                [skillBonus]="character.characterStats.finalStats.perception"></app-profile-skill-box-widget>
+            <app-profile-skill-box-widget [skillName]="'Vitality'" [skillLevel]="character.skills.vitality"
+                [skillBonus]="character.characterStats.finalStats.vitality"></app-profile-skill-box-widget>
         </div>
     </div>
 </div>
