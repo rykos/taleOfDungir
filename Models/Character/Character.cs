@@ -25,6 +25,11 @@ namespace taleOfDungir.Models
         public Skills Skills { get; set; }//Combat skills
         public LifeSkills LifeSkills { get; set; }//Event skills
 
+        /// <summary>
+        /// Serialized CharacterStats
+        /// </summary>
+        public byte[] CharacterStats { get; set; }
+
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
@@ -39,7 +44,7 @@ namespace taleOfDungir.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime LastHealthCheck { get; set; } = DateTime.Now;
         /// <summary>
-        /// Health regenerated per minute
+        /// Health regenerated per minute, base 10% max health per 5min
         /// </summary>
         public float HealthRegen { get; set; }
     }

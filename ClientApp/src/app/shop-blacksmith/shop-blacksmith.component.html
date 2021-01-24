@@ -1,7 +1,7 @@
 <div style="background-color: silver;">
     <div style="display: flex;">
         <!-- backpack -->
-        <div *ngIf="character" style="width: 440px;">
+        <div *ngIf="character" style="width: 480px;">
             <div class="d-flex flex-wrap" style="background-color: aliceblue;">
                 <div *ngFor="let item of character.inventory; index as i;"
                     (click)="itemClick($event.target, item, 'sell')">
@@ -10,18 +10,19 @@
             </div>
         </div>
         <!-- stock -->
-        <div *ngIf="character" style="width: 440px;">
-            <div class="d-flex flex-wrap" style="background-color: aliceblue;"
-                *ngIf="blacksmithItems$ | async as blacksmithItems">
+        <div *ngIf="blacksmithItems$ | async as blacksmithItems">
+            <div class="d-flex flex-wrap" style="background-color: aliceblue;">
 
                 <div *ngFor="let item of blacksmithItems.items; index as i;"
                     (click)="itemClick($event.target, item, 'buy')">
                     <app-item-widget [placeholder]="none" [item]="item"></app-item-widget>
                 </div>
-                <div *ngIf="blacksmithItems.restockTimeRemaining; let restock" [innerHtml]="restock | time">
-                </div>
+            </div>
+            <div>
+                {{blacksmithItems.restockTimeRemaining | time}}
             </div>
         </div>
+        
     </div>
 </div>
 <app-item-description-box [item]="SelectedItem" [context]="context" [merchant]="'blacksmith'">

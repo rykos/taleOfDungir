@@ -61,7 +61,8 @@ namespace taleOfDungir.Controllers
                 inventory = character.Inventory.Where(i => i.Merchant == null).Select(i => i.ItemDTO()),
                 lifeSkills = this.characterHelper.GetLifeSkillsDTO(character),
                 skills = this.characterHelper.GetSkillsDTO(character),
-                entity = new Entity(character)
+                entity = new Entity(character),
+                characterStats = SystemHelper.Deserialize<CharacterStats>(character.CharacterStats)
             });
         }
 
@@ -106,7 +107,6 @@ namespace taleOfDungir.Controllers
             return Ok(this.characterHelper.EnchanceSkillPrice(skillLevel));
         }
 
-        //
         private async Task<ApplicationUser> GetActiveUser()
         {
             string userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;

@@ -88,26 +88,40 @@ namespace taleOfDungir.Helpers
         public void EquipItem(long characterId, Item item)
         {
             if (item.ItemType == ItemType.Consumable || item.ItemType == ItemType.Resource || item.ItemType == ItemType.Trash)
-            {
                 return;
-            }
-            Character character = this.dbContext.Characters.Include(c => c.Inventory).FirstOrDefault(c => c.CharacterId == characterId);
+            Character character = this.dbContext.Characters.Include(c => c.Inventory).Include(c => c.Skills).FirstOrDefault(c => c.CharacterId == characterId);
             Item alreadyWornItem = character.Inventory.FirstOrDefault(i => i.ItemType == item.ItemType && i.Worn);
+            this.dbContext.Characters.Update(character);
+            this.dbContext.Items.Update(item);
+
+            //Unequiping active item
             if (alreadyWornItem != default)
             {
                 this.dbContext.Update(alreadyWornItem);
                 alreadyWornItem.Worn = false;
-                //Unequiping active item
-                if (alreadyWornItem.ItemId == item.ItemId)
-                {
-                    this.dbContext.SaveChanges();
-                    return;
-                }
             }
 
-            this.dbContext.Update(item);
-            item.Worn = true;
+            if (alreadyWornItem.ItemId != item.ItemId)
+            {
+                item.Worn = true;
+            }
+            else
+            {
+                //Already worn item was unequipped
+            }
+            this.RecalculateCharacterStats(character);
             this.dbContext.SaveChanges();
+        }
+
+        public void RecalculateCharacterStats(Character character)
+        {
+            CharacterStats cs = new CharacterStats(character.Skills, this.EquippedItems(character));
+            character.CharacterStats = SystemHelper.Serialize(cs);
+        }
+
+        private Item[] EquippedItems(Character character)
+        {
+            return character.Inventory.Where(i => i.Worn).ToArray();
         }
 
         public void SellItem(long characterId, Item item)
